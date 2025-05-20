@@ -1,6 +1,7 @@
 let existingbutton = document.querySelector("#nav-uiconfigs");
 let newbutton = existingbutton.cloneNode(true);
 newbutton.querySelector(".nav-text").innerHTML = "Billing Center";
+newbutton.classList.remove("nav-link-current"); // Remove class right after cloning
 document.querySelector("#nav-buttons").appendChild(newbutton);
 newbutton
   .querySelector(".nav-bg-image")
@@ -9,6 +10,7 @@ newbutton
     "background-position: 0;background-image:url('path/to/image.jpg')",
   );
 
+newbutton.querySelector("a").setAttribute("href", "portal/billingCenter");
 newbutton.querySelector("a").addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -18,7 +20,6 @@ newbutton.querySelector("a").addEventListener("click", function (e) {
   });
 
   existingbutton.classList.remove("nav-link-current");
-  newbutton.classList.add("nav-link-current");
 
   document.querySelector(".navigation-title").innerHTML = "Website";
   document.querySelector("#content").innerHTML =
