@@ -10,7 +10,6 @@ newbutton
     "background-position: 0;background-image:url('path/to/image.jpg')",
   );
 
-newbutton.querySelector("a").setAttribute("href", "/portal/billing");
 newbutton.querySelector("a").addEventListener("click", function (e) {
   e.preventDefault();
 
@@ -19,7 +18,7 @@ newbutton.querySelector("a").addEventListener("click", function (e) {
     button.classList.remove("nav-link-current");
   });
 
-  existingbutton.classList.remove("nav-link-current");
+  existingbutton.classList.add("nav-link-current");
 
   document.querySelector(".navigation-title").innerHTML = "Website";
   document.querySelector("#content").innerHTML =
