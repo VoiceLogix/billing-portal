@@ -10,7 +10,7 @@ newbutton
     "background-position: 0;background-image:url('path/to/image.jpg')",
   );
 
-newbutton.querySelector("a").setAttribute("href", "portal/billingCenter");
+newbutton.querySelector("a").setAttribute("href", "/portal/billing");
 newbutton.querySelector("a").addEventListener("click", function (e) {
   e.preventDefault();
 
