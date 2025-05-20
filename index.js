@@ -15,16 +15,14 @@ newbutton
   );
 
 newbutton.querySelector("a").addEventListener("click", function (e) {
-  e.preventDefault();
-
   let navButtons = document.querySelectorAll("#nav-buttons li");
   navButtons.forEach(function (button) {
     button.classList.remove("nav-link-current");
   });
 
   // Add nav-link-current to the newbutton (now with ID nav-billing)
-  newbutton.classList.add("nav-link-current");
-  newbutton.classList.add("loading");
+  //   newbutton.classList.add("nav-link-current");
+  //   newbutton.classList.add("loading");
 
   document.querySelector(".navigation-title").innerHTML = "Website";
   document.querySelector("#content").innerHTML =
