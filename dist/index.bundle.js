@@ -1,50 +1,28 @@
-(function () {
-  const navItems = [
-    { label: "Billing Center", contentId: "billing-center-content" },
-    { label: "Service Desk", contentId: "service-desk-content" },
-  ];
+let existingbutton = document.querySelector("#nav-uiconfigs");
+let newbutton = existingbutton.cloneNode(true);
+newbutton.querySelector(".nav-text").innerHTML = "Billing Center";
+document.querySelector("#nav-buttons").appendChild(newbutton);
+newbutton
+  .querySelector(".nav-bg-image")
+  .setAttribute(
+    "style",
+    "background-position: 0;background-image:url('path/to/image.jpg')",
+  );
 
-  const existingButton = document.querySelector("#nav-uiconfigs");
-  const navList = document.querySelector("#nav-buttons");
-  const titleEl = document.querySelector(".navigation-title");
-  const content = document.getElementById("content");
+newbutton.querySelector("a").addEventListener("click", function (e) {
+  e.preventDefault();
 
-  if (!existingButton || !navList || !titleEl || !content) return;
-
-  navItems.forEach(({ label, contentId }) => {
-    const newButton = existingButton.cloneNode(true);
-
-    // Set text
-    const textEl = newButton.querySelector(".nav-text");
-    if (textEl) textEl.textContent = label;
-
-    // Style tweaks (optional)
-    const bgEl = newButton.querySelector(".nav-bg-image");
-    if (bgEl) bgEl.style.backgroundPosition = "0";
-
-    // Append to nav
-    navList.appendChild(newButton);
-
-    // Add click handler
-    const link = newButton.querySelector("a");
-    if (link) {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-
-        // Remove all active states
-        document
-          .querySelectorAll("#nav-buttons li")
-          .forEach((li) => li.classList.remove("nav-link-current"));
-
-        // Set new active state
-        newButton.classList.add("nav-link-current");
-
-        // Update title
-        titleEl.textContent = label;
-
-        // Render content container (React will hook into this div if needed)
-        content.innerHTML = `<div id="${contentId}"></div>`;
-      });
-    }
+  let navButtons = document.querySelectorAll("#nav-buttons li");
+  navButtons.forEach(function (button) {
+    button.classList.remove("nav-link-current");
   });
-})();
+
+  existingbutton.classList.remove("nav-link-current");
+  newbutton.classList.add("nav-link-current");
+
+  document.querySelector(".navigation-title").innerHTML = "Website";
+  document.querySelector("#content").innerHTML =
+    "<div class='website-content'>Welcome to the Website Section</div>";
+
+  return false;
+});
