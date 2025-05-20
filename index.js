@@ -13,7 +13,7 @@ newbutton
     "style",
     "background-position: 0;background-image:url('path/to/image.jpg')",
   );
-
+newbutton.querySelector("a").setAttribute("href", "/#billing");
 newbutton.querySelector("a").addEventListener("click", function (e) {
   let navButtons = document.querySelectorAll("#nav-buttons li");
   navButtons.forEach(function (button) {
@@ -21,8 +21,7 @@ newbutton.querySelector("a").addEventListener("click", function (e) {
   });
 
   // Add nav-link-current to the newbutton (now with ID nav-billing)
-  //   newbutton.classList.add("nav-link-current");
-  //   newbutton.classList.add("loading");
+  newbutton.classList.add("nav-link-current");
 
   document.querySelector(".navigation-title").innerHTML = "Website";
   document.querySelector("#content").innerHTML =
