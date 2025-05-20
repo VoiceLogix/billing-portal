@@ -24,6 +24,7 @@ newbutton.querySelector("a").addEventListener("click", function (e) {
 
   // Add nav-link-current to the newbutton (now with ID nav-billing)
   newbutton.classList.add("nav-link-current");
+  newbutton.classList.add("loading");
 
   document.querySelector(".navigation-title").innerHTML = "Website";
   document.querySelector("#content").innerHTML =
