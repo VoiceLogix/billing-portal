@@ -1,11 +1,10 @@
 let existingbutton = document.querySelector("#nav-uiconfigs");
 let newbutton = existingbutton.cloneNode(true);
 
-// Change ID from nav-uiconfigs to nav-billing
 newbutton.id = "nav-billing";
 
 newbutton.querySelector(".nav-text").innerHTML = "Billing Center";
-newbutton.classList.remove("nav-link-current"); // Remove class right after cloning
+newbutton.classList.remove("nav-link-current");
 document.querySelector("#nav-buttons").appendChild(newbutton);
 newbutton
   .querySelector(".nav-bg-image")
@@ -22,13 +21,9 @@ newbutton.querySelector("a").addEventListener("click", function (e) {
     button.classList.remove("nav-link-current");
   });
 
-  // Add nav-link-current to the newbutton (now with ID nav-billing)
-  //   newbutton.classList.add("nav-link-current");
-  //   newbutton.classList.add("loading");
-
   document.querySelector(".navigation-title").innerHTML = "Billing Center";
   document.querySelector("#content").innerHTML =
-    "<div class='website-content'>Welcome to the Website Section</div>";
+    "<div id='billing-center-content'></div>";
 
   return false;
 });
