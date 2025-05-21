@@ -10,7 +10,7 @@ newbutton
   .querySelector(".nav-bg-image")
   .setAttribute(
     "style",
-    "background-position: 0;background-image:url('path/to/image.jpg')",
+    "background-position: 0; background-image: url('/asset/billing-center.svg');",
   );
 
 newbutton.querySelector("a").addEventListener("click", function (e) {
