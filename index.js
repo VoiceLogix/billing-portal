@@ -20,7 +20,8 @@ newbutton.querySelector("a").addEventListener("click", function (e) {
   navButtons.forEach(function (button) {
     button.classList.remove("nav-link-current");
   });
-
+  const newTextSpan = newbutton.querySelector("span.nav-text");
+  if (newTextSpan) newTextSpan.style.color = "#404040";
   document.querySelector(".navigation-title").innerHTML = "Billing Center";
   document.querySelector("#content").innerHTML =
     "<div id='billing-center-content'></div>";
