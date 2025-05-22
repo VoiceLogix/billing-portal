@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+.text {
+  @apply text-red-400;
+}
+
+.TabsRoot {
+  @apply flex flex-col w-full mt-5;
+}
+
+.TabsList {
+  @apply flex flex-shrink-0;
+}
+
+.TabsTrigger {
+  @apply font-inherit px-5 py-2.5 text-[15px] leading-none whitespace-nowrap select-none
+         text-text;
+}
+.TabsTrigger:last-child {
+  @apply flex-1;
+}
+.TabsTrigger:hover {
+  @apply text-violet-11;
+}
+.TabsTrigger[data-state="active"] {
+  @apply border-b-0 rounded-t-lg;
+}
+.TabsTrigger:focus {
+  @apply relative;
+}
+
+.TabsContent {
+  @apply flex-grow p-5 rounded-b-lg outline-none;
+}
+.TabsContent:focus {
+  @apply ring-2 ring-black;
+}

@@ -1,6 +1,8 @@
 import "../index.js";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import { Theme } from "@radix-ui/themes";
+import "./index.css";
 // 1) grab the container that will eventually get the billing div
 const pageContent = document.getElementById("content");
 if (!pageContent) throw new Error("#content not found");
@@ -15,7 +17,11 @@ const mo = new MutationObserver((mutations, observer) => {
     const rootEl = document.getElementById("billing-center-content");
     if (rootEl) {
       const root = createRoot(rootEl);
-      root.render(<App />);
+      root.render(
+        <Theme>
+          <App />
+        </Theme>,
+      );
     }
   }
 });

@@ -1,15 +1,9 @@
-import { useNavStore } from "./store";
+import BillingTabs from "./components/BillingTabs/BillingTabs";
 
 const App = () => {
-  const activeNav = useNavStore((state) => state.activeNav);
-
   return (
     <>
-      <div>
-        {/* {activeNav === "billing_center" && <h1>Billing Center</h1>}
-        {activeNav === "service_desk" && <h1>Service Desk</h1>} */}
-        <h1>Billing center here</h1>
-      </div>
+      <BillingTabs />
     </>
   );
 };
