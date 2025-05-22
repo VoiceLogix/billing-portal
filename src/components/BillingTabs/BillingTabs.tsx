@@ -1,10 +1,9 @@
 import { Tabs } from "radix-ui";
-import "./styles.module.css";
+import "./styles.css";
+import { Dashboard } from "../Dashboard/Dashboard";
 
 const BillingTabs = () => (
   <>
-    <h1 className="text">text</h1>
-
     <Tabs.Root className="TabsRoot" defaultValue="tab1">
       <Tabs.List className="TabsList" aria-label="Manage your account">
         <Tabs.Trigger className="TabsTrigger" value="tab1">
@@ -23,7 +22,7 @@ const BillingTabs = () => (
           Payment
         </Tabs.Trigger>
         <Tabs.Trigger className="TabsTrigger" value="tab6">
-          Compny Profile
+          Company Profile
         </Tabs.Trigger>
         <Tabs.Trigger className="TabsTrigger" value="tab7">
           Subscription
@@ -37,7 +36,9 @@ const BillingTabs = () => (
           value="tab9"
         ></Tabs.Trigger>
       </Tabs.List>
-      <Tabs.Content className="TabsContent" value="tab1"></Tabs.Content>
+      <Tabs.Content className="TabsContent" value="tab1">
+        <Dashboard />
+      </Tabs.Content>
       <Tabs.Content className="TabsContent" value="tab2"></Tabs.Content>
       <Tabs.Content className="TabsContent" value="tab3"></Tabs.Content>
       <Tabs.Content className="TabsContent" value="tab4"></Tabs.Content>

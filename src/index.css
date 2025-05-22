@@ -1,2 +1,18 @@
-@import "tailwindcss";
-@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");
+
+:root {
+  --heading-font-family: "Inter", sans-serif;
+  --color-text-black: #000000;
+  --color-text-gray: #6a6a6a;
+  --color-text-blue: #0f88cc;
+  --color-border: #dddddd;
+}
+
+.radix-themes {
+  --default-font-family: var(--heading-font-family);
+}
+
+#billing-center-content {
+  font-family: var(--heading-font-family);
+  line-height: 1.5;
+}

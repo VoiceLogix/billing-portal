@@ -1,0 +1,57 @@
+button,
+fieldset,
+input {
+  all: unset;
+}
+
+.TabsRoot {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.TabsList {
+  flex-shrink: 0;
+  display: flex;
+}
+
+.TabsTrigger {
+  font-family: inherit;
+  padding: 10px 20px;
+  font-size: 14px;
+  white-space: nowrap;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--color-text-blue);
+  user-select: none;
+  border-bottom: 1px solid;
+  border-color: var(--color-border);
+  cursor: pointer;
+}
+
+.TabsTrigger:last-child {
+  width: 100%;
+}
+.TabsTrigger:hover {
+  color: var(--color-text-black);
+}
+.TabsTrigger[data-state="active"] {
+  border: 1px solid;
+  border-color: var(--color-border);
+  border-bottom: 0px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  color: var(--color-text-black);
+}
+.TabsTrigger:focus {
+  position: relative;
+}
+
+.TabsContent {
+  flex-grow: 1;
+  padding: 20px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  outline: none;
+}

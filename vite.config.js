@@ -19,5 +19,12 @@ export default defineConfig({
     fs: { strict: false },
     open: "/index.html",
     port: 3000,
+    // proxy: {
+    //   "/oauth": {
+    //     target: "https://app.onebillsoftware.com",
+    //     changeOrigin: true,
+    //     rewrite: (path) => path.replace(/^\/oauth/, "/oauth"),
+    //   },
+    // },
   },
 });
