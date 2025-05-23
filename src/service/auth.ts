@@ -10,6 +10,9 @@ interface TokenResponse {
 }
 
 export async function fetchToken() {
+  const ns_token = localStorage.getItem("ns_t");
+  console.log("ns_token:", ns_token);
+
   try {
     const params = new URLSearchParams({
       grant_type: "password",
@@ -27,6 +30,7 @@ export async function fetchToken() {
       null,
       { maxBodyLength: Infinity },
     );
+    console.log("Token response:", response.data);
 
     saveToken(response.data.access_token);
     return response.data;

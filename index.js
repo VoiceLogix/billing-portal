@@ -20,12 +20,7 @@ newbutton.querySelector("a").addEventListener("click", function (e) {
   navButtons.forEach(function (button) {
     button.classList.remove("nav-link-current");
   });
-  newbutton
-    .querySelector(".nav-button")
-    .setAttribute(
-      "style",
-      "background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #0072bc), color-stop(100%, #0064cd));",
-    );
+
   const newTextSpan = newbutton.querySelector("span.nav-text");
   if (newTextSpan) newTextSpan.style.color = "#404040";
   document.querySelector(".navigation-title").innerHTML = "Billing Center";
