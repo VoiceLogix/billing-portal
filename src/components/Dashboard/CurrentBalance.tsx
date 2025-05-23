@@ -5,6 +5,8 @@ import "./styles.css";
 export const CurrentBalance = () => {
   const { data: subscriber, isLoading, isError } = useOneBillSubscriber();
   console.log("subscriber", subscriber);
+  const ns_token = localStorage.getItem("ns_t");
+  console.log("ns_token:", ns_token);
 
   return (
     <>
