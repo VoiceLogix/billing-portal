@@ -1,12 +1,34 @@
 import { Box, Flex, Heading, Text } from "@radix-ui/themes";
-import { useOneBillSubscriber } from "../../service/getOneBillSubscriber";
+import { useGetSubscriber } from "../../service/getSubscriber";
 import { formatToUSD } from "../../utils/formatToUSD";
 import "./styles.css";
+import { useGetSubscriberInvoices } from "../../service/getSubscriberInvoices";
+import { formatDate } from "../../utils/formatDate";
+import { useGetSubscriberPayments } from "../../service/getSubscriberPayments";
 export const CurrentBalance = () => {
-  const { data: subscriber, isLoading, isError } = useOneBillSubscriber();
+  // const subscriberId = "SR2202"; // Replace with actual subscriber ID or pass it as a prop
+  const subscriberId = "SR2002"; // Replace with actual subscriber ID or pass it as a prop
+  const {
+    data: subscriber,
+    isLoading,
+    isError,
+  } = useGetSubscriber(subscriberId);
   console.log("subscriber", subscriber);
-  const ns_token = localStorage.getItem("ns_t");
-  console.log("ns_token:", ns_token);
+  const { data: subscriberInvoice } = useGetSubscriberInvoices(
+    subscriber?.accountNumber,
+  );
+
+  const {
+    data: subscriberPayments,
+    isLoading: isPaymentsLoading,
+    isError: isPaymentsError,
+  } = useGetSubscriberPayments(subscriber?.accountNumber);
+  console.log("subscriberPayments", subscriberPayments);
+
+  // console.log("subscriberInvoice", subscriberInvoice);
+
+  const lastInvoice = subscriberInvoice?.invoice?.[0] || null;
+  // console.log("lastInvoice", lastInvoice);
 
   return (
     <>
@@ -18,7 +40,7 @@ export const CurrentBalance = () => {
                 Current Balance
               </Text>
               <Heading size="5" weight="medium">
-                {formatToUSD(subscriber.accountBalance.totalAmount)}
+                {formatToUSD(subscriber?.accountBalance?.totalAmount)}
               </Heading>
             </Flex>
 
@@ -26,9 +48,13 @@ export const CurrentBalance = () => {
               <Flex gap="4" justify="between" px="2">
                 <Text size="2">Last Invoice</Text>
                 <Text size="2" color="gray">
-                  Apr 25, 2025
+                  {lastInvoice?.invoiceDate
+                    ? formatDate(lastInvoice.invoiceDate)
+                    : "--"}
                 </Text>
-                <Text size="2">$68.00</Text>
+                <Text size="2">
+                  {lastInvoice?.amount ? formatToUSD(lastInvoice.amount) : "-"}
+                </Text>
               </Flex>
               <hr
                 style={{
@@ -38,16 +64,20 @@ export const CurrentBalance = () => {
               <Flex gap="4" justify="between" px="2">
                 <Text size="2">Last Invoice</Text>
                 <Text size="2" color="gray">
-                  Apr 25, 2025
+                  {lastInvoice?.invoiceDate
+                    ? formatDate(lastInvoice.invoiceDate)
+                    : "--"}
                 </Text>
-                <Text size="2">$68.00</Text>
+                <Text size="2">
+                  {lastInvoice?.amount ? formatToUSD(lastInvoice.amount) : "-"}
+                </Text>
               </Flex>
             </Flex>
           </Flex>
         </Box>
       )}
-      {isLoading && <p>Loading...</p>}
-      {isError && <p>Error loading subscriber data</p>}
+      {!subscriber && isLoading && <p>Loading...</p>}
+      {!subscriber && isError && <p>Error loading subscriber data</p>}
     </>
   );
 };

@@ -12,19 +12,9 @@ export default defineConfig({
       formats: ["umd"],
     },
   },
-  define: {
-    "process.env.NODE_ENV": JSON.stringify("production"),
-  },
   server: {
     fs: { strict: false },
     open: "/index.html",
     port: 3000,
-    // proxy: {
-    //   "/oauth": {
-    //     target: "https://app.onebillsoftware.com",
-    //     changeOrigin: true,
-    //     rewrite: (path) => path.replace(/^\/oauth/, "/oauth"),
-    //   },
-    // },
   },
 });
