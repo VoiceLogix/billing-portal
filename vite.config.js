@@ -12,6 +12,9 @@ export default defineConfig({
       formats: ["umd"],
     },
   },
+  define: {
+    "process.env.NODE_ENV": JSON.stringify("production"),
+  },
   server: {
     fs: { strict: false },
     open: "/index.html",
