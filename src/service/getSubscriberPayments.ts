@@ -1,13 +1,17 @@
 import { InvoiceInterface } from "../types/InvoiceInterface";
+import { PaymentResponse } from "../types/PaymentInterface";
 import { axiosInstance } from "./axiosInstance";
 import { useQuery } from "@tanstack/react-query";
 
 export async function getSubscriberPayments(subscriberId: string) {
   try {
     const response = await axiosInstance.get(
-      `/rest/PaymentService/v1/payments?resultCount=100&accountNumber=${subscriberId}`,
+      `/rest/PaymentService/v1/payments?resultCount=1000&accountNumber=${subscriberId}`,
     );
-    return response.data as InvoiceInterface;
+    const paymentResponse = response.data as PaymentResponse;
+    return paymentResponse.payment.filter(
+      (payment) => (payment.accountNumber = subscriberId),
+    );
   } catch (error) {
     console.error("Error fetching subscriber payments:", error);
     throw error;

@@ -13,7 +13,6 @@ export const CurrentBalance = () => {
     isLoading,
     isError,
   } = useGetSubscriber(subscriberId);
-  console.log("subscriber", subscriber);
   const { data: subscriberInvoice } = useGetSubscriberInvoices(
     subscriber?.accountNumber,
   );
@@ -23,12 +22,9 @@ export const CurrentBalance = () => {
     isLoading: isPaymentsLoading,
     isError: isPaymentsError,
   } = useGetSubscriberPayments(subscriber?.accountNumber);
-  console.log("subscriberPayments", subscriberPayments);
-
-  // console.log("subscriberInvoice", subscriberInvoice);
 
   const lastInvoice = subscriberInvoice?.invoice?.[0] || null;
-  // console.log("lastInvoice", lastInvoice);
+  const lastPayment = subscriberPayments?.[0] || null;
 
   return (
     <>
@@ -46,13 +42,17 @@ export const CurrentBalance = () => {
 
             <Flex direction="column" gap="3">
               <Flex gap="4" justify="between" px="2">
-                <Text size="2">Last Invoice</Text>
+                <Box width={"100px"}>
+                  <Text size="2" color="gray">
+                    Last Invoice
+                  </Text>
+                </Box>
                 <Text size="2" color="gray">
                   {lastInvoice?.invoiceDate
                     ? formatDate(lastInvoice.invoiceDate)
                     : "--"}
                 </Text>
-                <Text size="2">
+                <Text size="2" weight="medium">
                   {lastInvoice?.amount ? formatToUSD(lastInvoice.amount) : "-"}
                 </Text>
               </Flex>
@@ -62,14 +62,18 @@ export const CurrentBalance = () => {
                 }}
               />
               <Flex gap="4" justify="between" px="2">
-                <Text size="2">Last Invoice</Text>
+                <Box width={"100px"}>
+                  <Text size="2" color="gray">
+                    Last Payment
+                  </Text>
+                </Box>
                 <Text size="2" color="gray">
-                  {lastInvoice?.invoiceDate
-                    ? formatDate(lastInvoice.invoiceDate)
+                  {lastPayment?.paymentDate
+                    ? formatDate(lastPayment.paymentDate)
                     : "--"}
                 </Text>
-                <Text size="2">
-                  {lastInvoice?.amount ? formatToUSD(lastInvoice.amount) : "-"}
+                <Text size="2" weight="medium">
+                  {lastPayment?.amount ? formatToUSD(lastPayment.amount) : "-"}
                 </Text>
               </Flex>
             </Flex>

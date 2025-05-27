@@ -6,7 +6,8 @@ import {
   StoredToken,
 } from "./tokenStorage";
 
-const OAUTH_URL = "http://localhost:4000/getOneBillToken";
+// const OAUTH_URL = "http://localhost:8080/getOneBillToken";
+const OAUTH_URL = "https://onebillapi.fly.dev/getOneBillToken";
 
 interface TokenResponse {
   access_token: string;
