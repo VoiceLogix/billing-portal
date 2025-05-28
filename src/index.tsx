@@ -2,7 +2,6 @@ import "../index.js";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import { Theme } from "@radix-ui/themes";
-import "@radix-ui/themes/styles.css";
 import "./index.css";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -20,9 +19,7 @@ const mo = new MutationObserver((mutations, observer) => {
       const root = createRoot(rootEl);
       root.render(
         <QueryClientProvider client={queryClient}>
-          <Theme>
-            <App />
-          </Theme>
+          <App />
         </QueryClientProvider>,
       );
     }

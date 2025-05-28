@@ -1,87 +1,82 @@
-import { Box, Flex, Heading, Text } from "@radix-ui/themes";
-import { useGetSubscriber } from "../../service/getSubscriber";
 import { formatToUSD } from "../../utils/formatToUSD";
 import "./styles.css";
-import { useGetSubscriberInvoices } from "../../service/getSubscriberInvoices";
 import { formatDate } from "../../utils/formatDate";
-import { useGetSubscriberPayments } from "../../service/getSubscriberPayments";
-export const CurrentBalance = () => {
-  // const subscriberId = "SR2202"; // Replace with actual subscriber ID or pass it as a prop
-  const subscriberId = "SR2002"; // Replace with actual subscriber ID or pass it as a prop
-  const {
-    data: subscriber,
-    isLoading,
-    isError,
-  } = useGetSubscriber(subscriberId);
-  const { data: subscriberInvoice } = useGetSubscriberInvoices(
-    subscriber?.accountNumber,
-  );
+import { Box } from "../UI/Box";
+import { Typography } from "../UI/Typography";
+import { AccountInfo } from "../../types/AccountInfoInterface";
+import { InvoiceHistory } from "../../types/InvoiceInterface";
 
-  const {
-    data: subscriberPayments,
-    isLoading: isPaymentsLoading,
-    isError: isPaymentsError,
-  } = useGetSubscriberPayments(subscriber?.accountNumber);
+interface CurrentBalanceProps {
+  accountInfo: AccountInfo;
+  invoiceHistory: InvoiceHistory;
+}
 
-  const lastInvoice = subscriberInvoice?.invoice?.[0] || null;
-  const lastPayment = subscriberPayments?.[0] || null;
+export const CurrentBalance = ({
+  accountInfo,
+  invoiceHistory,
+}: CurrentBalanceProps) => {
+  const lastInvoice = invoiceHistory?.invoiceAmounts?.[0] || null;
 
   return (
     <>
-      {subscriber && (
-        <Box className="layoutWithBorder" width="368px">
-          <Flex direction="column" gap="5">
-            <Flex direction="column" gap="2">
-              <Text size="2" color="gray">
-                Current Balance
-              </Text>
-              <Heading size="5" weight="medium">
-                {formatToUSD(subscriber?.accountBalance?.totalAmount)}
-              </Heading>
-            </Flex>
+      {accountInfo && (
+        <Box width="368px" height="163px" className="layoutWithBorder">
+          <Box display="flex" flexDirection="column" gap="16px">
+            <Box display="flex" flexDirection="column">
+              <Typography color="secondarytext">Current Balance</Typography>
+              <Typography size="large" weight="medium">
+                {formatToUSD(accountInfo?.accountBalance ?? 0)}
+              </Typography>
+            </Box>
 
-            <Flex direction="column" gap="3">
-              <Flex gap="4" justify="between" px="2">
-                <Box width={"100px"}>
-                  <Text size="2" color="gray">
-                    Last Invoice
-                  </Text>
+            <Box display="flex" flexDirection="column" gap="12px">
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                padding="0 8px"
+              >
+                <Box width="100px">
+                  <Typography>Last Invoice</Typography>
                 </Box>
-                <Text size="2" color="gray">
-                  {lastInvoice?.invoiceDate
-                    ? formatDate(lastInvoice.invoiceDate)
+                <Typography color="secondarytext">
+                  {lastInvoice?.finalizedDate
+                    ? formatDate(lastInvoice.finalizedDate)
                     : "--"}
-                </Text>
-                <Text size="2" weight="medium">
-                  {lastInvoice?.amount ? formatToUSD(lastInvoice.amount) : "-"}
-                </Text>
-              </Flex>
-              <hr
-                style={{
-                  border: "1px solid #E6E6E6",
-                }}
-              />
-              <Flex gap="4" justify="between" px="2">
-                <Box width={"100px"}>
-                  <Text size="2" color="gray">
-                    Last Payment
-                  </Text>
+                </Typography>
+                <Typography weight="medium">
+                  {lastInvoice?.billAmount
+                    ? formatToUSD(lastInvoice.billAmount)
+                    : "-"}
+                </Typography>
+              </Box>
+
+              <hr style={{ border: "1px solid #E6E6E6" }} />
+
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                padding="0 8px"
+              >
+                <Box width="100px">
+                  <Typography>Last Payment</Typography>
                 </Box>
-                <Text size="2" color="gray">
-                  {lastPayment?.paymentDate
-                    ? formatDate(lastPayment.paymentDate)
+                <Typography color="secondarytext">
+                  {accountInfo?.lastPaymentDate
+                    ? formatDate(accountInfo.lastPaymentDate)
                     : "--"}
-                </Text>
-                <Text size="2" weight="medium">
-                  {lastPayment?.amount ? formatToUSD(lastPayment.amount) : "-"}
-                </Text>
-              </Flex>
-            </Flex>
-          </Flex>
+                </Typography>
+                <Typography weight="medium">
+                  {accountInfo?.lastPaymentAmount
+                    ? formatToUSD(accountInfo.lastPaymentAmount)
+                    : "-"}
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
         </Box>
       )}
-      {!subscriber && isLoading && <p>Loading...</p>}
-      {!subscriber && isError && <p>Error loading subscriber data</p>}
     </>
   );
 };
