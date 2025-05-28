@@ -16,3 +16,7 @@
   font-family: var(--heading-font-family);
   line-height: 1.5;
 }
+
+hr {
+  margin: 0;
+}
