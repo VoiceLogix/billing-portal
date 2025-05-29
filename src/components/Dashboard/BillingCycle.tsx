@@ -8,7 +8,7 @@ export const BillingCycle = () => {
   const pendingBillChargeDetails = unbilledDetails?.pendingBillChargeDetails;
   return (
     <Box className="layoutWithBorder" width="368px" height="68px">
-      <Box display="flex" flexDirection="column" gap="7px">
+      <Box display="flex" flexDirection="column" gap="5px">
         <Typography color="secondarytext">Billing Cycle</Typography>
         <Typography weight="medium">
           {formatDateRange(

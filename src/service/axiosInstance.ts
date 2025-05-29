@@ -32,32 +32,54 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-// On 401: re-authenticate once, then retry original request
 axiosInstance.interceptors.response.use(
-  (res) => res,
-  async (error: AxiosError & { config: AxiosRequestConfig }) => {
-    const original = error.config;
-    if (error.response?.status === 401 && !original.headers!["x-retried"]) {
-      if (original.headers && typeof original.headers.set === "function") {
-        original.headers.set("x-retried", "1");
-      } else if (original.headers) {
-        (original.headers as Record<string, any>)["x-retried"] = "1";
-      }
+  async (res) => {
+    // If server answers “Invalid request.” with a 200, treat it like an auth failure
+    const isInvalidRequest =
+      res.status === 200 &&
+      typeof res.data === "string" &&
+      res.data.trim() === "Invalid request.";
+
+    const originalReq = res.config as AxiosRequestConfig & {
+      _retried?: boolean;
+    };
+
+    if (isInvalidRequest && !originalReq._retried) {
+      originalReq._retried = true;
 
       try {
-        const newTokens: SessionTokens = await authenticateUser();
-        // Update headers on the retried request
-        if (original.headers && typeof original.headers.set === "function") {
-          original.headers.set("Cookie", `JSESSIONID=${newTokens.jsessionId}`);
-          original.headers.set("X-XSRF-TOKEN", newTokens.csrfToken);
-          original.headers.set("x-retried", "1");
+        // Re‐authenticate and grab new session tokens
+        const newTokens = await authenticateUser();
+
+        // Patch the headers on the original request
+        if (
+          originalReq.headers &&
+          typeof (originalReq.headers as any).set === "function"
+        ) {
+          (originalReq.headers as any).set(
+            "Cookie",
+            `JSESSIONID=${newTokens.jsessionId}`,
+          );
+          (originalReq.headers as any).set("X-XSRF-TOKEN", newTokens.csrfToken);
+        } else if (originalReq.headers) {
+          (originalReq.headers as Record<string, string>)[
+            "Cookie"
+          ] = `JSESSIONID=${newTokens.jsessionId}`;
+          (originalReq.headers as Record<string, string>)["X-XSRF-TOKEN"] =
+            newTokens.csrfToken;
         }
-        return axiosInstance.request(original);
+
+        // Replay the request with fresh tokens
+        return axiosInstance.request(originalReq);
       } catch (authErr) {
-        // if re-auth fails, fall through to rejection
+        // If re‐auth fails, let the error bubble
         return Promise.reject(authErr);
       }
     }
-    return Promise.reject(error);
+
+    // Otherwise just pass through
+    return res;
   },
+  // You can leave your error‐handler here as before, or reject directly
+  (error: AxiosError) => Promise.reject(error),
 );

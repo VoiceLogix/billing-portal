@@ -1,4 +1,5 @@
 import { useGetAccountSummaryCounts } from "../../service/getAccountSummaryCounts";
+import { useGetProfileDetails } from "../../service/getProfileDetails";
 import { DEFAULT_SUBSCRIBER_ID } from "../../service/tokenStorage";
 import { BriefcaseSVG } from "../SVG/BriefcaseSVG";
 import { Box } from "../UI/Box";
@@ -6,6 +7,10 @@ import { Typography } from "../UI/Typography";
 
 export const AccountNumber = () => {
   const { data: accountSummary } = useGetAccountSummaryCounts();
+  const { data: profileDetails } = useGetProfileDetails();
+  const addressLen = profileDetails?.lstAddresses?.length;
+  const contactLen = profileDetails?.clientCustomerContacts?.length;
+
   return (
     <Box width="368px" height="331px" className="layoutWithBorder">
       <Box display="flex" flexDirection="column" gap="16px">
@@ -21,7 +26,7 @@ export const AccountNumber = () => {
           </Box>
         </Box>
 
-        <Box display="flex" flexDirection="column" gap="8px" padding="0 8px">
+        <Box display="flex" flexDirection="column" gap="9px" padding="0 8px">
           <Box
             display="flex"
             justifyContent="space-between"
@@ -93,7 +98,7 @@ export const AccountNumber = () => {
               <Typography>Addresses</Typography>
             </Box>
 
-            <Typography weight="medium">0</Typography>
+            <Typography weight="medium">{addressLen}</Typography>
           </Box>
           <hr style={{ border: "1px solid #E6E6E6" }} />
 
@@ -103,10 +108,10 @@ export const AccountNumber = () => {
             alignItems="center"
           >
             <Box width="165px">
-              <Typography>Users</Typography>
+              <Typography>Contacts</Typography>
             </Box>
 
-            <Typography weight="medium">0</Typography>
+            <Typography weight="medium">{contactLen}</Typography>
           </Box>
         </Box>
       </Box>
