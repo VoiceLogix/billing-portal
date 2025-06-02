@@ -7,9 +7,14 @@ export const DEFAULT_SUBSCRIBER_ID = "SR2002";
 export const AUTH_URL = `${baseURL}/auth`;
 
 export function getNSToken(): string | null {
+  console.log("import.meta.env.VITE_NODE_ENV:", import.meta.env.VITE_NODE_ENV);
+
   if (import.meta.env.VITE_NODE_ENV === "development") {
     return import.meta.env.VITE_NS_TOKEN || null;
   }
+  console.log("Using production environment for ns_t token");
+  console.log("localStorage ns_t:", localStorage.getItem("ns_t"));
+
   return localStorage.getItem("ns_t");
 }
 
