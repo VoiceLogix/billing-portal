@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "VITE_NODE_ENV=production vite build"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
