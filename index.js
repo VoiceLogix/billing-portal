@@ -1,4 +1,4 @@
-let existingbutton = document.querySelector("#nav-uiconfigs");
+let existingbutton = document.querySelector("#nav-callhistory");
 let newbutton = existingbutton.cloneNode(true);
 
 newbutton.id = "nav-billing";
