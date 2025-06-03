@@ -104,6 +104,10 @@ input {
   height: 6px;
 }
 
+.cardOption input[type="radio"]:focus {
+  outline: none;
+}
+
 .selectedCard {
   border-color: #0088cc;
 }
