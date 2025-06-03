@@ -49,6 +49,11 @@ input {
   color: #00071b7f;
 }
 
+.form .input:focus {
+  box-shadow: none;
+  border: 0px;
+}
+
 .select {
   width: 100%;
   padding: 0px 10px;

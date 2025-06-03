@@ -145,7 +145,6 @@ const CardForm = () => {
                         value={type}
                         checked={field.value === type}
                         onChange={field.onChange}
-                        className="sr-only"
                       />
                       <CardTypeSVG type={type} />
                     </label>
