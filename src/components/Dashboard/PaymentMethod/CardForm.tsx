@@ -1,5 +1,5 @@
 import { useForm, Controller } from "react-hook-form";
-import styles from "./card-form.module.css";
+import styles from "./form.module.css";
 import { CardTypeSVG, PaymentCardType } from "../../SVG/CardTypeSVG";
 
 type FormValues = {
