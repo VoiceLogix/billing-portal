@@ -1,22 +1,28 @@
 import * as React from "react";
 import { Dialog } from "radix-ui";
-// import { Cross2Icon } from "@radix-ui/react-icons";
-import "./styles.css";
+import styles from "./styles.module.css";
+import { CloseSVG } from "../../SVG/CloseSVG";
 
-const Model = ({ url }: { url?: string }) => {
-  // console.log("Model URL:", url);
+interface ModelProps {
+  open: boolean;
+  handleClose: () => void;
+  children: React.ReactNode;
+}
 
+const Model = ({ open, handleClose, children }: ModelProps) => {
   return (
-    <Dialog.Root open={true}>
+    <Dialog.Root open={open}>
       <Dialog.Portal>
-        <Dialog.Overlay className="DialogOverlay" />
-        <Dialog.Content className="DialogContent">
-          <Dialog.Title className="DialogTitle"></Dialog.Title>
-          <Dialog.Description className="DialogDescription"></Dialog.Description>
-          {/* <iframe src={url} id="paymentIframe" width="100%" height="600px" /> */}
+        <Dialog.Overlay className={styles.DialogOverlay} />
+        <Dialog.Content className={styles.DialogContent}>
+          {children}
           <Dialog.Close asChild>
-            <button className="IconButton" aria-label="Close">
-              {/* <Cross2Icon /> */}
+            <button
+              className={styles.IconButton}
+              aria-label="Close"
+              onClick={handleClose}
+            >
+              <CloseSVG />
             </button>
           </Dialog.Close>
         </Dialog.Content>

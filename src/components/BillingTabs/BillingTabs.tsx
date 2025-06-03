@@ -1,51 +1,51 @@
 import { Tabs } from "radix-ui";
-import "./styles.css";
+import styles from "./styles.module.css";
 import { Dashboard } from "../Dashboard/Dashboard";
 
 const BillingTabs = () => (
   <>
-    <Tabs.Root className="TabsRoot" defaultValue="tab1">
-      <Tabs.List className="TabsList" aria-label="Manage your account">
-        <Tabs.Trigger className="TabsTrigger" value="tab1">
+    <Tabs.Root className={styles.TabsRoot} defaultValue="tab1">
+      <Tabs.List className={styles.TabsList} aria-label="Manage your account">
+        <Tabs.Trigger className={styles.TabsTrigger} value="tab1">
           Dashboard
         </Tabs.Trigger>
-        <Tabs.Trigger className="TabsTrigger" value="tab2">
+        <Tabs.Trigger className={styles.TabsTrigger} value="tab2">
           Quotes
         </Tabs.Trigger>
-        <Tabs.Trigger className="TabsTrigger" value="tab3">
+        <Tabs.Trigger className={styles.TabsTrigger} value="tab3">
           Orders
         </Tabs.Trigger>
-        <Tabs.Trigger className="TabsTrigger" value="tab4">
+        <Tabs.Trigger className={styles.TabsTrigger} value="tab4">
           Invoices
         </Tabs.Trigger>
-        <Tabs.Trigger className="TabsTrigger" value="tab5">
+        <Tabs.Trigger className={styles.TabsTrigger} value="tab5">
           Payment
         </Tabs.Trigger>
-        <Tabs.Trigger className="TabsTrigger" value="tab6">
+        <Tabs.Trigger className={styles.TabsTrigger} value="tab6">
           Company Profile
         </Tabs.Trigger>
-        <Tabs.Trigger className="TabsTrigger" value="tab7">
+        <Tabs.Trigger className={styles.TabsTrigger} value="tab7">
           Subscription
         </Tabs.Trigger>
-        <Tabs.Trigger className="TabsTrigger" value="tab8">
+        <Tabs.Trigger className={styles.TabsTrigger} value="tab8">
           Hierarchy
         </Tabs.Trigger>
         <Tabs.Trigger
           disabled
-          className="TabsTrigger"
+          className={styles.TabsTrigger}
           value="tab9"
         ></Tabs.Trigger>
       </Tabs.List>
-      <Tabs.Content className="TabsContent" value="tab1">
+      <Tabs.Content className={styles.TabsContent} value="tab1">
         <Dashboard />
       </Tabs.Content>
-      <Tabs.Content className="TabsContent" value="tab2"></Tabs.Content>
-      <Tabs.Content className="TabsContent" value="tab3"></Tabs.Content>
-      <Tabs.Content className="TabsContent" value="tab4"></Tabs.Content>
-      <Tabs.Content className="TabsContent" value="tab5"></Tabs.Content>
-      <Tabs.Content className="TabsContent" value="tab6"></Tabs.Content>
-      <Tabs.Content className="TabsContent" value="tab7"></Tabs.Content>
-      <Tabs.Content className="TabsContent" value="tab8"></Tabs.Content>
+      <Tabs.Content className={styles.TabsContent} value="tab2"></Tabs.Content>
+      <Tabs.Content className={styles.TabsContent} value="tab3"></Tabs.Content>
+      <Tabs.Content className={styles.TabsContent} value="tab4"></Tabs.Content>
+      <Tabs.Content className={styles.TabsContent} value="tab5"></Tabs.Content>
+      <Tabs.Content className={styles.TabsContent} value="tab6"></Tabs.Content>
+      <Tabs.Content className={styles.TabsContent} value="tab7"></Tabs.Content>
+      <Tabs.Content className={styles.TabsContent} value="tab8"></Tabs.Content>
     </Tabs.Root>
   </>
 );

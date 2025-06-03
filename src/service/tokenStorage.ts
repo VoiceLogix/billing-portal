@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const baseURL = "https://onebillapi.fly.dev";
-// export const baseURL = "http://localhost:8080";
+// export const baseURL = "https://onebillapi.fly.dev";
+export const baseURL = "http://localhost:8080";
 export const DEFAULT_SUBSCRIBER_ID = "SR2002";
 
 export const AUTH_URL = `${baseURL}/auth`;

@@ -1,0 +1,128 @@
+button,
+input {
+  box-sizing: border-box;
+}
+.container {
+  background-color: white;
+  width: 100%;
+  overflow: hidden;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.grid2Cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.grid3Cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  height: 32px;
+  box-sizing: border-box;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+  font-size: 14px;
+  color: #00071b7f;
+}
+
+.select {
+  width: 100%;
+  padding: 0px 10px;
+  height: 32px;
+  box-sizing: border-box;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+  font-size: 14px;
+  color: #00071b7f;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.cardOptions {
+  display: flex;
+  gap: 8px;
+}
+
+.cardOption {
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 86px;
+  height: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cardOption input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #dddddd;
+}
+.cardOption input[type="radio"]:checked {
+  border-color: #0088cc;
+  border-width: 5px;
+}
+
+.selectedCard {
+  border-color: #0088cc;
+}
+
+.cardLogo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100;
+}
+
+.submitWrapper {
+  padding-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.submitButton {
+  padding: 8px 12px;
+  text-align: center;
+  background-color: #0088cc;
+  color: white;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.deleteButton {
+  background-color: #f3000d14;
+  color: #ce2c31;
+}

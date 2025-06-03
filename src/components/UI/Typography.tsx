@@ -4,12 +4,15 @@ import { Color, theme } from "../theme";
 const sizeMap = {
   small: "14px",
   medium: "16px",
+  big: "18px",
   large: "20px",
 } as const;
 
 const weightMap = {
+  light: 300,
   normal: 400,
   medium: 500,
+  semibold: 600,
 } as const;
 
 interface TypographyProps {
@@ -19,6 +22,7 @@ interface TypographyProps {
   color?: Color;
   align?: "left" | "center" | "right";
   className?: string;
+  onClick?: () => void;
 }
 
 export const Typography: React.FC<TypographyProps> = ({
@@ -27,6 +31,7 @@ export const Typography: React.FC<TypographyProps> = ({
   weight = "normal",
   color = "primarytext",
   align = "left",
+  onClick,
   className = "",
 }) => {
   const textColor = theme.colors[color];
@@ -40,7 +45,7 @@ export const Typography: React.FC<TypographyProps> = ({
   };
 
   return (
-    <span style={{ ...defaultStyle }} className={className}>
+    <span onClick={onClick} style={{ ...defaultStyle }} className={className}>
       {children}
     </span>
   );
