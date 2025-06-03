@@ -288,13 +288,13 @@ const CardForm = () => {
 
         {/* Submit */}
         <div className={styles.submitWrapper}>
-          <button
+          {/* <button
             type="button"
             onClick={handleSubmit(onSubmit)}
             className={`${styles.submitButton} ${styles.deleteButton}`}
           >
             Delete Method
-          </button>
+          </button> */}
           <button type="submit" className={styles.submitButton}>
             Save Method
           </button>

@@ -63,6 +63,9 @@ importers:
       vite:
         specifier: ^6.3.5
         version: 6.3.5
+      vite-plugin-css-injected-by-js:
+        specifier: ^3.5.2
+        version: 3.5.2(vite@6.3.5)
 
 packages:
 
@@ -1512,6 +1515,11 @@ packages:
     resolution: {integrity: sha512-Rb46I4cGGVBmjamjphe8L/UnvJD+uPPtTkNvX5mZgqdbavhI4EbgIWJiIHXJ8bc/i9EQGPRh4DwEURJ552Do0A==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  vite-plugin-css-injected-by-js@3.5.2:
+    resolution: {integrity: sha512-2MpU/Y+SCZyWUB6ua3HbJCrgnF0KACAsmzOQt1UvRVJCGF6S8xdA3ZUhWcWdM9ivG4I5az8PnQmwwrkC2CAQrQ==}
+    peerDependencies:
+      vite: '>2.0.0-0'
 
   vite@6.3.5:
     resolution: {integrity: sha512-cZn6NDFE7wdTpINgs++ZJ4N49W2vRp8LCKrn3Ob1kYNtOo21vfDoaV5GzBfLU4MovSAB8uNRm4jgzVQZ+mBzPQ==}
@@ -3041,6 +3049,10 @@ snapshots:
   use-sync-external-store@1.5.0(react@19.1.0):
     dependencies:
       react: 19.1.0
+
+  vite-plugin-css-injected-by-js@3.5.2(vite@6.3.5):
+    dependencies:
+      vite: 6.3.5
 
   vite@6.3.5:
     dependencies:
