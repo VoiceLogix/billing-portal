@@ -134,7 +134,7 @@ const CardForm = () => {
               render={({ field }) => (
                 <>
                   {CARD_TYPES.map((type) => (
-                    <div
+                    <label
                       key={type}
                       className={`
                         ${styles.cardOption} 
@@ -145,9 +145,10 @@ const CardForm = () => {
                         value={type}
                         checked={field.value === type}
                         onChange={field.onChange}
+                        className="sr-only"
                       />
                       <CardTypeSVG type={type} />
-                    </div>
+                    </label>
                   ))}
                 </>
               )}

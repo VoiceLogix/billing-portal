@@ -83,19 +83,20 @@ input {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .cardOption input[type="radio"] {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   border: 2px solid #dddddd;
 }
 .cardOption input[type="radio"]:checked {
   border-color: #0088cc;
   border-width: 5px;
-  width: 10px;
-  height: 10px;
+  width: 6px;
+  height: 6px;
 }
 
 .selectedCard {
