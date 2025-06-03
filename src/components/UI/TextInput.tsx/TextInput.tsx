@@ -13,9 +13,6 @@ interface TextInputProps {
   error?: FieldError;
 }
 
-/**
- * A reusable text‐input + label + error message component.
- */
 const TextInput: React.FC<TextInputProps> = ({
   label,
   name,
@@ -27,7 +24,7 @@ const TextInput: React.FC<TextInputProps> = ({
   error,
 }) => {
   return (
-    <div>
+    <div className={styles.textInputContainer}>
       <label htmlFor={name} className={styles.label}>
         {label}
       </label>

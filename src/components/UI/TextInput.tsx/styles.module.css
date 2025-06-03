@@ -1,3 +1,9 @@
+button,
+fieldset,
+input {
+  all: unset;
+}
+
 .label {
   font-size: 14px;
   font-weight: 500;
@@ -6,14 +12,14 @@
   display: block;
 }
 
-.textInput {
-  width: 100% !important;
-  padding: 10px !important;
-  height: 32px !important;
-  box-sizing: border-box !important;
-  border: 1px solid #dddddd !important;
-  border-radius: 4px !important;
-  background-color: #f1f1f1 !important;
-  font-size: 14px !important;
-  color: #00071b7f !important;
+.textInputContainer .textInput {
+  width: 100%;
+  padding: 10px;
+  height: 32px;
+  box-sizing: border-box;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+  font-size: 14px;
+  color: #00071b7f;
 }

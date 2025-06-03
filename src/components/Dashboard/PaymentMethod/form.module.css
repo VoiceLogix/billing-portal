@@ -1,7 +1,10 @@
 button,
+fieldset,
 input {
+  all: unset;
   box-sizing: border-box;
 }
+
 .container {
   background-color: white;
   width: 100%;
@@ -91,6 +94,8 @@ input {
 .cardOption input[type="radio"]:checked {
   border-color: #0088cc;
   border-width: 5px;
+  width: 10px;
+  height: 10px;
 }
 
 .selectedCard {
