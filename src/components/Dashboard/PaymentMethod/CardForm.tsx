@@ -86,7 +86,6 @@ const CardForm = () => {
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        {/* First & Last Name (use TextInput) */}
         <div className={styles.grid2Cols}>
           <TextInput
             label="First Name*"
@@ -109,7 +108,6 @@ const CardForm = () => {
           />
         </div>
 
-        {/* Email */}
         <TextInput
           label="Email*"
           name="email"
@@ -127,7 +125,6 @@ const CardForm = () => {
           error={errors.email}
         />
 
-        {/* Card Type (unchanged) */}
         <div>
           <label className={styles.label}>Card Type</label>
           <div className={styles.cardOptions}>
@@ -159,9 +156,7 @@ const CardForm = () => {
           </div>
         </div>
 
-        {/* Card Details (Card Number, Expiry Date, CVV) */}
         <div className={styles.grid3Cols}>
-          {/* Card Number (still using Controller for formatting) */}
           <div>
             <label className={styles.label}>Card Number*</label>
             <Controller
