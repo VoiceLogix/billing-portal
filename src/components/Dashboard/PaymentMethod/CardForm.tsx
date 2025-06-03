@@ -1,6 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import styles from "./form.module.css";
 import { CardTypeSVG, PaymentCardType } from "../../SVG/CardTypeSVG";
+import TextInput from "../../UI/TextInput.tsx/TextInput";
 
 type FormValues = {
   firstName: string;
@@ -85,59 +86,48 @@ const CardForm = () => {
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        {/* First & Last Name */}
+        {/* First & Last Name (use TextInput) */}
         <div className={styles.grid2Cols}>
-          <div>
-            <label className={styles.label}>First Name*</label>
-            <input
-              {...register("firstName", { required: "First name is required" })}
-              type="text"
-              placeholder="John"
-              className={styles.input}
-              autoComplete="given-name"
-            />
-            {errors.firstName && (
-              <p className={styles.error}>{errors.firstName.message}</p>
-            )}
-          </div>
+          <TextInput
+            label="First Name*"
+            name="firstName"
+            register={register}
+            rules={{ required: "First name is required" }}
+            placeholder="John"
+            autoComplete="given-name"
+            error={errors.firstName}
+          />
 
-          <div>
-            <label className={styles.label}>Last Name*</label>
-            <input
-              {...register("lastName", { required: "Last name is required" })}
-              type="text"
-              placeholder="Doe"
-              className={styles.input}
-              autoComplete="family-name"
-            />
-            {errors.lastName && (
-              <p className={styles.error}>{errors.lastName.message}</p>
-            )}
-          </div>
+          <TextInput
+            label="Last Name*"
+            name="lastName"
+            register={register}
+            rules={{ required: "Last name is required" }}
+            placeholder="Doe"
+            autoComplete="family-name"
+            error={errors.lastName}
+          />
         </div>
 
         {/* Email */}
-        <div>
-          <label className={styles.label}>Email*</label>
-          <input
-            {...register("email", {
-              required: "Email is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address",
-              },
-            })}
-            type="email"
-            placeholder="example@company.com"
-            className={styles.input}
-            autoComplete="email"
-          />
-          {errors.email && (
-            <p className={styles.error}>{errors.email.message}</p>
-          )}
-        </div>
+        <TextInput
+          label="Email*"
+          name="email"
+          register={register}
+          rules={{
+            required: "Email is required",
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: "Invalid email address",
+            },
+          }}
+          type="email"
+          placeholder="example@company.com"
+          autoComplete="email"
+          error={errors.email}
+        />
 
-        {/* Card Type */}
+        {/* Card Type (unchanged) */}
         <div>
           <label className={styles.label}>Card Type</label>
           <div className={styles.cardOptions}>
@@ -149,9 +139,9 @@ const CardForm = () => {
                   {CARD_TYPES.map((type) => (
                     <label
                       key={type}
-                      className={`${styles.cardOption} ${
-                        field.value === type ? styles.selectedCard : ""
-                      }`}
+                      className={`
+                        ${styles.cardOption} 
+                        ${field.value === type ? styles.selectedCard : ""}`}
                     >
                       <input
                         type="radio"
@@ -169,9 +159,9 @@ const CardForm = () => {
           </div>
         </div>
 
-        {/* Card Details */}
+        {/* Card Details (Card Number, Expiry Date, CVV) */}
         <div className={styles.grid3Cols}>
-          {/* Card Number */}
+          {/* Card Number (still using Controller for formatting) */}
           <div>
             <label className={styles.label}>Card Number*</label>
             <Controller
@@ -194,7 +184,7 @@ const CardForm = () => {
                   {...field}
                   type="text"
                   placeholder="0000 0000 0000 0000"
-                  maxLength={selectedRules.maxLength + 3} // spaces
+                  maxLength={selectedRules.maxLength + 3}
                   className={styles.input}
                   autoComplete="cc-number"
                   onChange={(e) =>
@@ -288,13 +278,6 @@ const CardForm = () => {
 
         {/* Submit */}
         <div className={styles.submitWrapper}>
-          {/* <button
-            type="button"
-            onClick={handleSubmit(onSubmit)}
-            className={`${styles.submitButton} ${styles.deleteButton}`}
-          >
-            Delete Method
-          </button> */}
           <button type="submit" className={styles.submitButton}>
             Save Method
           </button>

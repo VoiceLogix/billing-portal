@@ -1,12 +1,5 @@
 @import "@radix-ui/colors/black-alpha.css";
 
-/* reset */
-button,
-fieldset,
-input {
-  all: unset;
-}
-
 .DialogOverlay {
   background-color: var(--black-a9);
   position: fixed;
