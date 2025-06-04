@@ -1,12 +1,11 @@
 import { PaymentGateway } from "../types/PaymentGateWayInterface";
 import { axiosInstance } from "./axiosInstance";
 import { useQuery } from "@tanstack/react-query";
-import { DEFAULT_SUBSCRIBER_ID } from "./tokenStorage";
 
-export async function getPaymentGateWayUrl() {
+export async function getPaymentGateWayUrl(accountNumber: string) {
   try {
     const response = await axiosInstance.get(
-      `/paymentGateWayUrl/${DEFAULT_SUBSCRIBER_ID}`,
+      `/paymentGateWayUrl/${accountNumber}`,
     );
     return response?.data as PaymentGateway;
   } catch (error) {
@@ -15,9 +14,9 @@ export async function getPaymentGateWayUrl() {
   }
 }
 
-export function useGetPaymentGateWayUrl() {
+export function useGetPaymentGateWayUrl(accountNumber: string) {
   return useQuery({
     queryKey: ["paymentGatewayUrl"],
-    queryFn: () => getPaymentGateWayUrl(),
+    queryFn: () => getPaymentGateWayUrl(accountNumber),
   });
 }

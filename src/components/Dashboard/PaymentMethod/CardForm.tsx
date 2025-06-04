@@ -79,9 +79,7 @@ const CardForm = () => {
   const selectedCardType = watch("cardType");
   const selectedRules = cardValidationRules[selectedCardType];
 
-  const onSubmit = (data: FormValues) => {
-    console.log("Form data:", data);
-  };
+  const onSubmit = (data: FormValues) => {};
 
   return (
     <div className={styles.container}>

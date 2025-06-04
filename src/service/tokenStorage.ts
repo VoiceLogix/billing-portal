@@ -1,67 +1,97 @@
 import axios from "axios";
 
 export const baseURL = "https://onebillapi.fly.dev";
-// export const baseURL = "http://localhost:8080";
-export const DEFAULT_SUBSCRIBER_ID = "SR2002";
-
+// export const baseURL = "http://localhost:8085";
 export const AUTH_URL = `${baseURL}/auth`;
 
-export function getNSToken(): string | null {
-  console.log("import.meta.env.VITE_NODE_ENV:", import.meta.env.VITE_NODE_ENV);
-
-  if (import.meta.env.VITE_NODE_ENV === "development") {
-    return import.meta.env.VITE_NS_TOKEN || null;
-  }
-  console.log("Using production environment for ns_t token");
-  console.log("localStorage ns_t:", localStorage.getItem("ns_t"));
-
-  return localStorage.getItem("ns_t");
-}
+const LS_KEY_USER_AUTH = "onebill_user_auth";
+const LS_KEY_NS_TOKEN = "ns_t";
+const ENV_NS_TOKEN = "VITE_NS_TOKEN";
 
 export interface SessionTokens {
   jsessionId: string;
   csrfToken: string;
 }
 
-export async function getSessionTokens(): Promise<SessionTokens> {
-  const jsessionId = localStorage.getItem("JSESSIONID");
-  const csrfToken = localStorage.getItem("CSRF-TOKEN");
+function loadCachedAuth(nsToken: string | null): SessionTokens | null {
+  if (!nsToken) return null;
+  const raw = localStorage.getItem(LS_KEY_USER_AUTH);
+  if (!raw) return null;
 
-  if (jsessionId && csrfToken) {
-    return { jsessionId, csrfToken };
+  let parsed: any;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    localStorage.removeItem(LS_KEY_USER_AUTH);
+    return null;
   }
 
-  // no tokens — authenticate
+  if (
+    typeof parsed !== "object" ||
+    parsed.nsToken !== nsToken ||
+    typeof parsed.jsessionId !== "string" ||
+    typeof parsed.csrfToken !== "string"
+  ) {
+    return null;
+  }
+
+  return {
+    jsessionId: parsed.jsessionId,
+    csrfToken: parsed.csrfToken,
+  };
+}
+
+export function getNsToken(): string | null {
+  const mode = import.meta.env.VITE_NODE_ENV;
+  if (mode === "development") {
+    return (import.meta.env[ENV_NS_TOKEN] as string) || null;
+  }
+  return localStorage.getItem(LS_KEY_NS_TOKEN);
+}
+
+export async function getSessionTokens(): Promise<SessionTokens> {
+  const nsToken = getNsToken();
+  const cached = loadCachedAuth(nsToken);
+  if (cached) {
+    console.log("Using cached session tokens:", cached);
+    return cached;
+  }
   return authenticateUser();
 }
 
 export async function authenticateUser(): Promise<SessionTokens> {
-  const onebillSubscriberId =
-    localStorage.getItem("onebillSubscriberId") || DEFAULT_SUBSCRIBER_ID;
-
-  const nsToken = getNSToken();
+  const nsToken = getNsToken();
   if (!nsToken) {
-    throw new Error("Missing ns_t (OneBill API) token");
+    throw new Error("Missing NS token (ns_t) in localStorage or environment");
   }
 
   try {
-    const { data } = await axios.get<SessionTokens>(
-      `${AUTH_URL}/${onebillSubscriberId}`,
+    const response = await axios.get<{ jsessionId: string; csrfToken: string }>(
+      AUTH_URL,
       {
         headers: { Authorization: `Bearer ${nsToken}` },
       },
     );
+    const data = response.data;
 
-    const { jsessionId, csrfToken } = data;
-    if (!jsessionId || !csrfToken) {
-      throw new Error("Auth response missing jsessionId or csrfToken");
+    if (!data.jsessionId || !data.csrfToken) {
+      throw new Error("Received incomplete session tokens from API");
     }
 
-    localStorage.setItem("JSESSIONID", jsessionId);
-    localStorage.setItem("CSRF-TOKEN", csrfToken);
-    return data;
+    const toStore = {
+      nsToken,
+      jsessionId: data.jsessionId,
+      csrfToken: data.csrfToken,
+    };
+    localStorage.setItem(LS_KEY_USER_AUTH, JSON.stringify(toStore));
+
+    return {
+      jsessionId: data.jsessionId,
+      csrfToken: data.csrfToken,
+    };
   } catch (err: any) {
     console.error("authenticateUser error:", err);
-    throw new Error("Authentication failed; please log in again.");
+    localStorage.removeItem(LS_KEY_USER_AUTH);
+    throw new Error("Authentication failed; server returned an error.");
   }
 }

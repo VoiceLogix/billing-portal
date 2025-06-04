@@ -1,5 +1,3 @@
-import { Box } from "../UI/Box";
-
 export const LoadingSVG = () => (
   <svg
     width="40"

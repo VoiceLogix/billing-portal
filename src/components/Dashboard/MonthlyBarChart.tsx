@@ -26,8 +26,6 @@ interface MonthlyBarChartProps {
 }
 
 const MonthlyBarChart = ({ invoiceHistory }: MonthlyBarChartProps) => {
-  console.log("invoiceHistory", invoiceHistory);
-
   const chartRef = useRef<HTMLCanvasElement>(null);
   const chartInstance = useRef<Chart.Chart | null>(null);
 
@@ -68,7 +66,6 @@ const MonthlyBarChart = ({ invoiceHistory }: MonthlyBarChartProps) => {
       data[monthIndex].payment += parseFloat(item.paidAmount);
     }
   });
-  console.log("Processed data for chart:", data);
 
   useEffect(() => {
     if (!chartRef.current) return;

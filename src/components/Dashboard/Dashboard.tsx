@@ -4,12 +4,12 @@ import { Box } from "../UI/Box";
 import { DueAmount } from "./DueAmount";
 import { BillingCycle } from "./BillingCycle";
 import { AccountNumber } from "./AccountNumber";
-import { LoadingSVG } from "../SVG/LoadingSVG";
 import { useGetAccountInfo } from "../../service/getAccountInfo";
 import { useGetInvoiceHistory } from "../../service/getInvoiceHistory";
 import { Typography } from "../UI/Typography";
 import { InvoiceAndPayment } from "./InvoiceAndPayment";
 import { useGetAgingInvoices } from "../../service/getAgingInvoices";
+import { Loading } from "../UI/Loading";
 
 export const Dashboard = () => {
   const {
@@ -33,17 +33,7 @@ export const Dashboard = () => {
   const hasError =
     acoountInfoError || invoiceHistoryError || agingInvoicesError;
   if (isFetching) {
-    return (
-      <Box
-        width="100%"
-        height="500px"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <LoadingSVG />
-      </Box>
-    );
+    return <Loading />;
   }
   if (hasError) {
     return (

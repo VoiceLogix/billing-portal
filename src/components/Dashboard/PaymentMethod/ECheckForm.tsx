@@ -43,7 +43,6 @@ const ECheckForm = () => {
   const onSubmit = (data: FormValues) => {
     // Strip spaces from routingNumber before sending
     const rawRouting = data.routingNumber.replace(/\D/g, "");
-    console.log("E‐Check Data:", { ...data, routingNumber: rawRouting });
   };
 
   return (

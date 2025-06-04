@@ -1,6 +1,5 @@
 import { useGetAccountSummaryCounts } from "../../service/getAccountSummaryCounts";
 import { useGetProfileDetails } from "../../service/getProfileDetails";
-import { DEFAULT_SUBSCRIBER_ID } from "../../service/tokenStorage";
 import { BriefcaseSVG } from "../SVG/BriefcaseSVG";
 import { Box } from "../UI/Box";
 import { Typography } from "../UI/Typography";
@@ -18,7 +17,7 @@ export const AccountNumber = () => {
           <Box display="flex" flexDirection="column">
             <Typography color="secondarytext">Account Number</Typography>
             <Typography size="large" weight="medium">
-              {DEFAULT_SUBSCRIBER_ID}
+              {profileDetails?.accountNumber}
             </Typography>
           </Box>
           <Box>
