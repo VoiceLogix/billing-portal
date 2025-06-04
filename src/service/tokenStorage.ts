@@ -53,7 +53,7 @@ export async function getSessionTokens(): Promise<SessionTokens> {
   const nsToken = getNsToken();
   const cached = loadCachedAuth(nsToken);
   if (cached) {
-    console.log("Using cached session tokens:", cached);
+    console.log("Using cached session tokens");
     return cached;
   }
   return authenticateUser();
@@ -61,6 +61,11 @@ export async function getSessionTokens(): Promise<SessionTokens> {
 
 export async function authenticateUser(): Promise<SessionTokens> {
   const nsToken = getNsToken();
+  const cached = loadCachedAuth(nsToken);
+  if (cached) {
+    console.log("Using cached session tokens");
+    return cached;
+  }
   if (!nsToken) {
     throw new Error("Missing NS token (ns_t) in localStorage or environment");
   }
