@@ -58,7 +58,7 @@ const MonthlyBarChart = ({ invoiceHistory }: MonthlyBarChartProps) => {
   );
 
   // Step 2: Fill actual data into matching months
-  invoiceHistory.invoiceAmounts.forEach((item) => {
+  invoiceHistory?.invoiceAmounts?.forEach((item) => {
     const date = new Date(item.finalizedDate);
     const monthIndex = date.getMonth();
     if (monthIndex <= currentMonthIndex) {

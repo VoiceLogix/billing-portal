@@ -27,6 +27,7 @@ export const Dashboard = () => {
     isLoading: agingInvoicesLoading,
     isError: agingInvoicesError,
   } = useGetAgingInvoices();
+  console.log("agingInvoices", agingInvoices);
 
   const isFetching =
     accountInfoLoading || invoiceHistoryLoading || agingInvoicesLoading;

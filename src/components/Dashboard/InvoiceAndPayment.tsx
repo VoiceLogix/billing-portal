@@ -65,7 +65,7 @@ export const InvoiceAndPayment = ({
           <Box display="flex" flexDirection="column">
             <Typography color="secondarytext">Total Due</Typography>
             <Typography size="large" weight="medium">
-              {formatToUSD(agingInvoices.agingInvoiceDetails.notDueYet ?? 0)}
+              {formatToUSD(agingInvoices?.agingInvoiceDetails?.notDueYet ?? 0)}
             </Typography>
           </Box>
         </Box>

@@ -1,6 +1,7 @@
 import { Tabs } from "radix-ui";
 import styles from "./styles.module.css";
 import { Dashboard } from "../Dashboard/Dashboard";
+import Quotes from "../Quotes/Quotes";
 
 const BillingTabs = () => (
   <>
@@ -39,7 +40,9 @@ const BillingTabs = () => (
       <Tabs.Content className={styles.TabsContent} value="tab1">
         <Dashboard />
       </Tabs.Content>
-      <Tabs.Content className={styles.TabsContent} value="tab2"></Tabs.Content>
+      <Tabs.Content className={styles.TabsContent} value="tab2">
+        <Quotes />
+      </Tabs.Content>
       <Tabs.Content className={styles.TabsContent} value="tab3"></Tabs.Content>
       <Tabs.Content className={styles.TabsContent} value="tab4"></Tabs.Content>
       <Tabs.Content className={styles.TabsContent} value="tab5"></Tabs.Content>
