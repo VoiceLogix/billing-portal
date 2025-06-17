@@ -2,27 +2,30 @@ import { useState } from "react";
 import Model from "../UI/Model/Model";
 import { Box } from "../UI/Box";
 import { Typography } from "../UI/Typography";
-import { useGetOrderDetails } from "../../service/getOrderdetails";
 import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 import { formatDate } from "../../utils/formatDate";
-import styles from "./QuoteTable.module.css";
+import styles from "./BillingTable.module.css";
 import { getStatusClass } from "./utils";
-import { QuoteDetailsTable } from "./QuoteDetailsTable";
+import { BillingDetailsTable } from "./BillingDetailsTable";
 import { Button } from "../UI/Button";
+import { useGetOrderDetails } from "../../service/getOrderDetails";
+import { BillingType } from "./BillingListing";
 
-export const QuoteDetails = ({
+export const BillingDetails = ({
   orderId,
-  setQuoteId,
+  setSelectedId,
+  type,
 }: {
   orderId: string;
-  setQuoteId: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedId: React.Dispatch<React.SetStateAction<string>>;
+  type: BillingType;
 }) => {
   const [open, setOpen] = useState(true);
 
   const handleClose = () => {
     setOpen(false);
-    setQuoteId(null);
+    setSelectedId(null);
   };
 
   const {
@@ -32,20 +35,21 @@ export const QuoteDetails = ({
   } = useGetOrderDetails(orderId);
 
   const order = orderDetails?.clientOrderDetails;
+
+  const typeWithoutS = type.endsWith("s") ? type.slice(0, -1) : type;
   return (
     <Model
       open={open}
       handleClose={handleClose}
-      title="Quote details"
+      title={`${typeWithoutS} Details`}
       width="1000px"
-      subtitle="View the details of the quote"
     >
       {order && (
         <Box marginTop="24px">
           <Box display="flex" gap="100px">
             <Box display="flex" flexDirection="column" gap="10px">
               <Box display="flex" gap="20px">
-                <Typography>Quote ID:</Typography>
+                <Typography>{typeWithoutS} ID:</Typography>
                 <Typography weight="semibold">{order.orderId}</Typography>
               </Box>
               <Box display="flex" gap="32px">
@@ -81,7 +85,7 @@ export const QuoteDetails = ({
             flexDirection="column"
             gap="10px"
           >
-            <QuoteDetailsTable order={order} />
+            <BillingDetailsTable order={order} />
             <Box display="flex" justifyContent="flex-end" marginTop="20px">
               <Button
                 onClick={handleClose}

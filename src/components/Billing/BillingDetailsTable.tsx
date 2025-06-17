@@ -3,9 +3,9 @@ import { formatDate } from "../../utils/formatDate";
 import { formatToUSD } from "../../utils/formatToUSD";
 import { Box } from "../UI/Box";
 import { Typography } from "../UI/Typography";
-import styles from "./QuoteTable.module.css";
+import styles from "./BillingTable.module.css";
 
-export const QuoteDetailsTable = ({ order }: { order: OrderDetails }) => {
+export const BillingDetailsTable = ({ order }: { order: OrderDetails }) => {
   const orderList = order.clientOrderElementDetailsList;
 
   const tableHeaders = [

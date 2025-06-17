@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import styles from "./QuoteTable.module.css";
+import styles from "./BillingTable.module.css";
 import { ArrowDownFilled } from "../SVG/ArrowDownFilled";
 import {
   ClientOrderInfo,
@@ -8,6 +8,7 @@ import {
 import { formatDate } from "../../utils/formatDate";
 import { formatToUSD } from "../../utils/formatToUSD";
 import { getStatusClass } from "./utils";
+import { BillingType } from "./BillingListing";
 
 type SortKey = keyof Pick<
   ClientOrderInfo,
@@ -20,27 +21,28 @@ type SortKey = keyof Pick<
 >;
 type SortOrder = "asc" | "desc";
 
-interface QuoteTableProps {
+interface BillingTableProps {
   searchTerm: string;
-  quoteListing: QuoteListingInterface;
-  setSelectedQuoteId: (id: string | null) => void;
+  billingListing: QuoteListingInterface;
+  setSelectedId: (id: string | null) => void;
+  type: BillingType;
 }
 
-const QuoteTable: React.FC<QuoteTableProps> = ({
+const BillingTable: React.FC<BillingTableProps> = ({
   searchTerm,
-  quoteListing,
-  setSelectedQuoteId,
+  billingListing,
+  setSelectedId,
 }) => {
   const [sortKey, setSortKey] = useState<SortKey>("orderNumber");
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
-  const [quotes] = useState(quoteListing.clientOrderInfoList);
+  const [orders] = useState(billingListing.clientOrderInfoList);
 
   const filtered = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
-    if (!term) return quotes;
+    if (!term) return orders;
 
-    return quotes.filter(
+    return orders.filter(
       ({
         orderStatus,
         orderNumber,
@@ -54,7 +56,7 @@ const QuoteTable: React.FC<QuoteTableProps> = ({
           orderStatus.toLowerCase().includes(term) ||
           orderAmount.toString().includes(term) ||
           taxAmount.toString().includes(term) ||
-          stateString.toLowerCase().includes(term) ||
+          stateString?.toLowerCase()?.includes(term) ||
           new Date(createdDate)
             .toLocaleDateString()
             .toLowerCase()
@@ -62,7 +64,7 @@ const QuoteTable: React.FC<QuoteTableProps> = ({
         );
       },
     );
-  }, [searchTerm, quotes]);
+  }, [searchTerm, orders]);
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
@@ -89,7 +91,7 @@ const QuoteTable: React.FC<QuoteTableProps> = ({
   };
 
   const handleQuoteClick = (id: string) => {
-    setSelectedQuoteId(id);
+    setSelectedId(id);
   };
 
   return (
@@ -148,10 +150,10 @@ const QuoteTable: React.FC<QuoteTableProps> = ({
               <td>
                 <span
                   className={`${styles["status-badge"]} ${getStatusClass(
-                    q.stateString,
+                    q?.stateString,
                   )}`}
                 >
-                  {q.stateString}
+                  {q.stateString || "N/A"}
                 </span>
               </td>
             </tr>
@@ -167,4 +169,4 @@ const QuoteTable: React.FC<QuoteTableProps> = ({
   );
 };
 
-export default QuoteTable;
+export default BillingTable;
