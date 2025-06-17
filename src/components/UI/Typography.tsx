@@ -2,6 +2,7 @@ import React from "react";
 import { Color, theme } from "../theme";
 
 const sizeMap = {
+  xsmall: "12px",
   small: "14px",
   medium: "16px",
   big: "18px",

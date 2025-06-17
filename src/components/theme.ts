@@ -10,6 +10,8 @@ export const theme = {
     warningText: "#D88500",
     gray: "#DFDFDF",
     lightGray: "#F1F1F1",
+    neutral: "#60646C",
+    bgNeutral: "#0000330F",
   },
 };
 

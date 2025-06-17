@@ -17,7 +17,7 @@ input {
   padding: 10px;
   height: 32px;
   box-sizing: border-box;
-  border: 1px solid #dddddd;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   background-color: #f1f1f1;
   font-size: 14px;

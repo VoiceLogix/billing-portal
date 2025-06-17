@@ -2,19 +2,37 @@ import * as React from "react";
 import { Dialog } from "radix-ui";
 import styles from "./styles.module.css";
 import { CloseSVG } from "../../SVG/CloseSVG";
+import { Typography } from "../Typography";
+import { Box } from "../Box";
 
 interface ModelProps {
   open: boolean;
   handleClose: () => void;
   children: React.ReactNode;
+  title?: string;
+  subtitle?: string;
+  width?: string | number;
 }
 
-const Model = ({ open, handleClose, children }: ModelProps) => {
+const Model = ({
+  open,
+  handleClose,
+  children,
+  title,
+  subtitle,
+  width = "600px",
+}: ModelProps) => {
   return (
     <Dialog.Root open={open}>
       <Dialog.Portal>
         <Dialog.Overlay className={styles.DialogOverlay} />
-        <Dialog.Content className={styles.DialogContent}>
+        <Dialog.Content className={styles.DialogContent} style={{ width }}>
+          <Box display="flex" flexDirection="column">
+            <Typography size="big" weight="semibold">
+              {title}
+            </Typography>
+            <Typography color="secondarytext">{subtitle}</Typography>
+          </Box>
           {children}
           <Dialog.Close asChild>
             <button

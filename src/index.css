@@ -4,7 +4,9 @@
   --heading-font-family: "Inter", sans-serif;
   --color-text-black: #000000;
   --color-text-gray: #6a6a6a;
+  --color-light-gray: #f1f1f1;
   --color-text-blue: #0f88cc;
+  --color-accent: #0088cc;
   --color-border: #dddddd;
 }
 

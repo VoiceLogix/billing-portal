@@ -41,11 +41,14 @@ const MonthlyDonutChart = ({ agingInvoices }: MonthlyDonutChartProps) => {
       .replace(/([A-Z])/g, " $1")
       .replace(/^./, (str) => str.toUpperCase());
   }
-  let data = Object?.entries(agingInvoiceDetails).map(([key, value]) => ({
-    label: formatLabel(key),
-    value,
-    color: colorMap[key as keyof typeof agingInvoiceDetails],
-  }));
+
+  let data = agingInvoiceDetails
+    ? Object?.entries(agingInvoiceDetails).map(([key, value]) => ({
+        label: formatLabel(key),
+        value,
+        color: colorMap[key as keyof typeof agingInvoiceDetails],
+      }))
+    : [];
 
   const total = data.reduce((sum, item) => sum + item.value, 0);
 

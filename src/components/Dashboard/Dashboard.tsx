@@ -10,6 +10,7 @@ import { Typography } from "../UI/Typography";
 import { InvoiceAndPayment } from "./InvoiceAndPayment";
 import { useGetAgingInvoices } from "../../service/getAgingInvoices";
 import { Loading } from "../UI/Loading";
+import { Error } from "../UI/Error";
 
 export const Dashboard = () => {
   const {
@@ -27,7 +28,6 @@ export const Dashboard = () => {
     isLoading: agingInvoicesLoading,
     isError: agingInvoicesError,
   } = useGetAgingInvoices();
-  console.log("agingInvoices", agingInvoices);
 
   const isFetching =
     accountInfoLoading || invoiceHistoryLoading || agingInvoicesLoading;
@@ -37,17 +37,7 @@ export const Dashboard = () => {
     return <Loading />;
   }
   if (hasError) {
-    return (
-      <Box
-        width="100%"
-        height="500px"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Typography color="errorText">Error loading data</Typography>
-      </Box>
-    );
+    return <Error />;
   }
   return (
     <Box display="flex" flexDirection="column" gap="16px">

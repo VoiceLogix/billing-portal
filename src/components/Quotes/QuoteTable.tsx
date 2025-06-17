@@ -1,53 +1,95 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import styles from "./QuoteTable.module.css";
 import { ArrowDownFilled } from "../SVG/ArrowDownFilled";
+import {
+  ClientOrderInfo,
+  QuoteListingInterface,
+} from "../../types/QuoteListingInterface";
+import { formatDate } from "../../utils/formatDate";
+import { formatToUSD } from "../../utils/formatToUSD";
+import { getStatusClass } from "./utils";
 
-interface Quote {
-  id: string;
-  type: string;
-  activationDate: string;
-  totalAmount: number;
-  tax: number;
-  status: string;
+type SortKey = keyof Pick<
+  ClientOrderInfo,
+  | "orderNumber"
+  | "createdDate"
+  | "orderAmount"
+  | "taxAmount"
+  | "stateString"
+  | "orderStatus"
+>;
+type SortOrder = "asc" | "desc";
+
+interface QuoteTableProps {
+  searchTerm: string;
+  quoteListing: QuoteListingInterface;
+  setSelectedQuoteId: (id: string | null) => void;
 }
 
-const QuoteTable: React.FC = () => {
-  const [quotes] = useState<Quote[]>([
-    {
-      id: "QU1002",
-      type: "New",
-      activationDate: "May 1, 2025",
-      totalAmount: 560.4,
-      tax: 31.5,
-      status: "Cancelled",
-    },
-    {
-      id: "QU1003",
-      type: "New",
-      activationDate: "May 1, 2025",
-      totalAmount: 105.34,
-      tax: 34.22,
-      status: "Cancelled",
-    },
-    {
-      id: "QU1005",
-      type: "In Progress",
-      activationDate: "May 1, 2025",
-      totalAmount: 105.34,
-      tax: 34.22,
-      status: "Active",
-    },
-  ]);
+const QuoteTable: React.FC<QuoteTableProps> = ({
+  searchTerm,
+  quoteListing,
+  setSelectedQuoteId,
+}) => {
+  const [sortKey, setSortKey] = useState<SortKey>("orderNumber");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 
-  const getStatusClass = (status: string): string => {
-    switch (status.toLowerCase()) {
-      case "cancelled":
-        return styles["status-cancelled"];
-      case "active":
-        return styles["status-active"];
-      default:
-        return styles["status-default"];
-    }
+  const [quotes] = useState(quoteListing.clientOrderInfoList);
+
+  const filtered = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return quotes;
+
+    return quotes.filter(
+      ({
+        orderStatus,
+        orderNumber,
+        taxAmount,
+        orderAmount,
+        createdDate,
+        stateString,
+      }) => {
+        return (
+          orderNumber.toLowerCase().includes(term) ||
+          orderStatus.toLowerCase().includes(term) ||
+          orderAmount.toString().includes(term) ||
+          taxAmount.toString().includes(term) ||
+          stateString.toLowerCase().includes(term) ||
+          new Date(createdDate)
+            .toLocaleDateString()
+            .toLowerCase()
+            .includes(term)
+        );
+      },
+    );
+  }, [searchTerm, quotes]);
+
+  const sorted = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      const aVal = a[sortKey];
+      const bVal = b[sortKey];
+
+      if (typeof aVal === "number" && typeof bVal === "number") {
+        return sortOrder === "asc" ? aVal - bVal : bVal - aVal;
+      }
+
+      const aStr = String(aVal).toLowerCase();
+      const bStr = String(bVal).toLowerCase();
+      return sortOrder === "asc"
+        ? aStr.localeCompare(bStr)
+        : bStr.localeCompare(aStr);
+    });
+  }, [filtered, sortKey, sortOrder]);
+
+  const handleSort = (key: SortKey) => {
+    setSortKey(key);
+    setSortOrder((prev) =>
+      prev === "asc" && key === sortKey ? "desc" : "asc",
+    );
+  };
+
+  const handleQuoteClick = (id: string) => {
+    setSelectedQuoteId(id);
   };
 
   return (
@@ -55,67 +97,70 @@ const QuoteTable: React.FC = () => {
       <table className={styles["quote-table"]}>
         <thead>
           <tr>
-            <th className={styles.sortable}>
-              <div className={styles["header-content"]}>
-                Quote number
-                <ArrowDownFilled />
-              </div>
-            </th>
-            <th className={styles.sortable}>
-              <div className={styles["header-content"]}>
-                Quote type
-                <ArrowDownFilled />
-              </div>
-            </th>
-            <th className={styles.sortable}>
-              <div className={styles["header-content"]}>
-                Activation date
-                <ArrowDownFilled />
-              </div>
-            </th>
-            <th className={styles.sortable}>
-              <div className={styles["header-content"]}>
-                Total amount
-                <ArrowDownFilled />
-              </div>
-            </th>
-            <th className={styles.sortable}>
-              <div className={styles["header-content"]}>
-                Tax
-                <ArrowDownFilled />
-              </div>
-            </th>
-            <th className={styles.sortable}>
-              <div className={styles["header-content"]}>
-                Status
-                <ArrowDownFilled />
-              </div>
-            </th>
+            {(
+              [
+                "orderNumber",
+                "orderStatus",
+                "createdDate",
+                "orderAmount",
+                "taxAmount",
+                "stateString",
+              ] as SortKey[]
+            ).map((key) => (
+              <th key={key} className={styles.sortable}>
+                <div
+                  className={styles["header-content"]}
+                  onClick={() => handleSort(key)}
+                >
+                  {key === "orderNumber" && "Quote number"}
+                  {key === "orderStatus" && "Quote type"}
+                  {key === "createdDate" && "Activation date"}
+                  {key === "orderAmount" && "Total amount"}
+                  {key === "taxAmount" && "Tax"}
+                  {key === "stateString" && "Status"}
+
+                  <ArrowDownFilled
+                    rotateUp={sortKey === key && sortOrder === "asc"}
+                  />
+                </div>
+              </th>
+            ))}
           </tr>
         </thead>
+
         <tbody>
-          {quotes.map((quote) => (
-            <tr key={quote.id}>
+          {sorted.map((q) => (
+            <tr key={q.orderNumber}>
               <td>
-                <a href="#" className={styles["quote-link"]}>
-                  {quote.id}
-                </a>
+                <span
+                  onClick={() => handleQuoteClick(q.orderNumber)}
+                  className={styles["quote-link"]}
+                >
+                  {q.orderNumber}
+                </span>
               </td>
-              <td>{quote.type}</td>
-              <td>{quote.activationDate}</td>
-              <td>${quote.totalAmount.toFixed(2)}</td>
-              <td>${quote.tax.toFixed(2)}</td>
+              <td>{q.orderStatus}</td>
+              <td>{formatDate(q.createdDate)}</td>
+              <td className={styles["order-amount"]}>
+                {formatToUSD(q.orderAmount)}
+              </td>
+              <td>{formatToUSD(q.taxAmount)}</td>
               <td>
                 <span
                   className={`${styles["status-badge"]} ${getStatusClass(
-                    quote.status,
+                    q.stateString,
                   )}`}
                 >
-                  {quote.status}
+                  {q.stateString}
                 </span>
               </td>
             </tr>
           ))}
+          {sorted.length === 0 && (
+            <tr className={styles["no-quotes"]}>
+              <td colSpan={6}>No quotes</td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>

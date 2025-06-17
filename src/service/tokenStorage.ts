@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const baseURL = "https://onebillapi.fly.dev";
-// export const baseURL = "http://localhost:8085";
+// export const baseURL = "https://onebillapi.fly.dev";
+export const baseURL = "http://localhost:8085";
 export const AUTH_URL = `${baseURL}/auth`;
 
 const LS_KEY_USER_AUTH = "onebill_user_auth";
