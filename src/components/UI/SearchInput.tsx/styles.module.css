@@ -15,7 +15,6 @@ input {
   border: 1px solid var(--color-border);
   border-radius: 4px;
   font-size: 14px;
-  color: #00051d74;
 }
 
 .searchInputContainer .searchInput:focus {

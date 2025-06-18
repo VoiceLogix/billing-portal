@@ -2,6 +2,7 @@ import { Tabs } from "radix-ui";
 import styles from "./styles.module.css";
 import { Dashboard } from "../Dashboard/Dashboard";
 import BillingListing, { BillingType } from "../Billing/BillingListing";
+import { Payments } from "../Payments/Payments";
 
 const BillingTabs = () => (
   <>
@@ -47,7 +48,9 @@ const BillingTabs = () => (
         <BillingListing type={BillingType.Orders} />
       </Tabs.Content>
       <Tabs.Content className={styles.TabsContent} value="tab4"></Tabs.Content>
-      <Tabs.Content className={styles.TabsContent} value="tab5"></Tabs.Content>
+      <Tabs.Content className={styles.TabsContent} value="tab5">
+        <Payments />
+      </Tabs.Content>
       <Tabs.Content className={styles.TabsContent} value="tab6"></Tabs.Content>
       <Tabs.Content className={styles.TabsContent} value="tab7"></Tabs.Content>
       <Tabs.Content className={styles.TabsContent} value="tab8"></Tabs.Content>

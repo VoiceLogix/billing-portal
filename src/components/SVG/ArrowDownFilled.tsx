@@ -15,7 +15,7 @@ export const ArrowDownFilled = ({
     style={{
       transform: `rotate(${rotateUp ? 180 : 0}deg)`,
       transition: "transform 0.2s ease",
-      cursor: onClick ? "pointer" : "default",
+      cursor: "pointer",
     }}
   >
     <path

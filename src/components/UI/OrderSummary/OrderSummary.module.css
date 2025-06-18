@@ -1,0 +1,34 @@
+.container {
+  margin-left: auto;
+  margin-right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  font-family: var(--heading-font-family);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.label {
+  font-weight: 400;
+  text-align: right;
+  width: 80px;
+}
+
+.amount {
+  font-weight: 500;
+}
+
+.totalLabel {
+  font-weight: 600;
+  text-align: right;
+  width: 80px;
+}
+
+.totalAmount {
+  font-weight: 700;
+}

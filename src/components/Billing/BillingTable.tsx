@@ -1,25 +1,13 @@
-import React, { useState, useMemo } from "react";
-import styles from "./BillingTable.module.css";
-import { ArrowDownFilled } from "../SVG/ArrowDownFilled";
+import React, { useMemo } from "react";
 import {
   ClientOrderInfo,
   QuoteListingInterface,
 } from "../../types/QuoteListingInterface";
 import { formatDate } from "../../utils/formatDate";
 import { formatToUSD } from "../../utils/formatToUSD";
-import { getStatusClass } from "./utils";
+import { Column, Table } from "../UI/Table/Table";
 import { BillingType } from "./BillingListing";
-
-type SortKey = keyof Pick<
-  ClientOrderInfo,
-  | "orderNumber"
-  | "createdDate"
-  | "orderAmount"
-  | "taxAmount"
-  | "stateString"
-  | "orderStatus"
->;
-type SortOrder = "asc" | "desc";
+import { Badge } from "../UI/Badge/Badge";
 
 interface BillingTableProps {
   searchTerm: string;
@@ -32,140 +20,73 @@ const BillingTable: React.FC<BillingTableProps> = ({
   searchTerm,
   billingListing,
   setSelectedId,
+  type,
 }) => {
-  const [sortKey, setSortKey] = useState<SortKey>("orderNumber");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
+  const orders = billingListing.clientOrderInfoList;
 
-  const [orders] = useState(billingListing.clientOrderInfoList);
-
-  const filtered = useMemo(() => {
-    const term = searchTerm.trim().toLowerCase();
-    if (!term) return orders;
-
-    return orders.filter(
-      ({
-        orderStatus,
-        orderNumber,
-        taxAmount,
-        orderAmount,
-        createdDate,
-        stateString,
-      }) => {
-        return (
-          orderNumber.toLowerCase().includes(term) ||
-          orderStatus.toLowerCase().includes(term) ||
-          orderAmount.toString().includes(term) ||
-          taxAmount.toString().includes(term) ||
-          stateString?.toLowerCase()?.includes(term) ||
-          new Date(createdDate)
-            .toLocaleDateString()
-            .toLowerCase()
-            .includes(term)
-        );
+  const columns: Column<ClientOrderInfo>[] = useMemo(
+    () => [
+      {
+        header: "Quote number",
+        accessor: "orderNumber",
+        sortable: true,
+        isLink: true,
+        searchable: true,
+        Cell: (val: string) => (
+          <span onClick={() => setSelectedId(val)}>{val}</span>
+        ),
       },
-    );
-  }, [searchTerm, orders]);
-
-  const sorted = useMemo(() => {
-    return [...filtered].sort((a, b) => {
-      const aVal = a[sortKey];
-      const bVal = b[sortKey];
-
-      if (typeof aVal === "number" && typeof bVal === "number") {
-        return sortOrder === "asc" ? aVal - bVal : bVal - aVal;
-      }
-
-      const aStr = String(aVal).toLowerCase();
-      const bStr = String(bVal).toLowerCase();
-      return sortOrder === "asc"
-        ? aStr.localeCompare(bStr)
-        : bStr.localeCompare(aStr);
-    });
-  }, [filtered, sortKey, sortOrder]);
-
-  const handleSort = (key: SortKey) => {
-    setSortKey(key);
-    setSortOrder((prev) =>
-      prev === "asc" && key === sortKey ? "desc" : "asc",
-    );
-  };
-
-  const handleQuoteClick = (id: string) => {
-    setSelectedId(id);
-  };
+      {
+        header: "Quote type",
+        accessor: "orderStatus",
+        sortable: true,
+        searchable: true,
+      },
+      {
+        header: "Activation date",
+        accessor: "createdDate",
+        sortable: true,
+        searchable: true,
+        Cell: (val) => formatDate(Number(val)),
+      },
+      {
+        header: "Total amount",
+        accessor: "orderAmount",
+        sortable: true,
+        align: "right",
+        searchable: true,
+        Cell: (val) => formatToUSD(Number(val)),
+      },
+      {
+        header: "Tax",
+        accessor: "taxAmount",
+        sortable: true,
+        searchable: true,
+        Cell: (val) => formatToUSD(Number(val)),
+        align: "right",
+        width: "15%",
+      },
+      {
+        header: "Status",
+        accessor: "stateString",
+        sortable: true,
+        align: "right",
+        searchable: true,
+        Cell: (val: string) => <Badge status={val || "N/A"} />,
+      },
+    ],
+    [setSelectedId],
+  );
 
   return (
-    <div className={styles["quote-table-container"]}>
-      <table className={styles["quote-table"]}>
-        <thead>
-          <tr>
-            {(
-              [
-                "orderNumber",
-                "orderStatus",
-                "createdDate",
-                "orderAmount",
-                "taxAmount",
-                "stateString",
-              ] as SortKey[]
-            ).map((key) => (
-              <th key={key} className={styles.sortable}>
-                <div
-                  className={styles["header-content"]}
-                  onClick={() => handleSort(key)}
-                >
-                  {key === "orderNumber" && "Quote number"}
-                  {key === "orderStatus" && "Quote type"}
-                  {key === "createdDate" && "Activation date"}
-                  {key === "orderAmount" && "Total amount"}
-                  {key === "taxAmount" && "Tax"}
-                  {key === "stateString" && "Status"}
-
-                  <ArrowDownFilled
-                    rotateUp={sortKey === key && sortOrder === "asc"}
-                  />
-                </div>
-              </th>
-            ))}
-          </tr>
-        </thead>
-
-        <tbody>
-          {sorted.map((q) => (
-            <tr key={q.orderNumber}>
-              <td>
-                <span
-                  onClick={() => handleQuoteClick(q.orderNumber)}
-                  className={styles["quote-link"]}
-                >
-                  {q.orderNumber}
-                </span>
-              </td>
-              <td>{q.orderStatus}</td>
-              <td>{formatDate(q.createdDate)}</td>
-              <td className={styles["order-amount"]}>
-                {formatToUSD(q.orderAmount)}
-              </td>
-              <td>{formatToUSD(q.taxAmount)}</td>
-              <td>
-                <span
-                  className={`${styles["status-badge"]} ${getStatusClass(
-                    q?.stateString,
-                  )}`}
-                >
-                  {q.stateString || "N/A"}
-                </span>
-              </td>
-            </tr>
-          ))}
-          {sorted.length === 0 && (
-            <tr className={styles["no-quotes"]}>
-              <td colSpan={6}>No quotes</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
+    <Table
+      columns={columns}
+      data={orders}
+      searchTerm={searchTerm}
+      defaultSortKey="orderNumber"
+      defaultSortOrder="asc"
+      emptyText={`No ${type}`}
+    />
   );
 };
 

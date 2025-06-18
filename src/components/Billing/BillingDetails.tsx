@@ -6,11 +6,11 @@ import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 import { formatDate } from "../../utils/formatDate";
 import styles from "./BillingTable.module.css";
-import { getStatusClass } from "./utils";
 import { BillingDetailsTable } from "./BillingDetailsTable";
 import { Button } from "../UI/Button";
 import { useGetOrderDetails } from "../../service/getOrderDetails";
 import { BillingType } from "./BillingListing";
+import { Badge } from "../UI/Badge/Badge";
 
 export const BillingDetails = ({
   orderId,
@@ -54,13 +54,7 @@ export const BillingDetails = ({
               </Box>
               <Box display="flex" gap="32px">
                 <Typography>Status:</Typography>
-                <span
-                  className={`${styles["status-badge"]} ${getStatusClass(
-                    order.stateString,
-                  )}`}
-                >
-                  {order.stateString}
-                </span>
+                <Badge status={order.stateString as string} />
               </Box>
             </Box>
             <Box display="flex" flexDirection="column" gap="10px">

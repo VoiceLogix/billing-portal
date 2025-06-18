@@ -1,89 +1,78 @@
+import React, { useMemo } from "react";
 import { OrderDetails } from "../../types/OrderDetailsInterface";
 import { formatDate } from "../../utils/formatDate";
 import { formatToUSD } from "../../utils/formatToUSD";
 import { Box } from "../UI/Box";
 import { Typography } from "../UI/Typography";
+import { Column, Table } from "../UI/Table/Table";
 import styles from "./BillingTable.module.css";
+import OrderSummary from "../UI/OrderSummary/OrderSummary";
+
+// Type for the order list items
+type OrderItem = OrderDetails["clientOrderElementDetailsList"][0];
 
 export const BillingDetailsTable = ({ order }: { order: OrderDetails }) => {
   const orderList = order.clientOrderElementDetailsList;
 
-  const tableHeaders = [
-    "Product / Price Plan",
-    "Activation  Date",
-    "Frequency",
-    "Unit Price",
-    "Quantity",
-    "Subtotal",
-  ];
+  const columns: Column<OrderItem>[] = useMemo(
+    () => [
+      {
+        header: "Product / Price Plan",
+        accessor: "productName",
+        width: "300px",
+        Cell: (val: string, row: OrderItem) => (
+          <Box display="flex" flexDirection="column">
+            <Typography>{row.productName}</Typography>
+
+            <Typography color="secondarytext" size="xsmall">
+              {row.subscriptionIdentifier}
+            </Typography>
+          </Box>
+        ),
+      },
+      {
+        header: "Activation Date",
+        accessor: "activationStartDate",
+        Cell: (val) => formatDate(val as number),
+      },
+      {
+        header: "Frequency",
+        accessor: "eventName",
+        Cell: (val: string) => val.toLowerCase(),
+        align: "center",
+      },
+      {
+        header: "Unit Price",
+        accessor: "unitPriceString",
+        align: "right",
+        Cell: (val) => formatToUSD(val as number),
+        width: "100px",
+      },
+      {
+        header: "Quantity",
+        accessor: "quantityString",
+        align: "right",
+      },
+      {
+        header: "Subtotal",
+        accessor: "subTotal",
+        align: "right",
+        Cell: (val) => formatToUSD(val as number),
+      },
+    ],
+    [],
+  );
+
   return (
     <div className={styles["quote-table-container"]}>
-      <table className={styles["quote-table"]}>
-        <thead>
-          <tr className={styles["quote-table-header-background"]}>
-            {tableHeaders.map((key) => (
-              <th key={key}>
-                <div className={styles["header-content"]}>{key}</div>
-              </th>
-            ))}
-          </tr>
-        </thead>
-
-        <tbody>
-          {orderList.map((item, index) => (
-            <tr key={index} className={styles["quote-details-table-row"]}>
-              <td>
-                <div className={styles["product-info"]}>
-                  <Typography>{item.productName}</Typography>
-                  <Typography color="secondarytext" size="xsmall">
-                    {item.subscriptionIdentifier}
-                  </Typography>
-                </div>
-              </td>
-              <td>{formatDate(item.activationStartDate)}</td>
-              <td>{item.eventName.toLowerCase()}</td>
-              <td className={styles["product-untit-price"]}>
-                {formatToUSD(item.unitPriceString)}
-              </td>
-              <td className={styles["product-quantity"]}>
-                {item.quantityString}
-              </td>
-              <td className={styles["product-subtotal"]}>
-                {formatToUSD(item.subTotal)}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <div className={styles["quote-summary"]}>
-        <Box
-          width="200px"
-          marginLeft="auto"
-          display="flex"
-          flexDirection="column"
-          gap="10px"
-        >
-          <Box display="flex" justifyContent="space-between">
-            <span className={styles["summary-label"]}>Subtotal</span>
-            <span className={styles["summary-amount"]}>
-              {order.netAmountString}
-            </span>
-          </Box>
-          <Box display="flex" justifyContent="space-between">
-            <span className={styles["summary-label"]}>Tax</span>
-            <span className={styles["summary-amount"]}>
-              {order.taxAmountString}
-            </span>
-          </Box>
-          <Box display="flex" justifyContent="space-between">
-            <span className={styles["summary-total"]}>Total</span>
-            <span className={styles["summary-amount"]}>
-              {order.totalAmountString}
-            </span>
-          </Box>
-        </Box>
-      </div>
+      <Table columns={columns} data={orderList} headerBackground={true} />
+      <Box width="220px" marginLeft="auto" marginTop="5px" marginRight="5px">
+        <OrderSummary
+          subtotal={order.netAmountString}
+          tax={order.taxAmountString}
+          total={order.totalAmountString}
+        />
+      </Box>
     </div>
   );
 };

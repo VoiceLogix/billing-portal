@@ -1,0 +1,34 @@
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.4px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.status-cancelled {
+  color: #c40006;
+  background-color: #f3000d14;
+}
+
+.status-active {
+  color: #00713f;
+  background-color: #00a4331a;
+}
+
+.status-pending {
+  color: #ab6400;
+  background-color: #ffde003d;
+}
+
+.status-created {
+  color: #002bb7c5;
+  background-color: #0047f112;
+}
+
+.status-default {
+  color: #60646c;
+  background-color: #0000330f;
+}
