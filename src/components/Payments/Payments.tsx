@@ -8,6 +8,7 @@ import { paymentPdf, useGetPayments } from "../../service/getPayments";
 import { Error } from "../UI/Error";
 import { PaymentInfo } from "../../types/PaymentsInterface";
 import { formatDate } from "../../utils/formatDate";
+import { PaymentCards } from "./PaymentCards";
 
 export function Payments() {
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -77,7 +78,7 @@ export function Payments() {
   ];
 
   return (
-    <Box>
+    <Box display="flex" justifyContent="space-between" gap="48px">
       <Box display="flex" flexDirection="column" gap="30px">
         <SearchInput
           width="272px"
@@ -86,10 +87,11 @@ export function Payments() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <Box width="752px">
+        <div style={{ minWidth: "752px" }}>
           <Table columns={columns} data={payments} searchTerm={searchTerm} />
-        </Box>
+        </div>
       </Box>
+      <PaymentCards />
     </Box>
   );
 }

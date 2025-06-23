@@ -24,7 +24,7 @@ export const BillingDetailsTable = ({ order }: { order: OrderDetails }) => {
           <Box display="flex" flexDirection="column">
             <Typography>{row.productName}</Typography>
 
-            <Typography color="secondarytext" size="xsmall">
+            <Typography color="secondaryText" size="xsmall">
               {row.subscriptionIdentifier}
             </Typography>
           </Box>

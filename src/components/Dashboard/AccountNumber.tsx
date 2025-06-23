@@ -3,6 +3,7 @@ import { useGetProfileDetails } from "../../service/getProfileDetails";
 import { BriefcaseSVG } from "../SVG/BriefcaseSVG";
 import { Box } from "../UI/Box";
 import { Typography } from "../UI/Typography";
+import { CardLayout } from "../UI/CardLayout/CardLayout";
 
 export const AccountNumber = () => {
   const { data: accountSummary } = useGetAccountSummaryCounts();
@@ -11,11 +12,11 @@ export const AccountNumber = () => {
   const contactLen = profileDetails?.clientCustomerContacts?.length;
 
   return (
-    <Box width="368px" height="331px" className="layoutWithBorder">
+    <CardLayout width="368px" height="331px">
       <Box display="flex" flexDirection="column" gap="16px">
         <Box display="flex" justifyContent="space-between">
           <Box display="flex" flexDirection="column">
-            <Typography color="secondarytext">Account Number</Typography>
+            <Typography color="secondaryText">Account Number</Typography>
             <Typography size="large" weight="medium">
               {profileDetails?.accountNumber}
             </Typography>
@@ -114,6 +115,6 @@ export const AccountNumber = () => {
           </Box>
         </Box>
       </Box>
-    </Box>
+    </CardLayout>
   );
 };

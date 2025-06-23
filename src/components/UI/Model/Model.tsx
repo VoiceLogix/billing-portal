@@ -31,7 +31,7 @@ const Model = ({
             <Typography size="big" weight="semibold">
               {title}
             </Typography>
-            <Typography color="secondarytext">{subtitle}</Typography>
+            <Typography color="secondaryText">{subtitle}</Typography>
           </Box>
           {children}
           <Dialog.Close asChild>

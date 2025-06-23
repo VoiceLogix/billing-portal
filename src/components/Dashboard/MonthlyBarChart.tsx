@@ -110,8 +110,8 @@ const MonthlyBarChart = ({ invoiceHistory }: MonthlyBarChartProps) => {
           },
           tooltip: {
             backgroundColor: theme.colors.lightGray,
-            titleColor: theme.colors.primarytext,
-            bodyColor: theme.colors.primarytext,
+            titleColor: theme.colors.primaryText,
+            bodyColor: theme.colors.primaryText,
             titleFont: {
               weight: "normal",
             },
@@ -150,7 +150,7 @@ const MonthlyBarChart = ({ invoiceHistory }: MonthlyBarChartProps) => {
               display: false,
             },
             ticks: {
-              color: theme.colors.secondarytext,
+              color: theme.colors.secondaryText,
             },
           },
         },

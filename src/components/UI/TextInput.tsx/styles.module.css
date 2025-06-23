@@ -23,3 +23,10 @@ input {
   font-size: 14px;
   color: #00071b7f;
 }
+
+.textInputContainer .error {
+  color: var(--color-error);
+  font-size: 12px;
+  margin-top: 4px;
+  margin-left: 5px;
+}

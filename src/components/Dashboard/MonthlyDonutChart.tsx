@@ -93,8 +93,8 @@ const MonthlyDonutChart = ({ agingInvoices }: MonthlyDonutChartProps) => {
           },
           tooltip: {
             backgroundColor: theme.colors.lightGray,
-            titleColor: theme.colors.primarytext,
-            bodyColor: theme.colors.primarytext,
+            titleColor: theme.colors.primaryText,
+            bodyColor: theme.colors.primaryText,
 
             titleFont: {
               weight: "normal",

@@ -1,6 +1,6 @@
-import { Box } from "../../UI/Box";
-import TabsComponent from "../../UI/Tabs/Tabs";
-import { Typography } from "../../UI/Typography";
+import { Box } from "../Box";
+import TabsComponent from "../Tabs/Tabs";
+import { Typography } from "../Typography";
 import CardForm from "./CardForm";
 import ECheckForm from "./ECheckForm";
 
@@ -10,11 +10,11 @@ const PaymentMethodModel = () => (
       <Typography size="big" weight="semibold">
         Add New Payment Method
       </Typography>
-      <Typography color="secondarytext">
+      <Typography color="secondaryText">
         Please fill all required fields
       </Typography>
     </Box>
-    <Box margin={"32px 0px 0px 0px"}>
+    <Box margin={"32px 10px 0px 0px"}>
       <TabsComponent
         tabs={[
           {

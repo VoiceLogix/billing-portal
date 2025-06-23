@@ -1,6 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import styles from "./form.module.css";
-import Dropdown from "../../UI/Dropdown/Dropdown";
+import Dropdown from "../Dropdown/Dropdown";
 
 type FormValues = {
   routingNumber: string;

@@ -1,4 +1,4 @@
-.layoutWithBorder {
+.CardLayout {
   border: 1px solid var(--color-border);
   padding: 12px;
   border-radius: 8px;

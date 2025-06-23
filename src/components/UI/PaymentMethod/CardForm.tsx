@@ -1,7 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import styles from "./form.module.css";
 import { CardTypeSVG, PaymentCardType } from "../../SVG/CardTypeSVG";
-import TextInput from "../../UI/TextInput.tsx/TextInput";
+import TextInput from "../TextInput.tsx/TextInput";
 
 type FormValues = {
   firstName: string;

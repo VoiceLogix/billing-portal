@@ -30,7 +30,7 @@ export const Typography: React.FC<TypographyProps> = ({
   children,
   size = "small",
   weight = "normal",
-  color = "primarytext",
+  color = "primaryText",
   align = "left",
   onClick,
   className = "",

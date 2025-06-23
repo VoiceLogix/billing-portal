@@ -1,0 +1,12 @@
+.radioSelect input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+}
+.radioSelect input[type="radio"]:checked {
+  border-color: var(--color-accent);
+  border-width: 5px;
+  width: 6px;
+  height: 6px;
+}

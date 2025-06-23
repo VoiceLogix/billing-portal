@@ -1,5 +1,4 @@
 import { CurrentBalance } from "./CurrentBalance";
-import { PaymentMethods } from "./PaymentMethod/PaymentMethods";
 import { Box } from "../UI/Box";
 import { DueAmount } from "./DueAmount";
 import { BillingCycle } from "./BillingCycle";
@@ -11,6 +10,7 @@ import { InvoiceAndPayment } from "./InvoiceAndPayment";
 import { useGetAgingInvoices } from "../../service/getAgingInvoices";
 import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
+import { PaymentCardPreview } from "../UI/PaymentMethod/PaymentCardPreview";
 
 export const Dashboard = () => {
   const {
@@ -47,7 +47,7 @@ export const Dashboard = () => {
             accountInfo={accountInfo}
             invoiceHistory={invoiceHistory}
           />
-          <PaymentMethods />
+          <PaymentCardPreview autoPay={false} />
         </Box>
         <Box display="flex" flexDirection="column" gap="16px">
           <DueAmount />

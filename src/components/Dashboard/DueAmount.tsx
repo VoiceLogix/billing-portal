@@ -2,6 +2,7 @@ import { useGetAccountInfo } from "../../service/getAccountInfo";
 import { useGetUnBilledDetails } from "../../service/getUnBilledDetails";
 import { formatToUSD } from "../../utils/formatToUSD";
 import { Box } from "../UI/Box";
+import { CardLayout } from "../UI/CardLayout/CardLayout";
 import { Typography } from "../UI/Typography";
 
 export const DueAmount = () => {
@@ -9,17 +10,17 @@ export const DueAmount = () => {
   const { data: unbilledDetails } = useGetUnBilledDetails();
   const pendingBillChargeDetails = unbilledDetails?.pendingBillChargeDetails;
   return (
-    <Box width="368px" height="247px" className="layoutWithBorder">
+    <CardLayout width="368px" height="247px">
       <Box display="flex" flexDirection="column" gap="16px">
         <Box display="flex" justifyContent="space-between">
           <Box display="flex" flexDirection="column">
-            <Typography color="secondarytext">Due Amount</Typography>
+            <Typography color="secondaryText">Due Amount</Typography>
             <Typography size="large" weight="medium" color="errorText">
               {formatToUSD(accountInfo?.currentDue ?? "00")}
             </Typography>
           </Box>
           <Box display="flex" flexDirection="column">
-            <Typography color="secondarytext">Unbilled Amount</Typography>
+            <Typography color="secondaryText">Unbilled Amount</Typography>
             <Typography
               size="large"
               weight="medium"
@@ -102,6 +103,6 @@ export const DueAmount = () => {
           </Box>
         </Box>
       </Box>
-    </Box>
+    </CardLayout>
   );
 };

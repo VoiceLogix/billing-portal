@@ -8,7 +8,7 @@ const sizeMap = {
 
 const paddingMap = {
   small: "6px 12px",
-  medium: "8px 16px",
+  medium: "12px 12px",
 } as const;
 
 const radiusMap = {
@@ -29,6 +29,11 @@ interface ButtonProps {
   size?: keyof typeof sizeMap;
   weight?: keyof typeof weightMap;
   radius?: keyof typeof radiusMap | number;
+  padding?: keyof typeof paddingMap;
+  border?: string;
+  borderColor?: Color;
+  borderSize?: string;
+  height?: string;
   color?: Color;
   bgColor?: Color;
   onClick?: () => void;
@@ -45,6 +50,11 @@ export const Button: React.FC<ButtonProps> = ({
   color = "white",
   bgColor = "primary",
   radius = "small",
+  padding = "small",
+  height = "auto",
+  border = "none",
+  borderColor = "transparent",
+  borderSize = "0px",
   onClick,
   disabled = false,
   className = "",
@@ -60,9 +70,13 @@ export const Button: React.FC<ButtonProps> = ({
     fontWeight: weightMap[weight],
     color: textColor,
     backgroundColor,
-    border: "none",
-    padding: paddingMap[size],
-    borderRadius: typeof radius === "number" ? `${radius}px` : radius,
+    border:
+      border !== "none"
+        ? border
+        : `${borderSize} solid ${theme.colors[borderColor]}`,
+    padding: paddingMap[padding],
+    borderRadius:
+      typeof radius === "number" ? `${radius}px` : radiusMap[radius],
     cursor: disabled ? "not-allowed" : "pointer",
     opacity: disabled ? 0.6 : 1,
     width: fullWidth ? "100%" : "auto",
@@ -70,6 +84,7 @@ export const Button: React.FC<ButtonProps> = ({
     display: "inline-block",
     textAlign: "center",
     transition: "background-color 0.2s, transform 0.2s",
+    height: height,
   };
 
   return (

@@ -1,10 +1,10 @@
 import { formatToUSD } from "../../utils/formatToUSD";
-import "./styles.css";
 import { formatDate } from "../../utils/formatDate";
 import { Box } from "../UI/Box";
 import { Typography } from "../UI/Typography";
 import { AccountInfo } from "../../types/AccountInfoInterface";
 import { InvoiceHistory } from "../../types/InvoiceInterface";
+import { CardLayout } from "../UI/CardLayout/CardLayout";
 
 interface CurrentBalanceProps {
   accountInfo: AccountInfo;
@@ -20,10 +20,10 @@ export const CurrentBalance = ({
   return (
     <>
       {accountInfo && (
-        <Box width="368px" height="163px" className="layoutWithBorder">
+        <CardLayout width="368px" height="163px">
           <Box display="flex" flexDirection="column" gap="16px">
             <Box display="flex" flexDirection="column">
-              <Typography color="secondarytext">Current Balance</Typography>
+              <Typography color="secondaryText">Current Balance</Typography>
               <Typography size="large" weight="medium">
                 {formatToUSD(accountInfo?.accountBalance ?? 0)}
               </Typography>
@@ -39,7 +39,7 @@ export const CurrentBalance = ({
                 <Box width="100px">
                   <Typography>Last Invoice</Typography>
                 </Box>
-                <Typography color="secondarytext">
+                <Typography color="secondaryText">
                   {lastInvoice?.finalizedDate
                     ? formatDate(lastInvoice.finalizedDate)
                     : "--"}
@@ -62,7 +62,7 @@ export const CurrentBalance = ({
                 <Box width="100px">
                   <Typography>Last Payment</Typography>
                 </Box>
-                <Typography color="secondarytext">
+                <Typography color="secondaryText">
                   {accountInfo?.lastPaymentDate
                     ? formatDate(accountInfo.lastPaymentDate)
                     : "--"}
@@ -75,7 +75,7 @@ export const CurrentBalance = ({
               </Box>
             </Box>
           </Box>
-        </Box>
+        </CardLayout>
       )}
     </>
   );
