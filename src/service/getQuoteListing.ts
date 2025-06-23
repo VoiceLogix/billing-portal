@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export async function getQuoteListing(type: string) {
   try {
-    const response = await axiosInstance.get(`/${type.toLowerCase()}Listing`);
+    const response = await axiosInstance.get(`${type.toLowerCase()}Listing`);
     return response.data as QuoteListingInterface;
   } catch (error) {
     console.error("Error fetching quote listing:", error);

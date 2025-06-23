@@ -88,7 +88,12 @@ export function Payments() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
         <div style={{ minWidth: "752px" }}>
-          <Table columns={columns} data={payments} searchTerm={searchTerm} />
+          <Table
+            columns={columns}
+            data={payments}
+            searchTerm={searchTerm}
+            emptyText="No payments"
+          />
         </div>
       </Box>
       <PaymentCards />

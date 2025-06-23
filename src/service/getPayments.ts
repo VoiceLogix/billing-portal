@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export async function paymentPdf(receiptNumber: string) {
   try {
-    const response = await axiosInstance.get(`/payments/${receiptNumber}`, {
+    const response = await axiosInstance.get(`payments/${receiptNumber}`, {
       responseType: "blob",
     });
 
@@ -27,7 +27,7 @@ export async function paymentPdf(receiptNumber: string) {
 
 export async function getPayments() {
   try {
-    const response = await axiosInstance.get(`/payments`);
+    const response = await axiosInstance.get(`payments`);
     return response.data as PaymentsInterface;
   } catch (error) {
     console.error("Error fetching payments:", error);

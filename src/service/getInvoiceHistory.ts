@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export async function getInvoiceHistory() {
   try {
-    const response = await axiosInstance.get(`/invoiceHistory`);
+    const response = await axiosInstance.get(`invoiceHistory`);
     return response.data as InvoiceHistory;
   } catch (error) {
     console.error("Error fetching invoice history:", error);

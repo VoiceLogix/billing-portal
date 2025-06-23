@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export async function getAccountInfo() {
   try {
-    const response = await axiosInstance.get(`/accountInfo`);
+    const response = await axiosInstance.get(`accountInfo`);
     return response.data as AccountInfo;
   } catch (error) {
     console.error("Error fetching accountInfo:", error);

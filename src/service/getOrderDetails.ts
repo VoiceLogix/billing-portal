@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export async function getOrderDetails(id: string) {
   try {
-    const response = await axiosInstance.get(`/orderdetails/${id}`);
+    const response = await axiosInstance.get(`orderdetails/${id}`);
     return response.data as OrderDetailsInterface;
   } catch (error) {
     console.error("Error fetching order details:", error);

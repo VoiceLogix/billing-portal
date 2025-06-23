@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 export async function getAccountSummaryCounts() {
   try {
-    const response = await axiosInstance.get(`/accountSummaryCounts`);
+    const response = await axiosInstance.get(`accountSummaryCounts`);
     return response.data as AccountSummaryInterface;
   } catch (error) {
     console.error("Error fetching accountSummaryCounts", error);
