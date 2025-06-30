@@ -4,8 +4,9 @@
   --heading-font-family: "Inter", sans-serif;
   --color-text-black: #000000;
   --color-text-white: #ffffff;
+  --color-text-primary: #333333;
   --color-text-gray: #6a6a6a;
-  --color-light-gray: #f1f1f1;
+  --color-light-gray: #f6f6f6;
   --color-text-blue: #0f88cc;
   --color-accent: #0088cc;
   --color-border: #dddddd;
@@ -16,6 +17,12 @@
   --color-neutral: #60646c;
   --color-bg-neutral: #0000330f;
   --color-blue-border: #0072bc72;
+  --color-disabled: #a9a9a9;
+}
+
+body {
+  font-family: var(--heading-font-family);
+  color: var(--color-text-primary);
 }
 
 .radix-themes {
@@ -29,4 +36,24 @@
 
 hr {
   margin: 0;
+}
+
+.toast-success {
+  background-color: #00a43319;
+  color: #00713fde;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 10px 16px;
+}
+
+.toast-error {
+  background-color: #f3000d14;
+  color: #c40006d3;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  padding: 10px 16px;
 }

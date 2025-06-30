@@ -1,11 +1,12 @@
 import axios from "axios";
+import { BillingAuthResponse } from "../types/BillingSubscriberResult";
 
-export const baseURL = "https://sb-manage.unitydial.com/billing-api/";
-// export const baseURL = "https://onebillapi.fly.dev";
-// export const baseURL = "http://localhost:8085";
+// export const baseURL = "https://sb-manage.unitydial.com/billing-api/";
+export const baseURL = "https://onebillapi.fly.dev";
+// export const baseURL = "http://localhost:8085/";
 export const AUTH_URL = `${baseURL}auth`;
 
-const LS_KEY_USER_AUTH = "onebill_user_auth";
+export const LS_KEY_USER_AUTH = "onebill_user_auth";
 const LS_KEY_NS_TOKEN = "ns_t";
 const ENV_NS_TOKEN = "VITE_NS_TOKEN";
 
@@ -62,6 +63,7 @@ export async function getSessionTokens(): Promise<SessionTokens> {
 
 export async function authenticateUser(): Promise<SessionTokens> {
   const nsToken = getNsToken();
+
   const cached = loadCachedAuth(nsToken);
   if (cached) {
     console.log("Using cached session tokens");
@@ -72,13 +74,11 @@ export async function authenticateUser(): Promise<SessionTokens> {
   }
 
   try {
-    const response = await axios.get<{ jsessionId: string; csrfToken: string }>(
-      AUTH_URL,
-      {
-        headers: { Authorization: `Bearer ${nsToken}` },
-      },
-    );
+    const response = await axios.get<BillingAuthResponse>(AUTH_URL, {
+      headers: { Authorization: `Bearer ${nsToken}` },
+    });
     const data = response.data;
+    console.log("authenticateUser", data);
 
     if (!data.jsessionId || !data.csrfToken) {
       throw new Error("Received incomplete session tokens from API");
@@ -88,6 +88,7 @@ export async function authenticateUser(): Promise<SessionTokens> {
       nsToken,
       jsessionId: data.jsessionId,
       csrfToken: data.csrfToken,
+      subscriberData: data.subscriberData,
     };
     localStorage.setItem(LS_KEY_USER_AUTH, JSON.stringify(toStore));
 
@@ -96,7 +97,6 @@ export async function authenticateUser(): Promise<SessionTokens> {
       csrfToken: data.csrfToken,
     };
   } catch (err: any) {
-    console.error("authenticateUser error:", err);
     localStorage.removeItem(LS_KEY_USER_AUTH);
     throw new Error("Authentication failed; server returned an error.");
   }

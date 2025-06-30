@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Color, theme } from "../theme";
+import { Box } from "./Box";
+import { LoadingSVG } from "../SVG/LoadingSVG";
 
 const sizeMap = {
   small: "14px",
@@ -14,7 +16,7 @@ const paddingMap = {
 const radiusMap = {
   small: "4px",
   medium: "6px",
-};
+} as const;
 
 const weightMap = {
   light: 300,
@@ -41,6 +43,8 @@ interface ButtonProps {
   className?: string;
   fullWidth?: boolean;
   text?: string;
+  isLoading?: boolean;
+  type?: "button" | "submit" | "reset";
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -60,9 +64,31 @@ export const Button: React.FC<ButtonProps> = ({
   className = "",
   fullWidth = false,
   text = "",
+  isLoading = false,
+  type = "button",
 }) => {
   const textColor = theme.colors[color];
   const backgroundColor = theme.colors[bgColor];
+  const [fixedWidth, setFixedWidth] = useState<number | undefined>(undefined);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const hasFixedWidth = useRef(false);
+
+  useEffect(() => {
+    if (isLoading && !hasFixedWidth.current && buttonRef.current) {
+      const { width } = buttonRef.current.getBoundingClientRect();
+      setFixedWidth(width + 50);
+      hasFixedWidth.current = true;
+    } else if (!isLoading && hasFixedWidth.current) {
+      setFixedWidth(undefined);
+      hasFixedWidth.current = false;
+    }
+  }, [isLoading]);
+
+  const getWidth = () => {
+    if (fullWidth) return "100%";
+    if (isLoading && fixedWidth) return `${fixedWidth}px`;
+    return "auto";
+  };
 
   const style: React.CSSProperties = {
     fontFamily: "Inter, sans-serif",
@@ -77,24 +103,50 @@ export const Button: React.FC<ButtonProps> = ({
     padding: paddingMap[padding],
     borderRadius:
       typeof radius === "number" ? `${radius}px` : radiusMap[radius],
-    cursor: disabled ? "not-allowed" : "pointer",
+    cursor: disabled || isLoading ? "not-allowed" : "pointer",
     opacity: disabled ? 0.6 : 1,
-    width: fullWidth ? "100%" : "auto",
+    width: getWidth(),
+    minWidth: isLoading && fixedWidth ? `${fixedWidth}px` : "auto",
     lineHeight: 1.2,
-    display: "inline-block",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
     textAlign: "center",
     transition: "background-color 0.2s, transform 0.2s",
     height: height,
+    position: "relative",
+    overflow: "hidden",
+  };
+
+  const handleClick = () => {
+    if (!disabled && !isLoading && onClick) {
+      onClick();
+    }
   };
 
   return (
     <button
-      onClick={disabled ? undefined : onClick}
+      onClick={handleClick}
       style={style}
       className={className}
-      disabled={disabled}
+      disabled={disabled || isLoading}
+      ref={buttonRef}
+      aria-busy={isLoading}
+      aria-disabled={disabled || isLoading}
+      type={type}
     >
-      {text || children}
+      {isLoading ? (
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          style={{ width: "20px", height: "20px" }}
+        >
+          <LoadingSVG />
+        </Box>
+      ) : (
+        text || children
+      )}
     </button>
   );
 };

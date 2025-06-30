@@ -4,11 +4,15 @@ input {
   all: unset;
 }
 
+.textInputContainer {
+  width: 100%;
+}
+
 .label {
   font-size: 14px;
   font-weight: 500;
-  color: #333333;
-  margin-bottom: 0.5rem;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
   display: block;
 }
 
@@ -19,9 +23,13 @@ input {
   box-sizing: border-box;
   border: 1px solid var(--color-border);
   border-radius: 4px;
-  background-color: #f1f1f1;
+  background-color: var(--color-light-gray);
   font-size: 14px;
-  color: #00071b7f;
+  color: var(--color-primaryText);
+}
+
+.textInputContainer .textInput:disabled {
+  color: var(--color-disabled);
 }
 
 .textInputContainer .error {

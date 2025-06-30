@@ -1,14 +1,12 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { OrderDetails } from "../../types/OrderDetailsInterface";
 import { formatDate } from "../../utils/formatDate";
 import { formatToUSD } from "../../utils/formatToUSD";
 import { Box } from "../UI/Box";
 import { Typography } from "../UI/Typography";
 import { Column, Table } from "../UI/Table/Table";
-import styles from "./BillingTable.module.css";
 import OrderSummary from "../UI/OrderSummary/OrderSummary";
 
-// Type for the order list items
 type OrderItem = OrderDetails["clientOrderElementDetailsList"][0];
 
 export const BillingDetailsTable = ({ order }: { order: OrderDetails }) => {
@@ -20,11 +18,11 @@ export const BillingDetailsTable = ({ order }: { order: OrderDetails }) => {
         header: "Product / Price Plan",
         accessor: "productName",
         width: "300px",
-        Cell: (val: string, row: OrderItem) => (
+        Cell: (_, row: OrderItem) => (
           <Box display="flex" flexDirection="column">
             <Typography>{row.productName}</Typography>
 
-            <Typography color="secondaryText" size="xsmall">
+            <Typography color="secondaryText">
               {row.subscriptionIdentifier}
             </Typography>
           </Box>
@@ -64,7 +62,7 @@ export const BillingDetailsTable = ({ order }: { order: OrderDetails }) => {
   );
 
   return (
-    <div className={styles["quote-table-container"]}>
+    <div>
       <Table columns={columns} data={orderList} headerBackground={true} />
       <Box width="220px" marginLeft="auto" marginTop="5px" marginRight="5px">
         <OrderSummary

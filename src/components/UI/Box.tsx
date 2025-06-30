@@ -1,6 +1,8 @@
 export interface BoxProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   width?: string | number;
+  minWidth?: string | number;
+  maxWidth?: string | number;
   height?: string | number;
   padding?: string | number;
   margin?: string | number;
@@ -13,6 +15,7 @@ export interface BoxProps extends React.HTMLAttributes<HTMLDivElement> {
   paddingLeft?: string | number;
   paddingRight?: string | number;
   border?: string;
+  borderBottom?: string;
   borderRadius?: string | number;
   bgColor?: string;
   display?: "block" | "flex";
@@ -27,6 +30,8 @@ export interface BoxProps extends React.HTMLAttributes<HTMLDivElement> {
 export const Box: React.FC<BoxProps> = ({
   children,
   width,
+  minWidth,
+  maxWidth,
   height,
   padding,
   margin,
@@ -40,6 +45,7 @@ export const Box: React.FC<BoxProps> = ({
   paddingRight,
   bgColor,
   border,
+  borderBottom,
   borderRadius,
   display = "block",
   flexDirection,
@@ -54,6 +60,8 @@ export const Box: React.FC<BoxProps> = ({
   const boxStyle: React.CSSProperties = {
     display,
     width,
+    minWidth,
+    maxWidth,
     height,
     padding,
     margin,
@@ -67,6 +75,7 @@ export const Box: React.FC<BoxProps> = ({
     paddingRight,
     border,
     borderRadius,
+    borderBottom,
     backgroundColor: bgColor,
     flexDirection,
     justifyContent,

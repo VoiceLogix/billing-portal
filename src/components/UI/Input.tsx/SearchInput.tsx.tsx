@@ -1,5 +1,4 @@
 import React from "react";
-import { FieldError, UseFormRegister, RegisterOptions } from "react-hook-form";
 import styles from "./styles.module.css";
 import { SearchSVG } from "../../SVG/SearchSVG";
 

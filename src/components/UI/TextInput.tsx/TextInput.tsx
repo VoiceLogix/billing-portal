@@ -5,12 +5,14 @@ import styles from "./styles.module.css";
 interface TextInputProps {
   label: string;
   name: string;
-  register: UseFormRegister<any>;
+  register?: UseFormRegister<any>;
   rules?: RegisterOptions;
   type?: React.HTMLInputTypeAttribute;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
-  autoComplete?: string;
   error?: FieldError;
+  disabled?: boolean;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -18,10 +20,8 @@ const TextInput: React.FC<TextInputProps> = ({
   name,
   register,
   rules,
-  type = "text",
-  placeholder,
-  autoComplete,
   error,
+  ...rest
 }) => {
   return (
     <div className={styles.textInputContainer}>
@@ -30,11 +30,9 @@ const TextInput: React.FC<TextInputProps> = ({
       </label>
       <input
         id={name}
-        {...register(name, rules)}
-        type={type}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
+        {...(register && register(name, rules))}
         className={styles.textInput}
+        {...rest}
       />
       {error && <p className={styles.error}>{error.message}</p>}
     </div>

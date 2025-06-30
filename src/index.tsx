@@ -1,7 +1,7 @@
 import "../index.js";
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import { Theme } from "@radix-ui/themes";
+import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

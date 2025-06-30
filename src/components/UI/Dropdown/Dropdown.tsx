@@ -2,47 +2,74 @@ import React from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import styles from "./dropdown.module.css";
 import { ArrowDown } from "../../SVG/ArrowDown";
-
-interface DropdownItem {
-  label: string;
-  onSelect: () => void;
-}
+import { Box } from "../Box";
+import { Typography } from "../Typography";
+import { FieldError } from "react-hook-form";
 
 interface DropdownProps {
-  label: string;
-  items: DropdownItem[];
+  value: string;
+  label?: string | React.ReactNode;
+  items: string[];
+  width?: string;
+  withBackground?: boolean;
+  onChange: (item: string) => void;
+  error?: FieldError;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ label, items }) => {
+const Dropdown: React.FC<DropdownProps> = ({
+  value,
+  label,
+  items,
+  width = "100%",
+  withBackground = true,
+  onChange,
+  error,
+}) => {
   return (
-    <DropdownMenu.Root>
-      {/* Trigger Button styled like an input */}
-      <DropdownMenu.Trigger asChild>
-        <button className={styles.trigger}>
-          <span className={styles.labelText}>{label}</span>
-          <span className={styles.chevron}>
-            <ArrowDown />
-          </span>
-        </button>
-      </DropdownMenu.Trigger>
-
-      {/* Dropdown Content */}
-      <DropdownMenu.Content
-        sideOffset={4}
-        align="start"
-        className={styles.content}
-      >
-        {items.map((item, index) => (
-          <DropdownMenu.Item
-            key={index}
-            onSelect={item.onSelect}
-            className={styles.item}
+    <Box width={width}>
+      {label && (
+        <Box marginBottom="8px">
+          <Typography weight="semibold">{label}</Typography>
+        </Box>
+      )}
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger asChild>
+          <button
+            className={styles.trigger}
+            style={{
+              width,
+              background: withBackground
+                ? "var(--color-light-gray)"
+                : "transparent",
+            }}
           >
-            {item.label}
-          </DropdownMenu.Item>
-        ))}
-      </DropdownMenu.Content>
-    </DropdownMenu.Root>
+            <span className={styles.labelText}>{value}</span>
+            <span className={styles.chevron}>
+              <ArrowDown />
+            </span>
+          </button>
+        </DropdownMenu.Trigger>
+
+        <DropdownMenu.Content
+          sideOffset={4}
+          align="start"
+          className={styles.content}
+          style={{ width }}
+        >
+          {items.map((item, idx) => (
+            <DropdownMenu.Item
+              key={idx}
+              onSelect={() => onChange(item)}
+              className={styles.item}
+              aria-selected={value === item}
+            >
+              {item}
+            </DropdownMenu.Item>
+          ))}
+        </DropdownMenu.Content>
+      </DropdownMenu.Root>
+      {error && <Typography color="errorText">{error.message}</Typography>}
+    </Box>
   );
 };
 

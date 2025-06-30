@@ -3,6 +3,13 @@ import styles from "./Badge.module.css";
 
 interface BadgeProps {
   status: string;
+  color?:
+    | "default"
+    | "cancelled"
+    | "active"
+    | "pending"
+    | "created"
+    | "primary";
 }
 
 const getStatusClass = (status: string) => {
@@ -10,13 +17,17 @@ const getStatusClass = (status: string) => {
 
   const statusLower = status.toLowerCase();
 
+  if (statusLower.includes("primary")) {
+    return styles["status-primary"];
+  }
   if (statusLower.includes("cancelled") || statusLower.includes("expired")) {
     return styles["status-cancelled"];
   }
   if (
     statusLower.includes("active") ||
     statusLower.includes("sent") ||
-    statusLower.includes("fulfilled")
+    statusLower.includes("fulfilled") ||
+    statusLower.includes("paid")
   ) {
     return styles["status-active"];
   }
@@ -30,7 +41,9 @@ const getStatusClass = (status: string) => {
   return styles["status-default"];
 };
 
-export const Badge: React.FC<BadgeProps> = ({ status }) => {
-  const className = `${styles["status-badge"]} ${getStatusClass(status)}`;
+export const Badge: React.FC<BadgeProps> = ({ status, color }) => {
+  const className = `${styles["status-badge"]} ${getStatusClass(
+    color || status,
+  )}`;
   return <span className={className}>{status}</span>;
 };

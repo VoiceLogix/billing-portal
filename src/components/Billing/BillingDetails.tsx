@@ -5,7 +5,6 @@ import { Typography } from "../UI/Typography";
 import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 import { formatDate } from "../../utils/formatDate";
-import styles from "./BillingTable.module.css";
 import { BillingDetailsTable } from "./BillingDetailsTable";
 import { Button } from "../UI/Button";
 import { useGetOrderDetails } from "../../service/getOrderDetails";
@@ -30,8 +29,8 @@ export const BillingDetails = ({
 
   const {
     data: orderDetails,
-    isLoading: orderdetailsLoading,
-    isError: orderdetailsError,
+    isLoading: orderDetailsLoading,
+    isError: orderDetailsError,
   } = useGetOrderDetails(orderId);
 
   const order = orderDetails?.clientOrderDetails;
@@ -91,8 +90,8 @@ export const BillingDetails = ({
           </Box>
         </Box>
       )}
-      {orderdetailsLoading && <Loading />}
-      {orderdetailsError && <Error />}
+      {orderDetailsLoading && <Loading />}
+      {orderDetailsError && <Error />}
     </Model>
   );
 };

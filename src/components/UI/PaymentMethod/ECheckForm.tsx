@@ -14,7 +14,6 @@ type FormValues = {
 const ACCOUNT_TYPES = ["Checking", "Savings"] as const;
 
 const formatRoutingNumber = (value: string) => {
-  // Strip non‐digits, then group into XXX XXX XXX
   const onlyDigits = value.replace(/\D/g, "").slice(0, 9);
   const parts: string[] = [];
   for (let i = 0; i < onlyDigits.length; i += 3) {
@@ -41,16 +40,13 @@ const ECheckForm = () => {
   });
 
   const onSubmit = (data: FormValues) => {
-    // Strip spaces from routingNumber before sending
     const rawRouting = data.routingNumber.replace(/\D/g, "");
   };
 
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        {/* ---------- Routing Number & Bank Name ---------- */}
         <div className={styles.grid2Cols}>
-          {/* Routing Number */}
           <div>
             <label className={styles.label}>Routing Number*</label>
             <Controller
@@ -83,7 +79,6 @@ const ECheckForm = () => {
             )}
           </div>
 
-          {/* Bank Name */}
           <div>
             <label className={styles.label}>Bank Name*</label>
             <input
@@ -99,7 +94,6 @@ const ECheckForm = () => {
           </div>
         </div>
 
-        {/* ---------- Account Number ---------- */}
         <div>
           <label className={styles.label}>Account Number*</label>
           <Controller
@@ -134,9 +128,7 @@ const ECheckForm = () => {
           )}
         </div>
 
-        {/* ---------- Name on Bank Account & Account Type ---------- */}
         <div className={styles.grid2Cols}>
-          {/* Name on Bank Account */}
           <div>
             <label className={styles.label}>Name on Bank Account*</label>
             <input
@@ -153,7 +145,6 @@ const ECheckForm = () => {
             )}
           </div>
 
-          {/* Account Type (select) */}
           <div>
             <label className={styles.label}>Account Type*</label>
             <Controller
@@ -161,15 +152,14 @@ const ECheckForm = () => {
               control={control}
               rules={{ required: "Account type is required" }}
               render={({ field }) => {
-                const dropdownItems = ACCOUNT_TYPES.map((type) => ({
-                  label: type,
-                  onSelect: () => field.onChange(type),
-                }));
+                const dropdownItems = ACCOUNT_TYPES.map((type) => type);
 
                 return (
-                  <div>
-                    <Dropdown label={field.value} items={dropdownItems} />
-                  </div>
+                  <Dropdown
+                    value={field.value}
+                    items={dropdownItems}
+                    onChange={() => {}}
+                  />
                 );
               }}
             />
@@ -179,7 +169,6 @@ const ECheckForm = () => {
           </div>
         </div>
 
-        {/* ---------- Email ---------- */}
         <div>
           <label className={styles.label}>Email*</label>
           <input

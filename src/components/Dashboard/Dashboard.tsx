@@ -5,18 +5,17 @@ import { BillingCycle } from "./BillingCycle";
 import { AccountNumber } from "./AccountNumber";
 import { useGetAccountInfo } from "../../service/getAccountInfo";
 import { useGetInvoiceHistory } from "../../service/getInvoiceHistory";
-import { Typography } from "../UI/Typography";
-import { InvoiceAndPayment } from "./InvoiceAndPayment";
 import { useGetAgingInvoices } from "../../service/getAgingInvoices";
 import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 import { PaymentCardPreview } from "../UI/PaymentMethod/PaymentCardPreview";
+import { InvoiceAndPayment } from "./InvoiceAndPayment";
 
 export const Dashboard = () => {
   const {
     data: accountInfo,
     isLoading: accountInfoLoading,
-    isError: acoountInfoError,
+    isError: accountInfoError,
   } = useGetAccountInfo();
   const {
     data: invoiceHistory,
@@ -32,7 +31,7 @@ export const Dashboard = () => {
   const isFetching =
     accountInfoLoading || invoiceHistoryLoading || agingInvoicesLoading;
   const hasError =
-    acoountInfoError || invoiceHistoryError || agingInvoicesError;
+    accountInfoError || invoiceHistoryError || agingInvoicesError;
   if (isFetching) {
     return <Loading />;
   }

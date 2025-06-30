@@ -1,15 +1,15 @@
 import { useGetAccountSummaryCounts } from "../../service/getAccountSummaryCounts";
-import { useGetProfileDetails } from "../../service/getProfileDetails";
 import { BriefcaseSVG } from "../SVG/BriefcaseSVG";
 import { Box } from "../UI/Box";
 import { Typography } from "../UI/Typography";
 import { CardLayout } from "../UI/CardLayout/CardLayout";
+import { useGetSubscriberInfo } from "../../service/getSubscriberInfo";
 
 export const AccountNumber = () => {
   const { data: accountSummary } = useGetAccountSummaryCounts();
-  const { data: profileDetails } = useGetProfileDetails();
-  const addressLen = profileDetails?.lstAddresses?.length;
-  const contactLen = profileDetails?.clientCustomerContacts?.length;
+  const { data: subscriberInfo } = useGetSubscriberInfo();
+  const addressLen = subscriberInfo?.address?.length;
+  const contactLen = subscriberInfo?.contact?.length;
 
   return (
     <CardLayout width="368px" height="331px">
@@ -18,7 +18,7 @@ export const AccountNumber = () => {
           <Box display="flex" flexDirection="column">
             <Typography color="secondaryText">Account Number</Typography>
             <Typography size="large" weight="medium">
-              {profileDetails?.accountNumber}
+              {subscriberInfo?.accountNumber}
             </Typography>
           </Box>
           <Box>

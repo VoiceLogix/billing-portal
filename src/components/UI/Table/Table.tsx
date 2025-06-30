@@ -8,13 +8,14 @@ const isDate = (value: unknown): value is Date => {
 
 export interface Column<T> {
   header: string;
-  accessor: keyof T;
+  accessor: keyof T | "";
   align?: "left" | "center" | "right";
   sortable?: boolean;
   isLink?: boolean;
   width?: string;
   searchable?: boolean;
   Cell?: (value: T[keyof T], row: T) => React.ReactNode;
+  key?: string;
 }
 
 export interface TableProps<T extends Record<string, any>> {
@@ -43,6 +44,12 @@ export function Table<T extends Record<string, any>>({
   const [sortKey, setSortKey] = useState<keyof T | undefined>(defaultSortKey);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">(defaultSortOrder);
 
+  const getColumnKey = (col: Column<T>, index: number): string => {
+    if (col.key) return col.key;
+    if (col.accessor && col.accessor !== "") return String(col.accessor);
+    return `column-${index}`;
+  };
+
   const filteredData = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
     if (!term) return data;
@@ -50,6 +57,7 @@ export function Table<T extends Record<string, any>>({
     return data.filter((row) => {
       return columns.some((col) => {
         if (col.searchable === false) return false;
+        if (!col.accessor || col.accessor === "") return false; // Skip custom columns in search
 
         const value = row[col.accessor];
         if (value == null) return false;
@@ -148,7 +156,7 @@ export function Table<T extends Record<string, any>>({
       <table className={styles.table}>
         <thead>
           <tr>
-            {columns.map((col) => {
+            {columns.map((col, index) => {
               const isSorted = sortKey === col.accessor;
               const headerClass = [
                 styles.th,
@@ -156,18 +164,22 @@ export function Table<T extends Record<string, any>>({
                 col.align === "right" ? styles.alignRight : "",
                 col.align === "center" ? styles.alignCenter : "",
               ].join(" ");
+              const columnKey = getColumnKey(col, index);
+
               return (
                 <th
-                  key={String(col.accessor)}
+                  key={columnKey}
                   className={headerClass}
                   style={col.width ? { width: col.width } : undefined}
                   onClick={
-                    col.sortable ? () => handleSort(col.accessor) : undefined
+                    col.sortable && col.accessor && col.accessor !== ""
+                      ? () => handleSort(col.accessor as keyof T)
+                      : undefined
                   }
                 >
                   <div className={styles.headerContent}>
                     <span className={styles.headerText}>{col.header}</span>
-                    {col.sortable && (
+                    {col.sortable && col.accessor && col.accessor !== "" && (
                       <ArrowDownFilled
                         rotateUp={isSorted && sortOrder === "asc"}
                       />
@@ -182,8 +194,11 @@ export function Table<T extends Record<string, any>>({
           {sortedData.length > 0 ? (
             sortedData.map((row, idx) => (
               <tr key={idx}>
-                {columns.map((col) => {
-                  const raw = row[col.accessor];
+                {columns.map((col, colIndex) => {
+                  const raw =
+                    col.accessor && col.accessor !== ""
+                      ? row[col.accessor]
+                      : undefined;
                   const text = raw == null ? "" : String(raw);
                   const cellNode = col.Cell ? col.Cell(raw, row) : text;
                   const content = col.isLink ? (
@@ -196,10 +211,12 @@ export function Table<T extends Record<string, any>>({
                     col.align === "right" ? styles.alignRight : "",
                     col.align === "center" ? styles.alignCenter : "",
                   ].join(" ");
+                  const columnKey = getColumnKey(col, colIndex);
+
                   return (
                     <td
                       style={col.width ? { width: col.width } : undefined}
-                      key={String(col.accessor)}
+                      key={columnKey}
                       className={cellClass}
                     >
                       {content}

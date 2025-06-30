@@ -3,6 +3,8 @@ import styles from "./styles.module.css";
 import { Dashboard } from "../Dashboard/Dashboard";
 import BillingListing, { BillingType } from "../Billing/BillingListing";
 import { Payments } from "../Payments/Payments";
+import Invoices from "../Invoices/Invoices";
+import { CompanyProfile } from "../CompanyProfile/CompanyProfile";
 
 const BillingTabs = () => (
   <>
@@ -29,9 +31,6 @@ const BillingTabs = () => (
         <Tabs.Trigger className={styles.TabsTrigger} value="tab7">
           Subscription
         </Tabs.Trigger>
-        <Tabs.Trigger className={styles.TabsTrigger} value="tab8">
-          Hierarchy
-        </Tabs.Trigger>
         <Tabs.Trigger
           disabled
           className={styles.TabsTrigger}
@@ -47,13 +46,16 @@ const BillingTabs = () => (
       <Tabs.Content className={styles.TabsContent} value="tab3">
         <BillingListing type={BillingType.Orders} />
       </Tabs.Content>
-      <Tabs.Content className={styles.TabsContent} value="tab4"></Tabs.Content>
+      <Tabs.Content className={styles.TabsContent} value="tab4">
+        <Invoices />
+      </Tabs.Content>
       <Tabs.Content className={styles.TabsContent} value="tab5">
         <Payments />
       </Tabs.Content>
-      <Tabs.Content className={styles.TabsContent} value="tab6"></Tabs.Content>
+      <Tabs.Content className={styles.TabsContent} value="tab6">
+        <CompanyProfile />
+      </Tabs.Content>
       <Tabs.Content className={styles.TabsContent} value="tab7"></Tabs.Content>
-      <Tabs.Content className={styles.TabsContent} value="tab8"></Tabs.Content>
     </Tabs.Root>
   </>
 );

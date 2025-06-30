@@ -22,7 +22,7 @@ input {
 }
 
 .searchInputContainer .searchInput::placeholder {
-  color: #9ca3af;
+  color: var(--color-text-gray);
 }
 
 .searchIcon {
@@ -32,6 +32,5 @@ input {
   transform: translateY(-50%);
   width: 16px;
   height: 16px;
-  color: #9ca3af;
   pointer-events: none;
 }

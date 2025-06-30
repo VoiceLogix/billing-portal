@@ -1,4 +1,4 @@
-interface Address {
+export interface Address {
   id: string;
   addLine1: string | null;
   addLine2: string | null;
@@ -15,28 +15,28 @@ interface Address {
   unpaidInvoiceList: boolean;
 }
 
-interface ClientCommunicationDTO {
+export interface ClientCommunicationDTO {
   id: string;
   contactId: string | null;
   value: string | null;
   type: string;
 }
 
-interface ClientCustomerContactDTO {
+export interface ClientCustomerContact {
   id: string;
   salutation: string | null;
   firstName: string;
   lastName: string;
   contactType: string | null;
   userName: string;
-  contactNumber: string | null;
   emailId: string;
   faceBookUserName: string | null;
   type: number;
   locale: string;
   clientCommunicationDTOList: ClientCommunicationDTO[];
-  cellContactNumber: string | null;
   alternateContactNumber: string | null;
+  cellContactNumber: string | null;
+  contactNumber: string | null;
   designation: string;
   userId: string;
   userRole: string;
@@ -46,7 +46,19 @@ interface ClientCustomerContactDTO {
   lstContactAttributes: any[];
 }
 
+export interface ClientCountryDTO {
+  countryCode: string;
+  countryName: string;
+  id: string;
+  isoAlpha3: string;
+}
+
 export interface ProfileDetails {
+  clientSubscriberInfo: ClientSubscriberInfo;
+  clientCountryDTOList: ClientCountryDTO[];
+}
+
+export interface ClientSubscriberInfo {
   accessDenied: boolean;
   successful: boolean;
   locale: string | null;
@@ -81,82 +93,16 @@ export interface ProfileDetails {
   paymentDueInterval: number;
   billCycleStartDate: number;
   billCycleEndDate: number;
-  isProxiedInsideSelfare: boolean;
-  addressLine1: string | null;
-  addressLine2: string | null;
-  city: string | null;
-  zipCode: string | null;
-  state: string | null;
-  county: string | null;
-  country: string | null;
-  zipCodeExtension: string | null;
-  profileImageName: string | null;
-  base64ProfileImage: string | null;
-  selfcareRegistrationConfig: any;
-  clientAccountAttributeList: any;
-  clientCustomAttributeDTOs: any;
-  clientKYCAttributeDTOs: any;
-  clientContactAttributes: any;
   accountId: string;
   partyType: number;
   partyTypeString: string;
   partyRoleTypeString: string | null;
   accImageByteStringURL: string | null;
   lstAddresses: Address[];
-  clientCustomerContactDTO: ClientCustomerContactDTO;
-  clientCustomerContacts: ClientCustomerContactDTO[];
-  clientCustomerPayInfo: any;
-  clientCCProfileInfoList: any;
-  clientEcheckProfileInfoList: any;
-  clientDigitalProfileInfoList: any;
-  isPayInfoModify: boolean | null;
-  billingDom: number;
-  authorizedPaymentLimit: number | null;
-  dateFormat: string | null;
-  currencyId: string | null;
-  language: string | null;
-  timeZone: string | null;
-  dataFormatAllowedValues: any;
-  defaultCurrencyId: string;
-  defaultPaymentProfileId: string | null;
-  currentDateAsString: string | null;
-  primaryCurrency: number;
-  precision: number | null;
-  clientAccountAttributesList: any[];
-  isCardNumberUpdateEnabled: boolean;
-  notifyInvoice: any;
-  authenticationResponse: any;
-  fireBaseAPIKey: string | null;
+  clientCustomerContactDTO: ClientCustomerContact;
+  clientCustomerContacts: ClientCustomerContact[];
   accountType: string | null;
-  usPhoneFormat: string;
-  showSelfCareGrants: boolean | null;
-  showSelfcareMyInvoice: boolean | null;
-  showSelfcareInvoiceAgingData: boolean | null;
-  welcomeMessage: string | null;
-  advancedServiceDeskEnabled: boolean | null;
-  isNewSelfcare: boolean | null;
-  isSSOConfigured: boolean | null;
-  party: any;
-  tenantId: string | null;
-  showSelfcareActivityLogs: boolean | null;
-  isParentOrChildHierachy: boolean;
-  fromProxiedAccNumber: string | null;
-  fromProxiedUserName: string | null;
-  isEcheckEnabled: boolean;
-  totalAcccountBalance: number;
-  jsessionId: string | null;
-  clientPaymentAttributesConfig: any;
-  customCheckoutConfig: any;
+  billingDom: number;
   accountStatus: string | null;
-  selfcareOTPAuthKey: string | null;
   billingType: string | null;
-  billingOCSConfiguration: any;
-  isSubscriberProxy: boolean | null;
-  subscriberProxyUserName: string | null;
-  showBreadCrumbForSubscriberProxy: boolean | null;
-  qrCodeImgforTOTP: string | null;
-  leadStage: string | null;
-  attachmentSize: number | null;
-  selfcareReportEnabled: boolean;
-  externallyManagedGateway: boolean;
 }

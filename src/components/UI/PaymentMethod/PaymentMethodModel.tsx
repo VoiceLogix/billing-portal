@@ -14,7 +14,7 @@ const PaymentMethodModel = () => (
         Please fill all required fields
       </Typography>
     </Box>
-    <Box margin={"32px 10px 0px 0px"}>
+    <Box marginTop="24px">
       <TabsComponent
         tabs={[
           {

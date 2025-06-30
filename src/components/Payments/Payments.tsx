@@ -1,7 +1,7 @@
 import React from "react";
 import { Column, Table } from "../UI/Table/Table";
 import { Box } from "../UI/Box";
-import SearchInput from "../UI/SearchInput.tsx/SearchInput.tsx";
+import SearchInput from "../UI/Input.tsx/SearchInput.tsx";
 import { DownloadSVG } from "../SVG/DownloadSVG";
 import { Loading } from "../UI/Loading";
 import { paymentPdf, useGetPayments } from "../../service/getPayments";

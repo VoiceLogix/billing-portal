@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Box } from "../UI/Box";
-import SearchInput from "../UI/SearchInput.tsx/SearchInput.tsx";
+import SearchInput from "../UI/Input.tsx/SearchInput.tsx";
 import BillingTable from "./BillingTable";
 import { useGetBillingListing } from "../../service/getQuoteListing";
 import { Loading } from "../UI/Loading";
