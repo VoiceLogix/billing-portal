@@ -2,7 +2,7 @@ import axios from "axios";
 import { BillingAuthResponse } from "../types/BillingSubscriberResult";
 
 // export const baseURL = "https://sb-manage.unitydial.com/billing-api/";
-export const baseURL = "https://onebillapi.fly.dev";
+export const baseURL = "https://onebillapi.fly.dev/";
 // export const baseURL = "http://localhost:8085/";
 export const AUTH_URL = `${baseURL}auth`;
 
