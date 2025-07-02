@@ -12,6 +12,7 @@ interface ModelProps {
   title?: string;
   subtitle?: string;
   width?: string | number;
+  height?: string | number;
 }
 
 const Model = ({
@@ -21,12 +22,16 @@ const Model = ({
   title,
   subtitle,
   width = "600px",
+  height = "500px",
 }: ModelProps) => {
   return (
     <Dialog.Root open={open}>
       <Dialog.Portal>
         <Dialog.Overlay className={styles.DialogOverlay} />
-        <Dialog.Content className={styles.DialogContent} style={{ width }}>
+        <Dialog.Content
+          className={styles.DialogContent}
+          style={{ width, height }}
+        >
           <Box display="flex" flexDirection="column">
             <Typography size="big" weight="semibold">
               {title}

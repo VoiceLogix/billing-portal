@@ -7,18 +7,14 @@ import PaymentMethodModel from "./PaymentMethodModel";
 import { Button } from "../Button";
 import { Badge } from "../Badge/Badge";
 import { CardLayout } from "../CardLayout/CardLayout";
-import { RadioSelect } from "../RadioSelect/RadioSelect";
+import { useGetSubscriberInfo } from "../../../service/getSubscriberInfo";
 
-export const PaymentCardPreview = ({
-  autoPay = true,
-}: {
-  autoPay?: boolean;
-}) => {
-  const accountDetails = {
-    name: "Michael Schott",
-    accountNumber: "**** **** ***** 1200",
-    status: "active",
-  };
+export const PaymentCardPreview = () => {
+  const { data: subscriberInfo } = useGetSubscriberInfo();
+
+  const defaultCard = subscriberInfo?.payInfo?.find(
+    (card) => card.isDefault || card.status === "Active",
+  );
 
   const [openPaymentMethodModel, setOpenPaymentMethodModel] = useState(false);
   return (
@@ -26,8 +22,10 @@ export const PaymentCardPreview = ({
       <Model
         open={openPaymentMethodModel}
         handleClose={() => setOpenPaymentMethodModel(false)}
+        width="1000px"
+        height="800px"
       >
-        <PaymentMethodModel />
+        <PaymentMethodModel card={defaultCard} />
       </Model>
       <CardLayout width="368px" height="152px">
         <Box
@@ -43,10 +41,21 @@ export const PaymentCardPreview = ({
           >
             <Box display="flex" flexDirection="column" gap="6px">
               <Typography color="secondaryText">Payment Methods</Typography>
-              {accountDetails.name ? (
+              {defaultCard ? (
                 <>
-                  <Typography weight="medium">{accountDetails.name}</Typography>
-                  <Typography>{accountDetails.accountNumber}</Typography>
+                  <div
+                    style={{
+                      textTransform: "capitalize",
+                    }}
+                  >
+                    <Typography weight="semibold">
+                      {defaultCard?.creditCardInfo.firstName}{" "}
+                      {defaultCard?.creditCardInfo.lastName}
+                    </Typography>
+                  </div>
+                  <Typography weight="medium">
+                    {defaultCard?.creditCardInfo.cardNumber}
+                  </Typography>
                 </>
               ) : (
                 <Typography>
@@ -55,23 +64,22 @@ export const PaymentCardPreview = ({
                 </Typography>
               )}
             </Box>
-            {accountDetails.name ? (
+            {defaultCard ? (
               <Box>
-                <Badge status={accountDetails.status} />
+                <Badge status={defaultCard?.status} />
               </Box>
             ) : (
               <CardSVG />
             )}
           </Box>
           <Box display="flex" justifyContent="space-between">
-            {autoPay && <RadioSelect label="Autopay" checked={true} />}
             <Button
               padding="small"
               borderColor="blueBorder"
               borderSize="1px"
               bgColor="white"
               color="blueText"
-              text="Edit"
+              text="Edit Method"
               onClick={() => setOpenPaymentMethodModel(true)}
             />
           </Box>

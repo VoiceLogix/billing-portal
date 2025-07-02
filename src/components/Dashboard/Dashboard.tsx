@@ -10,6 +10,7 @@ import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 import { PaymentCardPreview } from "../UI/PaymentMethod/PaymentCardPreview";
 import { InvoiceAndPayment } from "./InvoiceAndPayment";
+import { useGetProfileDetails } from "../../service/getProfileDetails";
 
 export const Dashboard = () => {
   const {
@@ -46,7 +47,7 @@ export const Dashboard = () => {
             accountInfo={accountInfo}
             invoiceHistory={invoiceHistory}
           />
-          <PaymentCardPreview autoPay={false} />
+          <PaymentCardPreview />
         </Box>
         <Box display="flex" flexDirection="column" gap="16px">
           <DueAmount />

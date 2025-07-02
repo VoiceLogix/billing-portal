@@ -9,8 +9,7 @@ import { Button } from "../UI/Button";
 import { useGetPayInvoiceDetails } from "../../service/getInvoiceListing";
 import { InvoiceInfo } from "../../types/InvoiceListingInterface";
 import Dropdown from "../UI/Dropdown/Dropdown";
-
-const cardOptions = ["23** **** ***** 1200", "23** **** ***** 1222"];
+import { useGetSubscriberInfo } from "../../service/getSubscriberInfo";
 
 export const InvoicesDetails = ({
   invoiceDetails,
@@ -20,8 +19,13 @@ export const InvoicesDetails = ({
   setSelectedInvoice: React.Dispatch<React.SetStateAction<InvoiceInfo | null>>;
 }) => {
   const [open, setOpen] = useState(true);
+  const { data: subscriberInfo } = useGetSubscriberInfo();
 
-  const [selectedCard, setSelectedCard] = useState(cardOptions[0]);
+  const defaultCard = subscriberInfo?.payInfo?.find(
+    (card) => card.isDefault || card.status === "Active",
+  );
+
+  const [selectedCard, setSelectedCard] = useState(defaultCard);
 
   const {
     data: payInvoiceDetails,
@@ -63,7 +67,9 @@ export const InvoicesDetails = ({
             <Box display="flex" gap="10px">
               <Dropdown
                 value="Select Card"
-                items={cardOptions}
+                items={subscriberInfo?.payInfo?.map(
+                  (card) => card.creditCardInfo.cardNumber,
+                )}
                 width="360px"
                 withBackground={false}
                 onChange={(item) => {

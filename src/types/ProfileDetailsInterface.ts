@@ -53,6 +53,22 @@ export interface ClientCountryDTO {
   isoAlpha3: string;
 }
 
+export interface ClientCCProfileInfo {
+  paymentProfileId: string;
+  referenceKey: string;
+  status: string;
+  createdDate: string;
+  cardNumber: string;
+  cardType: string;
+  cardExpiryMonth: string;
+  cardExpiryYear: string;
+  cardExpiryDate: string | null;
+  firstName: string;
+  lastName: string;
+  expired: boolean;
+  default: boolean;
+}
+
 export interface ProfileDetails {
   clientSubscriberInfo: ClientSubscriberInfo;
   clientCountryDTOList: ClientCountryDTO[];
@@ -101,6 +117,7 @@ export interface ClientSubscriberInfo {
   lstAddresses: Address[];
   clientCustomerContactDTO: ClientCustomerContact;
   clientCustomerContacts: ClientCustomerContact[];
+  clientCCProfileInfoList: ClientCCProfileInfo[];
   accountType: string | null;
   billingDom: number;
   accountStatus: string | null;

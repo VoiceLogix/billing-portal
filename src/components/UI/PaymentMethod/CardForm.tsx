@@ -2,6 +2,7 @@ import { useForm, Controller } from "react-hook-form";
 import styles from "./form.module.css";
 import { CardTypeSVG, PaymentCardType } from "../../SVG/CardTypeSVG";
 import TextInput from "../TextInput.tsx/TextInput";
+import { CreditCardInfo } from "../../../types/BillingSubscriberResult";
 
 type FormValues = {
   firstName: string;
@@ -57,7 +58,7 @@ const formatExpiryDate = (value: string) => {
   return raw.length >= 3 ? `${raw.slice(0, 2)}/${raw.slice(2, 4)}` : raw;
 };
 
-const CardForm = () => {
+const CardForm = ({ card }: { card: CreditCardInfo }) => {
   const {
     register,
     handleSubmit,
@@ -66,12 +67,12 @@ const CardForm = () => {
     formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      firstName: card.firstName,
+      lastName: card.lastName,
       email: "",
-      cardType: "visa",
-      cardNumber: "",
-      expiryDate: "",
+      cardType: card.cardType as PaymentCardType,
+      cardNumber: card.cardNumber,
+      expiryDate: `${card.cardExpiryMonth}/${card.cardExpiryYear}`,
       cvv: "",
     },
   });
@@ -91,7 +92,6 @@ const CardForm = () => {
             register={register}
             rules={{ required: "First name is required" }}
             placeholder="John"
-            autoComplete="given-name"
             error={errors.firstName}
           />
 
@@ -101,7 +101,6 @@ const CardForm = () => {
             register={register}
             rules={{ required: "Last name is required" }}
             placeholder="Doe"
-            autoComplete="family-name"
             error={errors.lastName}
           />
         </div>
@@ -119,7 +118,6 @@ const CardForm = () => {
           }}
           type="email"
           placeholder="example@company.com"
-          autoComplete="email"
           error={errors.email}
         />
 

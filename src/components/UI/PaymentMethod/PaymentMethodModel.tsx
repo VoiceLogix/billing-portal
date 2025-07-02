@@ -1,34 +1,55 @@
+import React, { useEffect } from "react";
 import { Box } from "../Box";
-import TabsComponent from "../Tabs/Tabs";
 import { Typography } from "../Typography";
-import CardForm from "./CardForm";
-import ECheckForm from "./ECheckForm";
+import { PayInfo } from "../../../types/BillingSubscriberResult";
+import { useGetPaymentGateWayUrl } from "../../../service/getPaymentGateWayUrl";
+import { Button } from "../Button";
+import axios from "axios";
 
-const PaymentMethodModel = () => (
-  <Box>
-    <Box display="flex" flexDirection="column">
-      <Typography size="big" weight="semibold">
-        Add New Payment Method
-      </Typography>
-      <Typography color="secondaryText">
-        Please fill all required fields
-      </Typography>
-    </Box>
-    <Box marginTop="24px">
-      <TabsComponent
-        tabs={[
-          {
-            label: "Credit/Debit Card",
-            content: <CardForm />,
-          },
-          {
-            label: "E-Check",
-            content: <ECheckForm />,
-          },
-        ]}
+interface Props {
+  card?: PayInfo;
+}
+
+const PaymentMethodModal: React.FC<Props> = ({ card }) => {
+  console.log("referenceKey", card?.referenceKey || null);
+
+  const { data: gatewayData } = useGetPaymentGateWayUrl(
+    card?.referenceKey || null,
+  );
+
+  console.log("gatewayData", gatewayData);
+  const handleCancel = () => {
+    console.log("handleCancel");
+  };
+
+  const handleSave = () => {
+    console.log("handleSave");
+  };
+
+  return (
+    <Box width="100%" height="100%" padding="24px">
+      <Box display="flex" flexDirection="column" marginBottom="24px">
+        <Typography size="big" weight="semibold">
+          Add New Payment Method
+        </Typography>
+        <Typography color="secondaryText">
+          Please fill all required fields
+        </Typography>
+      </Box>
+      <iframe
+        src={gatewayData?.paymentGatewayUrl}
+        width="100%"
+        height="90%"
+        style={{ border: "none" }}
       />
+      {/* <Box display="flex" justifyContent="flex-end" gap="12px">
+        <Button onClick={handleCancel}>Cancel</Button>
+        <Button bgColor="blueAccent" onClick={handleSave} type="submit">
+          {"Save"}
+        </Button>
+      </Box> */}
     </Box>
-  </Box>
-);
+  );
+};
 
-export default PaymentMethodModel;
+export default PaymentMethodModal;
