@@ -3,6 +3,7 @@
   height: 14px;
   border-radius: 50%;
   border: 2px solid var(--color-border);
+  cursor: pointer;
 }
 .radioSelect input[type="radio"]:checked {
   border-color: var(--color-accent);

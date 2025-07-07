@@ -28,11 +28,27 @@ export const Dashboard = () => {
     isLoading: agingInvoicesLoading,
     isError: agingInvoicesError,
   } = useGetAgingInvoices();
+  const {
+    data: profileDetails,
+    isLoading: profileDetailsLoading,
+    isError: profileDetailsError,
+  } = useGetProfileDetails();
+
+  const defaultCard =
+    profileDetails?.clientSubscriberInfo?.clientCCProfileInfoList?.find(
+      (card) => card.default || card.status === "Active",
+    );
 
   const isFetching =
-    accountInfoLoading || invoiceHistoryLoading || agingInvoicesLoading;
+    accountInfoLoading ||
+    invoiceHistoryLoading ||
+    agingInvoicesLoading ||
+    profileDetailsLoading;
   const hasError =
-    accountInfoError || invoiceHistoryError || agingInvoicesError;
+    accountInfoError ||
+    invoiceHistoryError ||
+    agingInvoicesError ||
+    profileDetailsError;
   if (isFetching) {
     return <Loading />;
   }
@@ -47,7 +63,7 @@ export const Dashboard = () => {
             accountInfo={accountInfo}
             invoiceHistory={invoiceHistory}
           />
-          <PaymentCardPreview />
+          <PaymentCardPreview cardDetails={defaultCard} />
         </Box>
         <Box display="flex" flexDirection="column" gap="16px">
           <DueAmount />

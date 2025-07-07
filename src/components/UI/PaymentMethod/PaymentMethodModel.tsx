@@ -4,10 +4,10 @@ import { Typography } from "../Typography";
 import { PayInfo } from "../../../types/BillingSubscriberResult";
 import { useGetPaymentGateWayUrl } from "../../../service/getPaymentGateWayUrl";
 import { Button } from "../Button";
-import axios from "axios";
+import { ClientCCProfileInfo } from "../../../types/ProfileDetailsInterface";
 
 interface Props {
-  card?: PayInfo;
+  card?: PayInfo | ClientCCProfileInfo;
 }
 
 const PaymentMethodModal: React.FC<Props> = ({ card }) => {

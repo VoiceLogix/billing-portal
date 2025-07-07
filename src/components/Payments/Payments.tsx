@@ -9,6 +9,7 @@ import { Error } from "../UI/Error";
 import { PaymentInfo } from "../../types/PaymentsInterface";
 import { formatDate } from "../../utils/formatDate";
 import { PaymentCards } from "./PaymentCards";
+import { useGetProfileDetails } from "../../service/getProfileDetails";
 
 export function Payments() {
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -18,8 +19,14 @@ export function Payments() {
     isError: paymentsError,
   } = useGetPayments();
 
-  const isFetching = paymentsLoading;
-  const hasError = paymentsError;
+  const {
+    data: profileDetails,
+    isLoading: profileDetailsLoading,
+    isError: profileDetailsError,
+  } = useGetProfileDetails();
+
+  const isFetching = paymentsLoading || profileDetailsLoading;
+  const hasError = paymentsError || profileDetailsError;
 
   if (isFetching) {
     return <Loading />;
@@ -96,7 +103,7 @@ export function Payments() {
           />
         </div>
       </Box>
-      <PaymentCards />
+      <PaymentCards profileDetails={profileDetails} />
     </Box>
   );
 }
