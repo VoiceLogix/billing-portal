@@ -10,6 +10,8 @@ import { useGetPayInvoiceDetails } from "../../service/getInvoiceListing";
 import { InvoiceInfo } from "../../types/InvoiceListingInterface";
 import Dropdown from "../UI/Dropdown/Dropdown";
 import { useGetSubscriberInfo } from "../../service/getSubscriberInfo";
+import { usePayInvoice } from "../../service/payinvoice";
+import { Notification } from "../UI/Notification/Notification";
 
 export const InvoicesDetails = ({
   invoiceDetails,
@@ -26,6 +28,9 @@ export const InvoicesDetails = ({
   );
 
   const [selectedCard, setSelectedCard] = useState(defaultCard);
+  const [amount, setAmount] = useState<string | null>(
+    invoiceDetails.dueAmount.toString(),
+  );
 
   const {
     data: payInvoiceDetails,
@@ -33,13 +38,30 @@ export const InvoicesDetails = ({
     isError: payInvoiceDetailsError,
   } = useGetPayInvoiceDetails(invoiceDetails.invoiceNumber);
 
+  const {
+    mutateAsync: payInvoice,
+    isPending: payInvoicePending,
+    isSuccess: payInvoiceSuccess,
+    isError: payInvoiceError,
+  } = usePayInvoice();
+
   const handleClose = () => {
     setOpen(false);
     setSelectedInvoice(null);
   };
 
-  const handlePay = () => {
-    console.log("payInvoiceDetails", payInvoiceDetails);
+  const handlePay = async () => {
+    await payInvoice({
+      invoiceNumber: invoiceDetails.invoiceNumber,
+      makePayment: false,
+      oneTimePayment: false,
+      paymentAmount: amount,
+      paymentAttributeValues: [],
+      paymentProfileId: selectedCard?.paymentProfileId,
+    });
+    setTimeout(() => {
+      handleClose();
+    }, 2000);
   };
 
   return (
@@ -66,14 +88,18 @@ export const InvoicesDetails = ({
             <Typography>Select Card to pay</Typography>
             <Box display="flex" gap="10px">
               <Dropdown
-                value="Select Card"
+                value={selectedCard?.creditCardInfo.cardNumber || "Select Card"}
                 items={subscriberInfo?.payInfo?.map(
                   (card) => card.creditCardInfo.cardNumber,
                 )}
                 width="360px"
                 withBackground={false}
                 onChange={(item) => {
-                  setSelectedCard(item);
+                  setSelectedCard(
+                    subscriberInfo?.payInfo?.find(
+                      (card) => card.creditCardInfo.cardNumber === item,
+                    ),
+                  );
                 }}
               />
             </Box>
@@ -85,20 +111,37 @@ export const InvoicesDetails = ({
             flexDirection="column"
             gap="10px"
           >
-            <InvoicesDetailsTable invoiceDetails={invoiceDetails} />
-            <Box
-              display="flex"
-              justifyContent="flex-end"
-              marginTop="20px"
-              gap="10px"
-            >
+            <InvoicesDetailsTable
+              amount={amount}
+              setAmount={setAmount}
+              invoiceDetails={invoiceDetails}
+            />
+
+            <Notification
+              type="error"
+              message={
+                payInvoiceSuccess
+                  ? "Payment successful"
+                  : "Payment failed, please try again"
+              }
+              showNotification={payInvoiceSuccess || payInvoiceError}
+            />
+
+            <Box display="flex" justifyContent="flex-end" gap="10px">
               <Button
                 onClick={handleClose}
                 bgColor="bgNeutral"
                 text="Close"
                 color="neutral"
+                disabled={payInvoicePending}
               />
-              <Button onClick={handlePay} bgColor="blueAccent" text="Pay" />
+              <Button
+                onClick={handlePay}
+                bgColor="blueAccent"
+                text="Pay"
+                disabled={payInvoicePending}
+                isLoading={payInvoicePending}
+              />
             </Box>
           </Box>
         </Box>

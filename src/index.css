@@ -37,23 +37,3 @@ body {
 hr {
   margin: 0;
 }
-
-.toast-success {
-  background-color: #00a43319;
-  color: #00713fde;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  height: 44px;
-  padding: 10px 16px;
-}
-
-.toast-error {
-  background-color: #f3000d14;
-  color: #c40006d3;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  height: 44px;
-  padding: 10px 16px;
-}

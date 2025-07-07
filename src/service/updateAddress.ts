@@ -1,39 +1,31 @@
 import { axiosInstance } from "./axiosInstance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import { getSubscriberInfo } from "./getSubscriberInfo";
 
 export const updateAddress = async (data: any) => {
   const response = await axiosInstance.put("/updateProfile/address", data);
+  const errorDescription =
+    response?.data?.clientValidationErrorInfo?.[0]?.errorDescription;
+  if (errorDescription) {
+    console.log("errorDescription", errorDescription);
+    throw new Error(errorDescription);
+  }
   return response.data;
 };
 
-interface UseUpdateAddressOptions {
-  onClose: () => void;
-  isUpdate: boolean;
-}
-
-export const useUpdateAddress = ({
-  onClose,
-  isUpdate,
-}: UseUpdateAddressOptions) => {
+export const useUpdateAddress = (handleClose: () => void) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: any) => updateAddress(data),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["profileDetails"] });
-      toast.success(
-        isUpdate
-          ? "Address updated successfully"
-          : "Address added successfully",
-      );
-
-      onClose();
+      setTimeout(() => {
+        handleClose();
+      }, 2000);
     },
     onError: (error: unknown) => {
       console.error("Address mutation error:", error);
-      toast.error(isUpdate ? "Error updating address" : "Error adding address");
     },
   });
 };
@@ -44,26 +36,32 @@ export const deleteAddress = async (addressId: string) => {
   const response = await axiosInstance.delete(
     `/deleteAddress/${accountNumber}/${addressId}`,
   );
+  const responseStatus = response?.data?.status === "OK";
+
+  const errorDescription =
+    response?.data?.validationResponse?.validationErrorInfo?.[0]?.message;
+
+  if (errorDescription || !responseStatus) {
+    throw new Error(
+      errorDescription || "Error deleting address, please try again",
+    );
+  }
   return response.data;
 };
 
-interface UseDeleteAddressOptions {
-  onClose: () => void;
-}
-
-export const useDeleteAddress = ({ onClose }: UseDeleteAddressOptions) => {
+export const useDeleteAddress = (handleClose: () => void) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: any) => deleteAddress(data.addressId),
+    mutationFn: (addressId: string) => deleteAddress(addressId),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["profileDetails"] });
-      toast.success("Address deleted successfully");
-      onClose();
+      setTimeout(() => {
+        handleClose();
+      }, 2000);
     },
     onError: (error: unknown) => {
       console.error("Address deletion error:", error);
-      toast.error("Error deleting address");
     },
   });
 };

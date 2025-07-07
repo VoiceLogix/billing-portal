@@ -14,6 +14,8 @@ import {
   useDeleteAddress,
   useUpdateAddress,
 } from "../../service/updateAddress";
+import { Notification } from "../UI/Notification/Notification";
+import { getAddressNotification } from "./utils";
 
 interface AddressFormData {
   zip: string;
@@ -43,16 +45,16 @@ export const AddressModel = ({
   const {
     mutate: updateAddressMutation,
     isPending: isUpdateAddressMutationPending,
-  } = useUpdateAddress({
-    onClose: handleClose,
-    isUpdate,
-  });
+    isSuccess: isUpdateAddressMutationSuccess,
+    isError: isUpdateAddressMutationError,
+  } = useUpdateAddress(handleClose);
   const {
     mutate: deleteAddressMutation,
     isPending: isDeleteAddressMutationPending,
-  } = useDeleteAddress({
-    onClose: handleClose,
-  });
+    isSuccess: isDeleteAddressMutationSuccess,
+    isError: isDeleteAddressMutationError,
+    error: deleteAddressMutationError,
+  } = useDeleteAddress(handleClose);
 
   const countries = useMemo(() => {
     return clientCountryDTOList?.map((c) => c.countryName) || [];
@@ -147,7 +149,7 @@ export const AddressModel = ({
     });
   };
 
-  const onSubmit = (data: AddressFormData) => {
+  const onSubmit = async (data: AddressFormData) => {
     const formData = {
       lstAddresses: [
         {
@@ -160,6 +162,20 @@ export const AddressModel = ({
 
     updateAddressMutation(formData);
   };
+
+  const handleDeleteAddress = async () => {
+    deleteAddressMutation(selectedAddress?.id);
+  };
+
+  const { notificationType, notificationMessage, showNotification } =
+    getAddressNotification(
+      isUpdate,
+      deleteAddressMutationError,
+      isUpdateAddressMutationSuccess,
+      isUpdateAddressMutationError,
+      isDeleteAddressMutationSuccess,
+      isDeleteAddressMutationError,
+    );
 
   return (
     <Model open={openAddressModel} handleClose={handleClose} width="720px">
@@ -269,7 +285,13 @@ export const AddressModel = ({
               </Box>
             )}
           </Box>
-          <Box display="flex" flexDirection="row" gap="24px" marginTop="30px">
+          <Box
+            display="flex"
+            flexDirection="row"
+            gap="24px"
+            marginTop="30px"
+            marginBottom="10px"
+          >
             <RadioSelect
               label="Default for Billing"
               checked={!!isDefaultBilling}
@@ -281,11 +303,16 @@ export const AddressModel = ({
               onChange={handleIsDefaultShippingChange}
             />
           </Box>
+          <Notification
+            type={notificationType}
+            message={notificationMessage}
+            showNotification={showNotification}
+          />
           <Box
             display="flex"
             flexDirection="row"
+            marginTop="12px"
             justifyContent={selectedAddress ? "space-between" : "flex-end"}
-            marginTop="32px"
           >
             {selectedAddress && (
               <Button
@@ -294,9 +321,7 @@ export const AddressModel = ({
                 color="errorText"
                 isLoading={isDeleteAddressMutationPending}
                 onClick={() => {
-                  deleteAddressMutation({
-                    addressId: selectedAddress?.id,
-                  });
+                  handleDeleteAddress();
                 }}
                 text="Delete Address"
                 disabled={isDefaultBilling || isDefaultShipping}
@@ -307,9 +332,7 @@ export const AddressModel = ({
               bgColor="blueAccent"
               text={selectedAddress ? "Update Address" : "Add Address"}
               disabled={!isDirty}
-              isLoading={
-                isUpdateAddressMutationPending || isDeleteAddressMutationPending
-              }
+              isLoading={isUpdateAddressMutationPending}
             />
           </Box>
         </form>

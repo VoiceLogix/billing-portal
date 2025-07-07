@@ -14,7 +14,13 @@ import {
 } from "../../service/updateContact";
 import { getContactType } from "../UI/ContactsCard/utils";
 import Dropdown from "../UI/Dropdown/Dropdown";
-import { contactTypes, formatPhoneNumber, LanguageTypes } from "./utils";
+import {
+  contactTypes,
+  formatPhoneNumber,
+  getContactNotification,
+  LanguageTypes,
+} from "./utils";
+import { Notification } from "../UI/Notification/Notification";
 
 interface ContactFormData {
   firstName: string;
@@ -39,16 +45,20 @@ export const ContactModel = ({
   handleClose: () => void;
   selectedContact: ClientCustomerContact | null;
 }) => {
-  const isUpdate = !!selectedContact?.id;
-  const { mutate: contactMutation, isPending: isContactMutationPending } =
-    useUpdateContact({
-      onClose: handleClose,
-      isUpdate,
-    });
+  const {
+    mutate: contactMutation,
+    isPending: isContactMutationPending,
+    isSuccess: isUpdateContactMutationSuccess,
+    isError: isUpdateContactMutationError,
+  } = useUpdateContact({
+    onClose: handleClose,
+  });
 
   const {
     mutate: deleteContactMutation,
     isPending: isDeleteContactMutationPending,
+    isSuccess: isDeleteContactMutationSuccess,
+    isError: isDeleteContactMutationError,
   } = useDeleteContact({
     onClose: handleClose,
   });
@@ -165,6 +175,15 @@ export const ContactModel = ({
   const locale = watch("locale");
   const type = watch("type");
 
+  const { notificationType, notificationMessage, showNotification } =
+    getContactNotification(
+      !!selectedContact?.id,
+      isUpdateContactMutationSuccess,
+      isUpdateContactMutationError,
+      isDeleteContactMutationSuccess,
+      isDeleteContactMutationError,
+    );
+
   return (
     <Model open={openContactModel} handleClose={handleClose} width="720px">
       <Box display="flex" flexDirection="column" gap="10px">
@@ -280,7 +299,13 @@ export const ContactModel = ({
               />
             </Box>
           </Box>
-          <Box display="flex" flexDirection="row" gap="24px" marginTop="30px">
+          <Box
+            display="flex"
+            flexDirection="row"
+            gap="24px"
+            marginTop="30px"
+            marginBottom="12px"
+          >
             <RadioSelect
               label="Default for Billing"
               checked={!!isPrimaryContact}
@@ -292,11 +317,16 @@ export const ContactModel = ({
               onChange={handleBillingContactChange}
             />
           </Box>
+          <Notification
+            type={notificationType}
+            message={notificationMessage}
+            showNotification={showNotification}
+          />
           <Box
             display="flex"
             flexDirection="row"
             justifyContent={selectedContact ? "space-between" : "flex-end"}
-            marginTop="32px"
+            marginTop="12px"
           >
             {selectedContact && (
               <Button

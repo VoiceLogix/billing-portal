@@ -22,7 +22,7 @@ const Model = ({
   title,
   subtitle,
   width = "600px",
-  height = "500px",
+  height = "auto",
 }: ModelProps) => {
   return (
     <Dialog.Root open={open}>

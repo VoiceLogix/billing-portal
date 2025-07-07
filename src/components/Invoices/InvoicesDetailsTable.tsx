@@ -8,12 +8,13 @@ import { Button } from "../UI/Button";
 
 export const InvoicesDetailsTable = ({
   invoiceDetails,
+  amount,
+  setAmount,
 }: {
   invoiceDetails: InvoiceInfo;
+  amount: string;
+  setAmount: (amount: string) => void;
 }) => {
-  const [amount, setAmount] = useState<string | null>(
-    invoiceDetails.amount.toString(),
-  );
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let incoming = Number(e.target.value) || 0;
 
@@ -56,7 +57,8 @@ export const InvoicesDetailsTable = ({
         header: "Due Amount",
         accessor: "",
         align: "right",
-        Cell: (_, row) => formatToUSD(row.amount - (Number(amount) || 0)),
+        Cell: (_, row) =>
+          formatToUSD(Math.max(0, row.amount - (Number(amount) || 0))),
         width: "150px",
       },
       {
