@@ -39,7 +39,7 @@ export const ContactsCard = ({ contact, onEdit }: ContactsCardProps) => {
         </Box>
         <Box display="flex" flexDirection="column" gap="4px">
           <Typography weight="semibold">
-            {contact.firstName} {contact.lastName}
+            {contact.firstName + " " + contact.lastName}
           </Typography>
           <Typography color="secondaryText">{emailId}</Typography>
           <Typography color="secondaryText">{contactNumbers}</Typography>

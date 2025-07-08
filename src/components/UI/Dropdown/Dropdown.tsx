@@ -14,6 +14,7 @@ interface DropdownProps {
   withBackground?: boolean;
   onChange: (item: string) => void;
   error?: FieldError;
+  disabled?: boolean;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -24,6 +25,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   withBackground = true,
   onChange,
   error,
+  disabled = false,
 }) => {
   return (
     <Box width={width}>
@@ -42,6 +44,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 ? "var(--color-light-gray)"
                 : "transparent",
             }}
+            disabled={disabled}
           >
             <span className={styles.labelText}>{value}</span>
             <span className={styles.chevron}>
@@ -56,16 +59,27 @@ const Dropdown: React.FC<DropdownProps> = ({
           className={styles.content}
           style={{ width }}
         >
-          {items.map((item, idx) => (
+          {items.length === 0 ? (
             <DropdownMenu.Item
-              key={idx}
-              onSelect={() => onChange(item)}
+              key={0}
+              onSelect={() => onChange("")}
               className={styles.item}
-              aria-selected={value === item}
+              disabled
             >
-              {item}
+              No options
             </DropdownMenu.Item>
-          ))}
+          ) : (
+            items.map((item, idx) => (
+              <DropdownMenu.Item
+                key={idx}
+                onSelect={() => onChange(item)}
+                className={styles.item}
+                aria-selected={value === item}
+              >
+                {item}
+              </DropdownMenu.Item>
+            ))
+          )}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
       {error && <Typography color="errorText">{error.message}</Typography>}

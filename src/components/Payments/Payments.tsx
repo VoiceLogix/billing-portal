@@ -10,6 +10,7 @@ import { PaymentInfo } from "../../types/PaymentsInterface";
 import { formatDate } from "../../utils/formatDate";
 import { PaymentCards } from "./PaymentCards";
 import { useGetProfileDetails } from "../../service/getProfileDetails";
+import { formatToUSD } from "../../utils/formatToUSD";
 
 export function Payments() {
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -77,7 +78,7 @@ export function Payments() {
     {
       header: "Amount",
       accessor: "paymentAmount",
-      Cell: (val) => `$${Number(val).toFixed(2)}`,
+      Cell: (val) => formatToUSD(Number(val)),
       align: "right",
       sortable: true,
       searchable: true,

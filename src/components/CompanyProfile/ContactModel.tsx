@@ -50,6 +50,7 @@ export const ContactModel = ({
     isPending: isContactMutationPending,
     isSuccess: isUpdateContactMutationSuccess,
     isError: isUpdateContactMutationError,
+    error: updateContactMutationError,
   } = useUpdateContact({
     onClose: handleClose,
   });
@@ -59,6 +60,7 @@ export const ContactModel = ({
     isPending: isDeleteContactMutationPending,
     isSuccess: isDeleteContactMutationSuccess,
     isError: isDeleteContactMutationError,
+    error: deleteContactMutationError,
   } = useDeleteContact({
     onClose: handleClose,
   });
@@ -178,6 +180,8 @@ export const ContactModel = ({
   const { notificationType, notificationMessage, showNotification } =
     getContactNotification(
       !!selectedContact?.id,
+      updateContactMutationError,
+      deleteContactMutationError,
       isUpdateContactMutationSuccess,
       isUpdateContactMutationError,
       isDeleteContactMutationSuccess,

@@ -10,6 +10,7 @@
   cursor: pointer;
   box-sizing: border-box;
   height: 32px;
+  user-select: none;
 }
 
 .labelText {
@@ -54,4 +55,13 @@
 .item[aria-selected="true"] {
   background-color: var(--color-light-gray);
   color: var(--color-text-black);
+}
+
+.item[aria-disabled] {
+  color: var(--color-disabled);
+  cursor: not-allowed;
+}
+
+.item[aria-disabled]:hover {
+  background-color: transparent;
 }

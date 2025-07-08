@@ -9,6 +9,7 @@ import { Button } from "../UI/Button";
 import CardSVG from "../SVG/CardSVG";
 import { Box } from "../UI/Box";
 import { getInvoiceDetails } from "../../service/getInvoiceListing";
+import { DownloadSVG } from "../SVG/DownloadSVG";
 
 interface InvoicesTableProps {
   searchTerm: string;
@@ -32,7 +33,15 @@ const InvoicesTable: React.FC<InvoicesTableProps> = ({
         isLink: true,
         searchable: true,
         Cell: (val: string) => (
-          <span onClick={() => getInvoiceDetails(val)}>{val}</span>
+          <Box
+            onClick={() => getInvoiceDetails(val)}
+            display="flex"
+            alignItems="center"
+            gap="8px"
+          >
+            <Box width="52px">{val}</Box>
+            <DownloadSVG />
+          </Box>
         ),
       },
       {

@@ -127,7 +127,7 @@ const MonthlyBarChart = ({ invoiceHistory }: MonthlyBarChartProps) => {
                 return `${tooltipItems[0].label}`;
               },
               label: (context) => {
-                return `$${context.parsed.y.toFixed(2)}`;
+                return `${formatToUSD(context.parsed.y)}`;
               },
             },
           },
@@ -137,7 +137,7 @@ const MonthlyBarChart = ({ invoiceHistory }: MonthlyBarChartProps) => {
             ticks: {
               maxTicksLimit: 4,
               callback: function (value) {
-                return formatToUSD(value as number);
+                return formatToUSD(value);
               },
             },
             grid: {
@@ -174,7 +174,7 @@ const MonthlyBarChart = ({ invoiceHistory }: MonthlyBarChartProps) => {
   }, []);
 
   return (
-    <Box height="100%" padding="16px">
+    <Box height="95%" padding="16px" marginTop="10px">
       <canvas ref={chartRef} />
     </Box>
   );

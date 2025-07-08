@@ -53,7 +53,7 @@ export const BillingDetails = ({
               </Box>
               <Box display="flex" gap="32px">
                 <Typography>Status:</Typography>
-                <Badge status={order.stateString as string} />
+                <Badge status={(order.stateString as string) || "NA"} />
               </Box>
             </Box>
             <Box display="flex" flexDirection="column" gap="10px">

@@ -23,11 +23,12 @@ const BillingTable: React.FC<BillingTableProps> = ({
   type,
 }) => {
   const orders = billingListing.clientOrderInfoList;
+  const typeWithoutS = type.endsWith("s") ? type.slice(0, -1) : type;
 
   const columns: Column<ClientOrderInfo>[] = useMemo(
     () => [
       {
-        header: "Quote number",
+        header: `${typeWithoutS} number`,
         accessor: "orderNumber",
         sortable: true,
         isLink: true,
@@ -37,7 +38,7 @@ const BillingTable: React.FC<BillingTableProps> = ({
         ),
       },
       {
-        header: "Quote type",
+        header: `${typeWithoutS} type`,
         accessor: "orderStatus",
         sortable: true,
         searchable: true,

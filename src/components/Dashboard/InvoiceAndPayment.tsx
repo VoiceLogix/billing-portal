@@ -55,6 +55,7 @@ export const InvoiceAndPayment = ({
               justifyContent="center"
               alignItems="center"
               height="100%"
+              marginTop="10px"
             >
               <MonthlyDonutChart agingInvoices={agingInvoices} />
             </Box>

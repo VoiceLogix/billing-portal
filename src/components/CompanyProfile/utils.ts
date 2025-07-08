@@ -66,6 +66,8 @@ export const getAddressNotification = (
 
 export const getContactNotification = (
   isUpdate: boolean,
+  updateContactMutationError: unknown | undefined,
+  deleteContactMutationError: unknown | undefined,
   isUpdateContactMutationSuccess: boolean,
   isUpdateContactMutationError: boolean,
   isDeleteContactMutationSuccess: boolean,
@@ -82,21 +84,27 @@ export const getContactNotification = (
   if (isUpdate) {
     if (isUpdateContactMutationSuccess) {
       notificationMessage = "Contact updated successfully";
-    } else {
-      notificationMessage = "Error updating contact, please try again";
+    } else if (isUpdateContactMutationError) {
+      notificationMessage =
+        (updateContactMutationError as { message?: string })?.message ||
+        "Error updating contact, please try again";
     }
   } else {
     if (isUpdateContactMutationSuccess) {
       notificationMessage = "Contact added successfully";
-    } else {
-      notificationMessage = "Error adding contact, please try again";
+    } else if (isUpdateContactMutationError) {
+      notificationMessage =
+        (updateContactMutationError as { message?: string })?.message ||
+        "Error adding contact, please try again";
     }
   }
 
   if (isDeleteContactMutationSuccess) {
     notificationMessage = "Contact deleted successfully";
   } else if (isDeleteContactMutationError) {
-    notificationMessage = "Error deleting contact, please try again";
+    notificationMessage =
+      (deleteContactMutationError as { message?: string })?.message ||
+      "Error deleting contact, please try again";
   }
 
   const notificationType: "error" | "success" =

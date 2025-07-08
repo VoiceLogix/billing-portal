@@ -4,6 +4,12 @@ import { getSubscriberInfo } from "./getSubscriberInfo";
 
 export const updateContact = async (data: any) => {
   const response = await axiosInstance.put("/updateProfile/contact", data);
+  const errorDescription =
+    response?.data?.clientValidationErrorInfo?.[0]?.errorDescription;
+  if (errorDescription) {
+    console.log("errorDescription", errorDescription);
+    throw new Error(errorDescription);
+  }
   return response.data;
 };
 

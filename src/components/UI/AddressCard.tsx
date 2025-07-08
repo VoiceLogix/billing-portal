@@ -50,7 +50,7 @@ export const AddressCard = ({
           </Typography>
         </Box>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Box>
+          <Box display="flex" gap="10px">
             {isDefaultBilling && (
               <Badge status="Default for Billing" color="primary" />
             )}
