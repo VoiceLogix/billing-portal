@@ -5,6 +5,7 @@ import BillingListing, { BillingType } from "../Billing/BillingListing";
 import { Payments } from "../Payments/Payments";
 import Invoices from "../Invoices/Invoices";
 import { CompanyProfile } from "../CompanyProfile/CompanyProfile";
+import Subscriptions from "../Subscriptions/Subscriptions";
 
 const BillingTabs = () => (
   <>
@@ -55,7 +56,9 @@ const BillingTabs = () => (
       <Tabs.Content className={styles.TabsContent} value="tab6">
         <CompanyProfile />
       </Tabs.Content>
-      <Tabs.Content className={styles.TabsContent} value="tab7"></Tabs.Content>
+      <Tabs.Content className={styles.TabsContent} value="tab7">
+        <Subscriptions />
+      </Tabs.Content>
     </Tabs.Root>
   </>
 );

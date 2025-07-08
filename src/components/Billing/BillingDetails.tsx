@@ -31,6 +31,7 @@ export const BillingDetails = ({
     data: orderDetails,
     isLoading: orderDetailsLoading,
     isError: orderDetailsError,
+    error: orderDetailsErrorData,
   } = useGetOrderDetails(orderId);
 
   const order = orderDetails?.clientOrderDetails;
@@ -43,7 +44,7 @@ export const BillingDetails = ({
       title={`${typeWithoutS} Details`}
       width="1000px"
     >
-      {order && (
+      {order && !orderDetailsLoading && (
         <Box marginTop="24px">
           <Box display="flex" gap="100px">
             <Box display="flex" flexDirection="column" gap="10px">
@@ -91,7 +92,7 @@ export const BillingDetails = ({
         </Box>
       )}
       {orderDetailsLoading && <Loading />}
-      {orderDetailsError && <Error />}
+      {orderDetailsError && <Error message={orderDetailsErrorData?.message} />}
     </Model>
   );
 };

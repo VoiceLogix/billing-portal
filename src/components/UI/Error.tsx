@@ -1,7 +1,11 @@
 import { Box } from "./Box";
 import { Typography } from "./Typography";
 
-export const Error: React.FC = () => {
+export const Error = ({
+  message = "Error loading data",
+}: {
+  message?: string;
+}) => {
   return (
     <Box
       width="100%"
@@ -10,7 +14,7 @@ export const Error: React.FC = () => {
       justifyContent="center"
       alignItems="center"
     >
-      <Typography color="errorText">Error loading data</Typography>
+      <Typography color="errorText">{message}</Typography>
     </Box>
   );
 };
