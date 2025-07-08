@@ -23,6 +23,7 @@
 body {
   font-family: var(--heading-font-family);
   color: var(--color-text-primary);
+  font-size: 14px;
 }
 
 .radix-themes {

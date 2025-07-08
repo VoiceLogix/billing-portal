@@ -29,7 +29,7 @@ export const Notification = ({
       className={styles[`notification-${type}`]}
     >
       <InfoSvg type={type} />
-      <p>{message}</p>
+      <div>{message}</div>
     </div>
   );
 };

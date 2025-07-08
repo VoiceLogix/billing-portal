@@ -11,3 +11,8 @@
   width: 6px;
   height: 6px;
 }
+
+.radioSelect input[type="radio"]:focus {
+  outline: none;
+  outline-offset: 0;
+}
