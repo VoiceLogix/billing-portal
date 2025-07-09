@@ -7,6 +7,7 @@ import { Box } from "../Box";
 
 interface ModelProps {
   open: boolean;
+  showCloseButton?: boolean;
   handleClose: () => void;
   children: React.ReactNode;
   title?: string;
@@ -23,6 +24,7 @@ const Model = ({
   subtitle,
   width = "600px",
   height = "auto",
+  showCloseButton = true,
 }: ModelProps) => {
   return (
     <Dialog.Root open={open}>
@@ -39,15 +41,17 @@ const Model = ({
             <Typography color="secondaryText">{subtitle}</Typography>
           </Box>
           {children}
-          <Dialog.Close asChild>
-            <button
-              className={styles.IconButton}
-              aria-label="Close"
-              onClick={handleClose}
-            >
-              <CloseSVG />
-            </button>
-          </Dialog.Close>
+          {showCloseButton && (
+            <Dialog.Close asChild>
+              <button
+                className={styles.IconButton}
+                aria-label="Close"
+                onClick={handleClose}
+              >
+                <CloseSVG />
+              </button>
+            </Dialog.Close>
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

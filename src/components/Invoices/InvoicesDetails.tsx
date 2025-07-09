@@ -118,7 +118,7 @@ export const InvoicesDetails = ({
             />
 
             <Notification
-              type="error"
+              type={payInvoiceSuccess ? "success" : "error"}
               message={
                 payInvoiceSuccess
                   ? "Payment successful"

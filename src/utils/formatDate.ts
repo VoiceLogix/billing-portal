@@ -1,5 +1,5 @@
 export function formatDate(dateStr: string | number): string {
-  if (!dateStr) return "";
+  if (!dateStr) return "--";
   const date = new Date(dateStr);
   return new Intl.DateTimeFormat("en-US", {
     year: "numeric",

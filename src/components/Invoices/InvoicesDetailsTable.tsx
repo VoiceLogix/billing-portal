@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { formatDate } from "../../utils/formatDate";
 import { formatToUSD } from "../../utils/formatToUSD";
 import { Column, Table } from "../UI/Table/Table";
@@ -29,7 +29,7 @@ export const InvoicesDetailsTable = ({
     setAmount("");
   };
   const handleFull = () => {
-    setAmount(invoiceDetails.amount.toString());
+    setAmount(invoiceDetails.dueAmount.toString());
   };
 
   const isFullAmount = Number(amount) === invoiceDetails.amount;
@@ -58,7 +58,7 @@ export const InvoicesDetailsTable = ({
         accessor: "",
         align: "right",
         Cell: (_, row) =>
-          formatToUSD(Math.max(0, row.amount - (Number(amount) || 0))),
+          formatToUSD(Math.max(0, row.dueAmount - (Number(amount) || 0))),
         width: "150px",
       },
       {
