@@ -1,9 +1,9 @@
 import axios from "axios";
 import { BillingAuthResponse } from "../types/BillingSubscriberResult";
 
-export const baseURL = "https://sb-manage.unitydial.com/billing-api/";
+// export const baseURL = "https://sb-manage.unitydial.com/billing-api/";
 // export const baseURL = "https://onebillapi.fly.dsev/";
-// export const baseURL = "http://localhost:8085/";
+export const baseURL = "http://localhost:8085/";
 export const AUTH_URL = `${baseURL}auth`;
 
 export const LS_KEY_USER_AUTH = "onebill_user_auth";
@@ -101,3 +101,26 @@ export async function authenticateUser(): Promise<SessionTokens> {
     throw new Error("Authentication failed; server returned an error.");
   }
 }
+
+export const getAccountNumber = () => {
+  const raw = localStorage.getItem(LS_KEY_USER_AUTH);
+  if (!raw) return null;
+
+  let parsed: any;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    localStorage.removeItem(LS_KEY_USER_AUTH);
+    return null;
+  }
+
+  if (
+    typeof parsed !== "object" ||
+    typeof parsed.subscriberData !== "object" ||
+    typeof parsed.subscriberData.accountNumber !== "string"
+  ) {
+    return null;
+  }
+
+  return parsed.subscriberData.accountNumber as string;
+};

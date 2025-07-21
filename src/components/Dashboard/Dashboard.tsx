@@ -10,7 +10,6 @@ import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 import { PaymentCardPreview } from "../UI/PaymentMethod/PaymentCardPreview";
 import { InvoiceAndPayment } from "./InvoiceAndPayment";
-import { useGetProfileDetails } from "../../service/getProfileDetails";
 
 export const Dashboard = () => {
   const {
@@ -28,27 +27,14 @@ export const Dashboard = () => {
     isLoading: agingInvoicesLoading,
     isError: agingInvoicesError,
   } = useGetAgingInvoices();
-  const {
-    data: profileDetails,
-    isLoading: profileDetailsLoading,
-    isError: profileDetailsError,
-  } = useGetProfileDetails();
 
-  const defaultCard =
-    profileDetails?.clientSubscriberInfo?.clientCCProfileInfoList?.find(
-      (card) => card.default || card.status === "Active",
-    );
-
+  const defaultCard = accountInfo?.payInfo?.find(
+    (card) => card.isDefault === true,
+  );
   const isFetching =
-    accountInfoLoading ||
-    invoiceHistoryLoading ||
-    agingInvoicesLoading ||
-    profileDetailsLoading;
+    accountInfoLoading || invoiceHistoryLoading || agingInvoicesLoading;
   const hasError =
-    accountInfoError ||
-    invoiceHistoryError ||
-    agingInvoicesError ||
-    profileDetailsError;
+    accountInfoError || invoiceHistoryError || agingInvoicesError;
   if (isFetching) {
     return <Loading />;
   }

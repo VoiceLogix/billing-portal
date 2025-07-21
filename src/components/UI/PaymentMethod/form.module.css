@@ -25,7 +25,7 @@ input {
 
 .grid3Cols {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1.6fr 0.7fr 0.7fr;
   gap: 10px;
 }
 
@@ -46,7 +46,6 @@ input {
   border-radius: 4px;
   background-color: var(--color-light-gray);
   font-size: 14px;
-  color: #00071b7f;
 }
 
 .form .input:focus {
@@ -118,12 +117,6 @@ input {
   justify-content: center;
   align-items: center;
   height: 100;
-}
-
-.submitWrapper {
-  padding-top: 1rem;
-  display: flex;
-  justify-content: flex-end;
 }
 
 .submitButton {

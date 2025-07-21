@@ -1,21 +1,23 @@
-import { BillingAuthResponse } from "../types/BillingSubscriberResult";
+import { SubscriberInfo } from "../types/SubscriberInfoInterface";
+import { axiosInstance } from "./axiosInstance";
 import { useQuery } from "@tanstack/react-query";
-import { LS_KEY_USER_AUTH } from "./tokenStorage";
+import { getAccountNumber } from "./tokenStorage";
 
-export async function getSubscriberInfo() {
+export async function getSubscriberInfo(accountId: string) {
   try {
-    const auth = localStorage.getItem(LS_KEY_USER_AUTH);
-    const authData = JSON.parse(auth || "{}") as BillingAuthResponse;
-    return authData.subscriberData;
+    const response = await axiosInstance.get(`/subscriberInfo/${accountId}`);
+    return response.data as SubscriberInfo;
   } catch (error) {
-    console.error("Error fetching invoice history:", error);
+    console.error("[getSubscriberInfo] Error fetching subscriber info:", error);
     throw error;
   }
 }
 
 export function useGetSubscriberInfo() {
+  const accountId = getAccountNumber();
+
   return useQuery({
-    queryKey: ["subscriberInfo"],
-    queryFn: () => getSubscriberInfo(),
+    queryKey: ["subscriberInfo", accountId],
+    queryFn: () => getSubscriberInfo(accountId),
   });
 }

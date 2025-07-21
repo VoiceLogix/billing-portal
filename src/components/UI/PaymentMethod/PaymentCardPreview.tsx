@@ -8,11 +8,12 @@ import { Button } from "../Button";
 import { Badge } from "../Badge/Badge";
 import { CardLayout } from "../CardLayout/CardLayout";
 import { RadioSelect } from "../RadioSelect/RadioSelect";
-import { ClientCCProfileInfo } from "../../../types/ProfileDetailsInterface";
 import { useUpdateDefaultPayment } from "../../../service/updateDefaultPayment";
+import { PayInfoItem } from "../../../types/SubscriberInfoInterface";
+import { maskAccountNumber } from "./utils";
 
 interface PaymentCardPreviewProps {
-  cardDetails?: ClientCCProfileInfo;
+  cardDetails?: PayInfoItem;
   showAutopay?: boolean;
 }
 export const PaymentCardPreview = ({
@@ -28,15 +29,29 @@ export const PaymentCardPreview = ({
       defaultPaymentProfileId: cardDetails?.paymentProfileId,
     });
   };
+  const creditCardInfo = cardDetails?.creditCardInfo;
+  const eCheckInfo = cardDetails?.echeckInfo;
+
+  const firstName = creditCardInfo?.firstName || eCheckInfo?.accountHolderName;
+  const lastName = creditCardInfo?.lastName || "";
+  const cardNumber =
+    creditCardInfo?.cardNumber ||
+    maskAccountNumber(eCheckInfo?.bankAccountNumber);
+
+  const handleCloseModel = () => {
+    setOpenPaymentMethodModel(false);
+  };
   return (
     <>
       <Model
         open={openPaymentMethodModel}
         handleClose={() => setOpenPaymentMethodModel(false)}
-        width="1000px"
-        height="800px"
+        // width="600px"
       >
-        <PaymentMethodModel card={cardDetails} />
+        <PaymentMethodModel
+          payInfo={cardDetails}
+          handleClose={handleCloseModel}
+        />
       </Model>
       <CardLayout width="368px" height="152px">
         <Box
@@ -51,7 +66,11 @@ export const PaymentCardPreview = ({
             justifyContent="space-between"
           >
             <Box display="flex" flexDirection="column" gap="6px">
-              <Typography color="secondaryText">Payment Methods</Typography>
+              <Typography color="secondaryText">
+                {cardDetails?.paymentMethod === "CC"
+                  ? "Credit/Debit Card"
+                  : "E-Check"}
+              </Typography>
               {cardDetails ? (
                 <>
                   <div
@@ -60,12 +79,10 @@ export const PaymentCardPreview = ({
                     }}
                   >
                     <Typography weight="semibold">
-                      {cardDetails?.firstName} {cardDetails?.lastName}
+                      {firstName} {lastName}
                     </Typography>
                   </div>
-                  <Typography weight="medium">
-                    {cardDetails?.cardNumber}
-                  </Typography>
+                  <Typography weight="medium">{cardNumber}</Typography>
                 </>
               ) : (
                 <Typography>
@@ -85,7 +102,7 @@ export const PaymentCardPreview = ({
           <Box display="flex" justifyContent="space-between">
             {showAutopay && (
               <RadioSelect
-                checked={cardDetails?.default || false}
+                checked={cardDetails.isDefault || false}
                 onChange={handleSetAutopay}
                 label="Autopay"
               />

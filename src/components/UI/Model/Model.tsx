@@ -14,6 +14,7 @@ interface ModelProps {
   subtitle?: string;
   width?: string | number;
   height?: string | number;
+  minWidth?: string | number;
 }
 
 const Model = ({
@@ -22,7 +23,8 @@ const Model = ({
   children,
   title,
   subtitle,
-  width = "600px",
+  width = "auto",
+  minWidth = "600px",
   height = "auto",
   showCloseButton = true,
 }: ModelProps) => {
@@ -32,7 +34,7 @@ const Model = ({
         <Dialog.Overlay className={styles.DialogOverlay} />
         <Dialog.Content
           className={styles.DialogContent}
-          style={{ width, height }}
+          style={{ minWidth, width, height }}
         >
           <Box display="flex" flexDirection="column">
             <Typography size="big" weight="semibold">

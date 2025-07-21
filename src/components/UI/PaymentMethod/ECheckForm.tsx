@@ -1,6 +1,7 @@
 import { useForm, Controller } from "react-hook-form";
 import styles from "./form.module.css";
 import Dropdown from "../Dropdown/Dropdown";
+import { PayInfoItem } from "../../../types/SubscriberInfoInterface";
 
 type FormValues = {
   routingNumber: string;
@@ -22,7 +23,13 @@ const formatRoutingNumber = (value: string) => {
   return parts.join(" ");
 };
 
-const ECheckForm = () => {
+const ECheckForm = ({
+  payInfo,
+  handleClose,
+}: {
+  payInfo?: PayInfoItem;
+  handleClose?: () => void;
+}) => {
   const {
     register,
     handleSubmit,

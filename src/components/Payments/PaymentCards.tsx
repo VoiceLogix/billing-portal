@@ -4,26 +4,35 @@ import { Box } from "../UI/Box";
 import { Button } from "../UI/Button";
 import Model from "../UI/Model/Model";
 import { PaymentCardPreview } from "../UI/PaymentMethod/PaymentCardPreview";
-import { ProfileDetails } from "../../types/ProfileDetailsInterface";
+import { SubscriberInfo } from "../../types/SubscriberInfoInterface";
 
 interface PaymentCardsProps {
-  profileDetails?: ProfileDetails | null;
+  subscriberInfo: SubscriberInfo;
 }
-export const PaymentCards = ({ profileDetails }: PaymentCardsProps) => {
-  const [openPaymentMethodModel, setOpenPaymentMethodModel] = useState(false);
+export const PaymentCards = ({ subscriberInfo }: PaymentCardsProps) => {
+  const cards = subscriberInfo.payInfo;
+  const [openPaymentMethodModel, setOpenPaymentMethodModel] = useState(
+    cards?.length === 0,
+  );
 
-  const cards = profileDetails?.clientSubscriberInfo?.clientCCProfileInfoList;
-
+  const handleAddPaymentCard = () => {
+    setOpenPaymentMethodModel(true);
+  };
+  const handleClose = () => {
+    setOpenPaymentMethodModel(false);
+  };
   return (
     <>
       <Model
         open={openPaymentMethodModel}
         handleClose={() => setOpenPaymentMethodModel(false)}
       >
-        <PaymentMethodModel />
+        <PaymentMethodModel handleClose={handleClose} />
       </Model>
       <Box>
-        <Button bgColor="blueAccent">Add Payment Card</Button>
+        <Button onClick={handleAddPaymentCard} bgColor="blueAccent">
+          Add Payment Card
+        </Button>
 
         <Box display="flex" flexDirection="column" gap="16px" marginTop="20px">
           {cards?.map((card) => (

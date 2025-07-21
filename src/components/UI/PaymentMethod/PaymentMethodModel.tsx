@@ -1,55 +1,43 @@
-import React, { useEffect } from "react";
+import { PayInfoItem } from "../../../types/SubscriberInfoInterface";
 import { Box } from "../Box";
+import TabsComponent from "../Tabs/Tabs";
 import { Typography } from "../Typography";
-import { PayInfo } from "../../../types/BillingSubscriberResult";
-import { useGetPaymentGateWayUrl } from "../../../service/getPaymentGateWayUrl";
-import { Button } from "../Button";
-import { ClientCCProfileInfo } from "../../../types/ProfileDetailsInterface";
+import CardForm from "./CardForm";
+import ECheckForm from "./ECheckForm";
 
-interface Props {
-  card?: PayInfo | ClientCCProfileInfo;
+interface PaymentMethodModelProps {
+  payInfo?: PayInfoItem;
+  handleClose: () => void;
 }
 
-const PaymentMethodModal: React.FC<Props> = ({ card }) => {
-  console.log("referenceKey", card?.referenceKey || null);
-
-  const { data: gatewayData } = useGetPaymentGateWayUrl(
-    card?.referenceKey || null,
-  );
-
-  console.log("gatewayData", gatewayData);
-  const handleCancel = () => {
-    console.log("handleCancel");
-  };
-
-  const handleSave = () => {
-    console.log("handleSave");
-  };
-
-  return (
-    <Box width="100%" height="100%" padding="24px">
-      <Box display="flex" flexDirection="column" marginBottom="24px">
-        <Typography size="big" weight="semibold">
-          Add New Payment Method
-        </Typography>
-        <Typography color="secondaryText">
-          Please fill all required fields
-        </Typography>
-      </Box>
-      <iframe
-        src={gatewayData?.paymentGatewayUrl}
-        width="100%"
-        height="90%"
-        style={{ border: "none" }}
-      />
-      {/* <Box display="flex" justifyContent="flex-end" gap="12px">
-        <Button onClick={handleCancel}>Cancel</Button>
-        <Button bgColor="blueAccent" onClick={handleSave} type="submit">
-          {"Save"}
-        </Button>
-      </Box> */}
+const PaymentMethodModel = ({
+  payInfo,
+  handleClose,
+}: PaymentMethodModelProps) => (
+  <Box>
+    <Box display="flex" flexDirection="column">
+      <Typography size="big" weight="semibold">
+        Add New Payment Method
+      </Typography>
+      <Typography color="secondaryText">
+        Please fill all required fields
+      </Typography>
     </Box>
-  );
-};
+    <Box marginTop="24px">
+      <TabsComponent
+        tabs={[
+          {
+            label: "Credit/Debit Card",
+            content: <CardForm payInfo={payInfo} handleClose={handleClose} />,
+          },
+          {
+            label: "E-Check",
+            content: <ECheckForm payInfo={payInfo} handleClose={handleClose} />,
+          },
+        ]}
+      />
+    </Box>
+  </Box>
+);
 
-export default PaymentMethodModal;
+export default PaymentMethodModel;

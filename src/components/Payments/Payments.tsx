@@ -9,8 +9,8 @@ import { Error } from "../UI/Error";
 import { PaymentInfo } from "../../types/PaymentsInterface";
 import { formatDate } from "../../utils/formatDate";
 import { PaymentCards } from "./PaymentCards";
-import { useGetProfileDetails } from "../../service/getProfileDetails";
 import { formatToUSD } from "../../utils/formatToUSD";
+import { useGetSubscriberInfo } from "../../service/getSubscriberInfo";
 
 export function Payments() {
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -21,13 +21,13 @@ export function Payments() {
   } = useGetPayments();
 
   const {
-    data: profileDetails,
-    isLoading: profileDetailsLoading,
-    isError: profileDetailsError,
-  } = useGetProfileDetails();
+    data: subscriberInfo,
+    isLoading: subscriberInfoLoading,
+    isError: subscriberInfoError,
+  } = useGetSubscriberInfo();
 
-  const isFetching = paymentsLoading || profileDetailsLoading;
-  const hasError = paymentsError || profileDetailsError;
+  const isFetching = paymentsLoading || subscriberInfoLoading;
+  const hasError = paymentsError || subscriberInfoError;
 
   if (isFetching) {
     return <Loading />;
@@ -37,7 +37,6 @@ export function Payments() {
   }
 
   const payments = paymentsData?.clientPaymentInfo;
-
   const handleDownload = (receiptNumber: string) => {
     paymentPdf(receiptNumber);
   };
@@ -55,7 +54,7 @@ export function Payments() {
       accessor: "paymentType",
       sortable: true,
       searchable: true,
-      Cell: (val, row) => row.paymentType + " - " + row.paymentSourceType,
+      Cell: (_, row) => row.paymentType + " - " + row.paymentSourceType,
     },
     {
       header: "Receipt Number",
@@ -104,7 +103,9 @@ export function Payments() {
           />
         </div>
       </Box>
-      <PaymentCards profileDetails={profileDetails} />
+      <Box>
+        <PaymentCards subscriberInfo={subscriberInfo} />
+      </Box>
     </Box>
   );
 }

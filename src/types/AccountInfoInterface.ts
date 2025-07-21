@@ -1,3 +1,5 @@
+import { PayInfoItem } from "./SubscriberInfoInterface";
+
 export interface AccountInfo {
   locale: string | null;
   accountBalance: string;
@@ -9,4 +11,5 @@ export interface AccountInfo {
   unBilledBalance: number;
   clientSubscriptionInfo: any | null;
   parentPaying: boolean;
+  payInfo: PayInfoItem[] | null;
 }

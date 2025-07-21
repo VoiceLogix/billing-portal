@@ -1,277 +1,428 @@
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, FormProvider } from "react-hook-form";
+import { useMemo, useCallback, useEffect, useState } from "react";
 import styles from "./form.module.css";
-import { CardTypeSVG, PaymentCardType } from "../../SVG/CardTypeSVG";
+
+import {
+  useCreatePaymentProfile,
+  useDeletePaymentProfile,
+} from "../../../service/createPaymentProfile";
+import { useGetSubscriberInfo } from "../../../service/getSubscriberInfo";
+
+// Components
+import { AddNewPaymentAddress } from "./AddNewPaymentAddress";
 import TextInput from "../TextInput.tsx/TextInput";
-import { CreditCardInfo } from "../../../types/BillingSubscriberResult";
+import { Notification } from "../Notification/Notification";
+import { Button } from "../Button";
+import { Box } from "../Box";
+import Toggle from "../Toggle/Toggle";
+import Dropdown from "../Dropdown/Dropdown";
+import { CardTypeSVG, PaymentCardType } from "../../SVG/CardTypeSVG";
 
-type FormValues = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  cardType: PaymentCardType;
-  cardNumber: string;
-  expiryDate: string;
-  cvv: string;
-};
+import { PayInfoItem } from "../../../types/SubscriberInfoInterface";
+import {
+  CARD_TYPES,
+  CardFormFormValues,
+  cardValidationRules,
+  convertMMYYtoYYYYMM,
+  formatCardNumber,
+  formatExpiryDate,
+  formatExpiryInput,
+  getAddressString,
+  getCardNotification,
+} from "./utils";
 
-const CARD_TYPES: PaymentCardType[] = [
-  "visa",
-  "mastercard",
-  "amex",
-  "discover",
-];
+const ADDRESS_NOT_LISTED = "The address is not in the list";
 
-const cardValidationRules = {
-  visa: {
-    re: /^(?:4[0-9]{12}(?:[0-9]{3})?|4[0-9]{15}|4[0-9]{18})$/,
-    example: "4xxx xxxx xxxx xxxx",
-    maxLength: 19,
-    cvvLength: 3,
-  },
-  mastercard: {
-    re: /^(?:5[1-5][0-9]{14}|2(?:2(?:2[1-9]|[3-9][0-9])|[3-6][0-9]{2}|7(?:[0][0-1]|20))[0-9]{12})$/,
-    example: "51xx xxxx xxxx xxxx",
-    maxLength: 16,
-    cvvLength: 3,
-  },
-  amex: {
-    re: /^(?:3[47][0-9]{13})$/,
-    example: "34x xxxxxx xxxxx",
-    maxLength: 15,
-    cvvLength: 4,
-  },
-  discover: {
-    re: /^(?:6011[0-9]{12}|65[0-9]{14}|64[4-9][0-9]{13})$/,
-    example: "6011 xxxx xxxx xxxx",
-    maxLength: 16,
-    cvvLength: 3,
-  },
-};
+const CardForm = ({
+  payInfo,
+  handleClose,
+}: {
+  payInfo?: PayInfoItem;
+  handleClose: () => void;
+}) => {
+  const { data: subscriberInfo } = useGetSubscriberInfo();
 
-const formatCardNumber = (value: string) => {
-  const onlyDigits = value.replace(/\D/g, "");
-  return onlyDigits.match(/.{1,4}/g)?.join(" ") || "";
-};
+  const defaultAddress = useMemo(
+    () => subscriberInfo?.address.find((addr) => addr.defaultBilling === true),
+    [subscriberInfo?.address],
+  );
 
-const formatExpiryDate = (value: string) => {
-  const raw = value.replace(/\D/g, "");
-  return raw.length >= 3 ? `${raw.slice(0, 2)}/${raw.slice(2, 4)}` : raw;
-};
+  const addressOptions = useMemo(() => {
+    const addresses =
+      subscriberInfo?.address.map((address) => getAddressString(address)) || [];
+    return [...addresses, ADDRESS_NOT_LISTED];
+  }, [subscriberInfo?.address]);
 
-const CardForm = ({ card }: { card: CreditCardInfo }) => {
-  const {
-    register,
-    handleSubmit,
-    control,
-    watch,
-    formState: { errors },
-  } = useForm<FormValues>({
+  const [useDefaultBilling, setUseDefaultBilling] = useState(true);
+  const [selectedAddressText, setSelectedAddressText] = useState(
+    addressOptions[0],
+  );
+
+  const card = payInfo?.creditCardInfo;
+  const isDefaultBilling = payInfo?.isDefault || false;
+
+  const methods = useForm<CardFormFormValues>({
     defaultValues: {
-      firstName: card.firstName,
-      lastName: card.lastName,
+      firstName: card?.firstName || "",
+      lastName: card?.lastName || "",
       email: "",
-      cardType: card.cardType as PaymentCardType,
-      cardNumber: card.cardNumber,
-      expiryDate: `${card.cardExpiryMonth}/${card.cardExpiryYear}`,
+      cardType: (card?.cardType.toLowerCase() as PaymentCardType) || "visa",
+      cardNumber: card?.cardNumber || "",
+      expiryDate:
+        formatExpiryDate(card?.cardExpiryMonth, card?.cardExpiryYear) || "",
       cvv: "",
+      // Address fields are only needed if a new address is added.
+      addLine1: "",
+      addLine2: "",
+      city: "",
+      state: "",
+      zip: "",
+      country: "",
     },
   });
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    register,
+    setValue,
+    formState: { errors },
+  } = methods;
 
   const selectedCardType = watch("cardType");
   const selectedRules = cardValidationRules[selectedCardType];
 
-  const onSubmit = (data: FormValues) => {};
+  const {
+    mutate: createPaymentProfile,
+    isPending: createPaymentProfilePending,
+    error: createPaymentProfileError,
+    isSuccess: createPaymentProfileSuccess,
+  } = useCreatePaymentProfile();
 
+  const {
+    mutate: deletePaymentProfile,
+    isPending: deletePaymentProfilePending,
+    error: deletePaymentProfileError,
+    isSuccess: deletePaymentProfileSuccess,
+  } = useDeletePaymentProfile();
+
+  useEffect(() => {
+    if (createPaymentProfileSuccess || deletePaymentProfileSuccess) {
+      handleClose();
+    }
+  }, [createPaymentProfileSuccess, deletePaymentProfileSuccess, handleClose]);
+
+  const onSubmit = useCallback(
+    (data: CardFormFormValues) => {
+      const formattedCardData = {
+        ...data,
+        cardNumber: data.cardNumber.replace(/\s/g, ""),
+        expiryDate: convertMMYYtoYYYYMM(data.expiryDate),
+      };
+
+      let billingAddress;
+      if (useDefaultBilling) {
+        billingAddress = payInfo?.profileAddress || defaultAddress;
+      } else if (selectedAddressText !== ADDRESS_NOT_LISTED) {
+        billingAddress = subscriberInfo?.address.find(
+          (addr) => getAddressString(addr) === selectedAddressText,
+        );
+      } else {
+        // New address from form fields
+        billingAddress = {
+          addLine1: data.addLine1,
+          addLine2: data.addLine2,
+          country: data.country,
+          city: data.city,
+          state: data.state,
+          zip: data.zip,
+        };
+      }
+
+      const payload = {
+        card: formattedCardData,
+        address: billingAddress,
+        type: "CC",
+        accountNumber: subscriberInfo?.accountNumber,
+      };
+      console.log("Payload for createPaymentProfile:", payload);
+
+      createPaymentProfile(payload);
+    },
+    [
+      createPaymentProfile,
+      defaultAddress,
+      payInfo?.profileAddress,
+      selectedAddressText,
+      subscriberInfo?.accountNumber,
+      subscriberInfo?.address,
+      useDefaultBilling,
+    ],
+  );
+
+  const handleDeleteMethod = useCallback(() => {
+    if (payInfo?.paymentProfileId && subscriberInfo?.accountNumber) {
+      deletePaymentProfile({
+        profileId: payInfo.paymentProfileId,
+        subscriberId: subscriberInfo.accountNumber,
+      });
+    }
+  }, [
+    deletePaymentProfile,
+    payInfo?.paymentProfileId,
+    subscriberInfo?.accountNumber,
+  ]);
+
+  const { notificationType, notificationMessage, showNotification } =
+    getCardNotification(
+      createPaymentProfileError,
+      createPaymentProfileSuccess,
+      createPaymentProfilePending,
+      deletePaymentProfileError,
+      deletePaymentProfilePending,
+      deletePaymentProfileSuccess,
+    );
   return (
     <div className={styles.container}>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        <div className={styles.grid2Cols}>
-          <TextInput
-            label="First Name*"
-            name="firstName"
-            register={register}
-            rules={{ required: "First name is required" }}
-            placeholder="John"
-            error={errors.firstName}
-          />
+        <Box display="flex" gap="20px">
+          <Box display="flex" gap="20px" flexDirection="column">
+            <div className={styles.grid2Cols}>
+              <TextInput
+                label="First Name*"
+                name="firstName"
+                register={register}
+                rules={{ required: "First name is required" }}
+                placeholder="John"
+                error={errors.firstName}
+              />
 
-          <TextInput
-            label="Last Name*"
-            name="lastName"
-            register={register}
-            rules={{ required: "Last name is required" }}
-            placeholder="Doe"
-            error={errors.lastName}
-          />
-        </div>
-
-        <TextInput
-          label="Email*"
-          name="email"
-          register={register}
-          rules={{
-            required: "Email is required",
-            pattern: {
-              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "Invalid email address",
-            },
-          }}
-          type="email"
-          placeholder="example@company.com"
-          error={errors.email}
-        />
-
-        <div>
-          <label className={styles.label}>Card Type</label>
-          <div className={styles.cardOptions}>
-            <Controller
-              name="cardType"
-              control={control}
-              render={({ field }) => (
-                <>
-                  {CARD_TYPES.map((type) => (
-                    <label
-                      key={type}
-                      className={`
+              <TextInput
+                label="Last Name*"
+                name="lastName"
+                register={register}
+                rules={{ required: "Last name is required" }}
+                placeholder="Doe"
+                error={errors.lastName}
+              />
+            </div>
+            <div>
+              <label className={styles.label}>Card Type</label>
+              <div className={styles.cardOptions}>
+                <Controller
+                  name="cardType"
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      {CARD_TYPES.map((type) => (
+                        <label
+                          key={type}
+                          className={`
                         ${styles.cardOption} 
                         ${field.value === type ? styles.selectedCard : ""}`}
-                    >
-                      <input
-                        type="radio"
-                        value={type}
-                        checked={field.value === type}
-                        onChange={field.onChange}
-                      />
-                      <CardTypeSVG type={type} />
-                    </label>
-                  ))}
-                </>
-              )}
-            />
-          </div>
-        </div>
-
-        <div className={styles.grid3Cols}>
-          <div>
-            <label className={styles.label}>Card Number*</label>
-            <Controller
-              name="cardNumber"
-              control={control}
-              rules={{
-                required: "Card number is required",
-                validate: (val) => {
-                  const raw = val.replace(/\D/g, "");
-                  return (
-                    selectedRules.re.test(raw) ||
-                    `Invalid ${selectedCardType.toUpperCase()} number (e.g. ${
-                      selectedRules.example
-                    })`
-                  );
-                },
-              }}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  placeholder="0000 0000 0000 0000"
-                  maxLength={selectedRules.maxLength + 3}
-                  className={styles.input}
-                  autoComplete="cc-number"
-                  onChange={(e) =>
-                    field.onChange(formatCardNumber(e.target.value))
-                  }
-                  value={field.value}
+                        >
+                          <input
+                            type="radio"
+                            value={type}
+                            checked={field.value === type}
+                            onChange={field.onChange}
+                          />
+                          <CardTypeSVG type={type} />
+                        </label>
+                      ))}
+                    </>
+                  )}
                 />
-              )}
-            />
-            {errors.cardNumber && (
-              <p className={styles.error}>{errors.cardNumber.message}</p>
-            )}
-          </div>
+              </div>
+            </div>
 
-          {/* Expiry Date */}
-          <div>
-            <label className={styles.label}>Expiry Date*</label>
-            <Controller
-              name="expiryDate"
-              control={control}
-              rules={{
-                required: "Expiry date is required",
-                pattern: {
-                  value: /^(0[1-9]|1[0-2])\/\d{2}$/,
-                  message: "Invalid format (MM/YY)",
-                },
-                validate: (val) => {
-                  const [mm, yy] = val.split("/").map((p) => parseInt(p, 10));
-                  if (isNaN(mm) || isNaN(yy)) return "Invalid format (MM/YY)";
-                  const year = 2000 + yy;
-                  const monthIndex = mm - 1;
-                  const lastDayOfMonth = new Date(year, monthIndex + 1, 0);
-                  const today = new Date();
-                  today.setHours(0, 0, 0, 0);
-                  return lastDayOfMonth >= today || "Card has expired";
-                },
-              }}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  placeholder="MM/YY"
-                  maxLength={5}
-                  className={styles.input}
-                  autoComplete="cc-exp"
-                  onChange={(e) =>
-                    field.onChange(formatExpiryDate(e.target.value))
-                  }
-                  value={field.value}
-                />
-              )}
-            />
-            {errors.expiryDate && (
-              <p className={styles.error}>{errors.expiryDate.message}</p>
-            )}
-          </div>
-
-          {/* CVV */}
-          <div>
-            <label className={styles.label}>CVV*</label>
-            <Controller
-              name="cvv"
-              control={control}
-              rules={{
-                required: "CVV is required",
-                validate: (val) =>
-                  new RegExp(`^\\d{${selectedRules.cvvLength}}$`).test(val) ||
-                  `CVV must be ${selectedRules.cvvLength} digits`,
-              }}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="text"
-                  placeholder={"0".repeat(selectedRules.cvvLength)}
-                  maxLength={selectedRules.cvvLength}
-                  className={styles.input}
-                  autoComplete="cc-csc"
-                  onChange={(e) => {
-                    const raw = e.target.value
-                      .replace(/\D/g, "")
-                      .slice(0, selectedRules.cvvLength);
-                    field.onChange(raw);
+            <div className={styles.grid3Cols}>
+              <div>
+                <label className={styles.label}>Card Number*</label>
+                <Controller
+                  name="cardNumber"
+                  control={control}
+                  rules={{
+                    required: "Card number is required",
+                    validate: (val) => {
+                      const raw = val.replace(/\D/g, "");
+                      return (
+                        selectedRules.re.test(raw) ||
+                        `Invalid ${selectedCardType.toUpperCase()} number (e.g. ${
+                          selectedRules.example
+                        })`
+                      );
+                    },
                   }}
-                  value={field.value}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      type="text"
+                      placeholder="0000 0000 0000 0000"
+                      maxLength={selectedRules?.maxLength + 3}
+                      className={styles.input}
+                      autoComplete="cc-number"
+                      onChange={(e) =>
+                        field.onChange(formatCardNumber(e.target.value))
+                      }
+                      value={field.value}
+                    />
+                  )}
                 />
-              )}
-            />
-            {errors.cvv && <p className={styles.error}>{errors.cvv.message}</p>}
-          </div>
-        </div>
+                {errors.cardNumber && (
+                  <p className={styles.error}>{errors.cardNumber.message}</p>
+                )}
+              </div>
 
-        {/* Submit */}
-        <div className={styles.submitWrapper}>
-          <button type="submit" className={styles.submitButton}>
-            Save Method
-          </button>
-        </div>
+              <div>
+                <label className={styles.label}>Expiry Date*</label>
+                <Controller
+                  name="expiryDate"
+                  control={control}
+                  rules={{
+                    required: "Expiry date is required",
+                    pattern: {
+                      value: /^(0[1-9]|1[0-2])\/\d{2}$/,
+                      message: "Invalid format (MM/YY)",
+                    },
+                    validate: (val) => {
+                      const [mm, yy] = val
+                        .split("/")
+                        .map((p) => parseInt(p, 10));
+                      if (isNaN(mm) || isNaN(yy))
+                        return "Invalid format (MM/YY)";
+                      const year = 2000 + yy;
+                      const monthIndex = mm - 1;
+                      const lastDayOfMonth = new Date(year, monthIndex + 1, 0);
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      return lastDayOfMonth >= today || "Card has expired";
+                    },
+                  }}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      type="text"
+                      placeholder="MM/YY"
+                      maxLength={5}
+                      className={styles.input}
+                      autoComplete="cc-exp"
+                      onChange={(e) =>
+                        field.onChange(formatExpiryInput(e.target.value))
+                      }
+                      value={field.value}
+                    />
+                  )}
+                />
+                {errors.expiryDate && (
+                  <p className={styles.error}>{errors.expiryDate.message}</p>
+                )}
+              </div>
+
+              <div>
+                <label className={styles.label}>CVV*</label>
+                <Controller
+                  name="cvv"
+                  control={control}
+                  rules={{
+                    required: "CVV is required",
+                    validate: (val) =>
+                      new RegExp(`^\\d{${selectedRules?.cvvLength}}$`).test(
+                        val,
+                      ) || `CVV must be ${selectedRules?.cvvLength} digits`,
+                  }}
+                  render={({ field }) => (
+                    <input
+                      {...field}
+                      type="text"
+                      placeholder={"0".repeat(selectedRules?.cvvLength)}
+                      maxLength={selectedRules?.cvvLength}
+                      className={styles.input}
+                      autoComplete="cc-csc"
+                      onChange={(e) => {
+                        const raw = e.target.value
+                          .replace(/\D/g, "")
+                          .slice(0, selectedRules?.cvvLength);
+                        field.onChange(raw);
+                      }}
+                      value={field.value}
+                    />
+                  )}
+                />
+                {errors.cvv && (
+                  <p className={styles.error}>{errors.cvv.message}</p>
+                )}
+              </div>
+            </div>
+            {!payInfo && (
+              <Box>
+                <Toggle
+                  label="Use Default Billing Address"
+                  checked={useDefaultBilling}
+                  onChange={() => setUseDefaultBilling((prev) => !prev)}
+                />
+              </Box>
+            )}
+            {!useDefaultBilling && (
+              <Box>
+                <Dropdown
+                  label="Select Billing Address*"
+                  onChange={(item: string) => setSelectedAddressText(item)}
+                  items={addressOptions}
+                  value={selectedAddressText}
+                />
+              </Box>
+            )}
+          </Box>
+          {selectedAddressText === ADDRESS_NOT_LISTED && !useDefaultBilling && (
+            <Box width="600px">
+              <AddNewPaymentAddress
+                register={register}
+                errors={errors}
+                setValue={setValue}
+              />
+            </Box>
+          )}
+        </Box>
+        {!payInfo && (
+          <Notification
+            type={notificationType}
+            message={notificationMessage}
+            showNotification={showNotification}
+          />
+        )}
+        <Box
+          display="flex"
+          flexDirection="row"
+          marginTop="10px"
+          justifyContent={payInfo ? "space-between" : "flex-end"}
+        >
+          {payInfo && (
+            <Button
+              type="button"
+              bgColor="redAccent"
+              color="errorText"
+              isLoading={deletePaymentProfilePending}
+              onClick={() => {
+                handleDeleteMethod();
+              }}
+              text="Delete Method"
+              disabled={isDefaultBilling || deletePaymentProfilePending}
+            />
+          )}
+          {!payInfo && (
+            <Button
+              type="submit"
+              bgColor="blueAccent"
+              height="20px"
+              disabled={createPaymentProfilePending}
+              isLoading={createPaymentProfilePending}
+            >
+              Save Method
+            </Button>
+          )}
+        </Box>
       </form>
     </div>
   );

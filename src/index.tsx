@@ -13,7 +13,15 @@ const mo = new MutationObserver((mutations, observer) => {
     observer.disconnect();
 
     const rootEl = document.getElementById("billing-center-content");
-    const queryClient = new QueryClient();
+    const queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          staleTime: 1000 * 30,
+          // refetch if you remount *after* that 30s window
+          refetchOnMount: true,
+        },
+      },
+    });
 
     if (rootEl) {
       const root = createRoot(rootEl);
