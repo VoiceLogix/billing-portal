@@ -14,6 +14,7 @@ export const theme = {
     neutral: "#60646C",
     bgNeutral: "#0000330F",
     blueBorder: "#0072BC72",
+    disabled: "#a9a9a9",
   },
 };
 

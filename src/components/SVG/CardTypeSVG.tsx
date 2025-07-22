@@ -28,8 +28,8 @@ export const CardTypeSVG = ({ type }: CardTypeSVGProps) => {
               y2="-1290.86"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stop-color="#222357" />
-              <stop offset="1" stop-color="#254AA5" />
+              <stop stopColor="#222357" />
+              <stop offset="1" stopColor="#254AA5" />
             </linearGradient>
           </defs>
         </svg>
@@ -129,8 +129,8 @@ export const CardTypeSVG = ({ type }: CardTypeSVGProps) => {
               y2="543.821"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stop-color="#F34F26" />
-              <stop offset="1" stop-color="#F69E35" />
+              <stop stopColor="#F34F26" />
+              <stop offset="1" stopColor="#F69E35" />
             </linearGradient>
             <clipPath id="clip0_372_1033">
               <rect width="40" height="6.71875" fill="white" />

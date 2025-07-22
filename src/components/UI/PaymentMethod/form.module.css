@@ -48,6 +48,11 @@ input {
   font-size: 14px;
 }
 
+.form .input:disabled {
+  color: var(--color-disabled);
+  cursor: not-allowed;
+}
+
 .form .input:focus {
   box-shadow: none;
   border: 0px;

@@ -5,20 +5,15 @@ import TextInput from "../TextInput.tsx/TextInput";
 import { useGetStateInfo } from "../../../service/getStateInfo";
 import { Typography } from "../Typography";
 import { useGetProfileDetails } from "../../../service/getProfileDetails";
-import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
-import { CardFormFormValues } from "./utils";
+import { useFormContext } from "react-hook-form";
+import { CardFormFormValues, ECheckFormValues } from "./utils";
 
-interface AddNewPaymentAddressProps {
-  register: UseFormRegister<CardFormFormValues>;
-  errors: FieldErrors<CardFormFormValues>;
-  setValue: UseFormSetValue<CardFormFormValues>;
-}
-
-export const AddNewPaymentAddress = ({
-  register,
-  errors,
-  setValue,
-}: AddNewPaymentAddressProps) => {
+export const AddNewPaymentAddress = ({}) => {
+  const {
+    register,
+    setValue,
+    formState: { errors },
+  } = useFormContext<CardFormFormValues | ECheckFormValues>();
   const { data: profileDetails } = useGetProfileDetails();
   const clientCountryDTOList = profileDetails?.clientCountryDTOList;
   const [country, setCountry] = useState("UNITED STATES");
@@ -48,21 +43,11 @@ export const AddNewPaymentAddress = ({
     );
   };
 
-  const getStateName = (state: string) => {
-    return stateInfo?.stateList?.find((s) => s.code === state)?.name;
-  };
-
-  const getStateCode = (state: string) => {
-    return stateInfo?.stateList?.find((s) => s.name === state)?.code;
-  };
   const { data: stateInfo } = useGetStateInfo(getCountryId(country));
 
   const states = useMemo(() => {
     return stateInfo?.stateList?.map((s) => s.name) || [];
   }, [stateInfo]);
-  //   useEffect(() => {
-  //     setValue("country", country);
-  //   }, [country, setValue]);
 
   const handleCountryChange = (item: string) => {
     setCountry(item);

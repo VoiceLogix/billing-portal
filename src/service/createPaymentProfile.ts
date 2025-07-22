@@ -20,11 +20,41 @@ interface PaymentProfileData {
     zip: string;
     country: string;
   };
+  type: string;
+  accountNumber: string;
 }
 
-export async function createPaymentProfile(data: PaymentProfileData) {
+export interface ECheckProfileData {
+  echeckInfo: {
+    accountHolderName: string;
+    bankAccountNumber: string;
+    bankAccountType: "Checking" | "Savings";
+    bankName: string;
+    routingNumber: string;
+  };
+  address?: {
+    addLine1: string;
+    addLine2?: string;
+    city: string;
+    state: string;
+    zip: string;
+    country: string;
+  };
+  type: string;
+  accountNumber: string;
+}
+
+export async function createPaymentProfile(
+  data: PaymentProfileData | ECheckProfileData,
+) {
   try {
     const response = await axiosInstance.post(`/createPaymentProfile`, data);
+    const dataResponse = response.data;
+    const validationResponse = dataResponse.validationResponse;
+    if (validationResponse && !validationResponse.successful) {
+      throw new Error("Create payment profile failed.");
+    }
+
     return response.data;
   } catch (error) {
     if (error.response && error.response.data && error.response.data.message) {
@@ -38,13 +68,17 @@ export async function createPaymentProfile(data: PaymentProfileData) {
   }
 }
 
-export function useCreatePaymentProfile() {
+export function useCreatePaymentProfile(handleClose: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: PaymentProfileData) => createPaymentProfile(data),
-    onSuccess: (response) => {
+    mutationFn: (data: PaymentProfileData | ECheckProfileData) =>
+      createPaymentProfile(data),
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["subscriberInfo"] });
+      setTimeout(() => {
+        handleClose();
+      }, 2000);
     },
   });
 }
@@ -84,7 +118,7 @@ export const deletePaymentProfile = async ({
   }
 };
 
-export function useDeletePaymentProfile() {
+export function useDeletePaymentProfile(handleClose: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -97,6 +131,9 @@ export function useDeletePaymentProfile() {
     }) => deletePaymentProfile({ profileId, subscriberId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["subscriberInfo"] });
+      setTimeout(() => {
+        handleClose();
+      }, 2000);
     },
   });
 }

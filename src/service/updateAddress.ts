@@ -1,6 +1,6 @@
 import { axiosInstance } from "./axiosInstance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getSubscriberInfo } from "./getSubscriberInfo";
+import { getAccountNumber } from "./tokenStorage";
 
 export const updateAddress = async (data: any) => {
   const response = await axiosInstance.put("/updateProfile/address", data);
@@ -31,7 +31,7 @@ export const useUpdateAddress = (handleClose: () => void) => {
 };
 
 export const deleteAddress = async (addressId: string) => {
-  const accountNumber = (await getSubscriberInfo()).accountNumber;
+  const accountNumber = getAccountNumber();
 
   const response = await axiosInstance.delete(
     `/deleteAddress/${accountNumber}/${addressId}`,

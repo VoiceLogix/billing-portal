@@ -13,6 +13,10 @@
   user-select: none;
 }
 
+.trigger:disabled {
+  color: var(--color-disabled);
+}
+
 .labelText {
   flex: 1;
   text-align: left;

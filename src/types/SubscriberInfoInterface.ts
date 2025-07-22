@@ -74,7 +74,7 @@ interface CreditCardInfo {
 interface ECheckInfo {
   accountHolderName: string;
   bankAccountNumber: string;
-  bankAccountType: string;
+  bankAccountType: "Checking" | "Savings";
   bankName: string;
   routingNumber: string;
 }

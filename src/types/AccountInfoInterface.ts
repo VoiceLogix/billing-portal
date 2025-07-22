@@ -11,5 +11,4 @@ export interface AccountInfo {
   unBilledBalance: number;
   clientSubscriptionInfo: any | null;
   parentPaying: boolean;
-  payInfo: PayInfoItem[] | null;
 }

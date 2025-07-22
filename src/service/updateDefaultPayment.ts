@@ -1,13 +1,15 @@
-import { axiosInstance } from "./axiosInstance";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { axiosInstance } from "./axiosInstance";
+import { PayInfoItem, SubscriberInfo } from "../types/SubscriberInfoInterface";
+import { getAccountNumber } from "./tokenStorage";
 
-export const updateDefaultPayment = async (data: any) => {
+export const updateDefaultPayment = async (data: {
+  defaultPaymentProfileId: string;
+}) => {
   const response = await axiosInstance.put(
     "/updateProfile/defaultPayment",
     data,
   );
-  console.log("updateDefaultPayment", response.data);
-
   return response.data;
 };
 
@@ -15,47 +17,51 @@ export const useUpdateDefaultPayment = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: any) => updateDefaultPayment(data),
-    onMutate: async (newData) => {
-      await queryClient.cancelQueries({ queryKey: ["profileDetails"] });
+    mutationFn: (data: { defaultPaymentProfileId: string }) =>
+      updateDefaultPayment(data),
 
-      const previousProfileDetails = queryClient.getQueryData([
-        "profileDetails",
+    onMutate: async (newData) => {
+      await queryClient.cancelQueries({ queryKey: ["subscriberInfo"] });
+
+      const previousSubscriberInfo = queryClient.getQueryData<SubscriberInfo>([
+        "subscriberInfo",
       ]);
 
-      queryClient.setQueryData(["profileDetails"], (oldData: any) => {
-        if (!oldData?.clientSubscriberInfo?.clientCCProfileInfoList)
-          return oldData;
+      const accountId = getAccountNumber();
 
-        return {
-          ...oldData,
-          clientSubscriberInfo: {
-            ...oldData.clientSubscriberInfo,
-            clientCCProfileInfoList:
-              oldData.clientSubscriberInfo.clientCCProfileInfoList.map(
-                (card) => ({
-                  ...card,
-                  default:
-                    card.paymentProfileId === newData.defaultPaymentProfileId,
-                }),
-              ),
-          },
-        };
-      });
+      queryClient.setQueryData<SubscriberInfo>(
+        ["subscriberInfo", accountId],
+        (oldData) => {
+          if (!oldData) return oldData;
 
-      return { previousProfileDetails };
+          const updatedPayInfo: PayInfoItem[] = oldData.payInfo.map((item) => ({
+            ...item,
+            isDefault:
+              item.paymentProfileId === newData.defaultPaymentProfileId,
+          }));
+
+          return {
+            ...oldData,
+            payInfo: updatedPayInfo,
+          };
+        },
+      );
+
+      return { previousSubscriberInfo };
     },
-    onError: (error: unknown, _variables, context) => {
+
+    onError: (error, _variables, context) => {
       console.error("Default payment mutation error:", error);
-      if (context?.previousProfileDetails) {
+      if (context?.previousSubscriberInfo) {
         queryClient.setQueryData(
-          ["profileDetails"],
-          context.previousProfileDetails,
+          ["subscriberInfo"],
+          context.previousSubscriberInfo,
         );
       }
     },
+
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["profileDetails"] });
+      await queryClient.invalidateQueries({ queryKey: ["subscriberInfo"] });
     },
   });
 };

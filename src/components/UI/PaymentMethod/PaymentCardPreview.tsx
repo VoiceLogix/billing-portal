@@ -46,7 +46,6 @@ export const PaymentCardPreview = ({
       <Model
         open={openPaymentMethodModel}
         handleClose={() => setOpenPaymentMethodModel(false)}
-        // width="600px"
       >
         <PaymentMethodModel
           payInfo={cardDetails}
@@ -93,7 +92,13 @@ export const PaymentCardPreview = ({
             </Box>
             {cardDetails ? (
               <Box>
-                <Badge status={cardDetails?.status} />
+                <Badge
+                  status={
+                    cardDetails?.paymentMethod === "CC"
+                      ? cardDetails.status
+                      : "active"
+                  }
+                />
               </Box>
             ) : (
               <CardSVG />
@@ -113,7 +118,7 @@ export const PaymentCardPreview = ({
               borderSize="1px"
               bgColor="white"
               color="blueText"
-              text="Edit"
+              text="View"
               onClick={() => setOpenPaymentMethodModel(true)}
             />
           </Box>

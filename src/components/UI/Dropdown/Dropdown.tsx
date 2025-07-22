@@ -52,35 +52,36 @@ const Dropdown: React.FC<DropdownProps> = ({
             </span>
           </button>
         </DropdownMenu.Trigger>
-
-        <DropdownMenu.Content
-          sideOffset={4}
-          align="start"
-          className={styles.content}
-          style={{ width }}
-        >
-          {items.length === 0 ? (
-            <DropdownMenu.Item
-              key={0}
-              onSelect={() => onChange("")}
-              className={styles.item}
-              disabled
-            >
-              No options
-            </DropdownMenu.Item>
-          ) : (
-            items.map((item, idx) => (
+        {!disabled && (
+          <DropdownMenu.Content
+            sideOffset={4}
+            align="start"
+            className={styles.content}
+            style={{ width }}
+          >
+            {items.length === 0 ? (
               <DropdownMenu.Item
-                key={idx}
-                onSelect={() => onChange(item)}
+                key={0}
+                onSelect={() => onChange("")}
                 className={styles.item}
-                aria-selected={value === item}
+                disabled
               >
-                {item}
+                No options
               </DropdownMenu.Item>
-            ))
-          )}
-        </DropdownMenu.Content>
+            ) : (
+              items.map((item, idx) => (
+                <DropdownMenu.Item
+                  key={idx}
+                  onSelect={() => onChange(item)}
+                  className={styles.item}
+                  aria-selected={value === item}
+                >
+                  {item}
+                </DropdownMenu.Item>
+              ))
+            )}
+          </DropdownMenu.Content>
+        )}
       </DropdownMenu.Root>
       {error && <Typography color="errorText">{error.message}</Typography>}
     </Box>

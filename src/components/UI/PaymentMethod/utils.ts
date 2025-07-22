@@ -1,6 +1,8 @@
 import { Address } from "../../../types/SubscriberInfoInterface";
 import { PaymentCardType } from "../../SVG/CardTypeSVG";
 
+export const ADDRESS_NOT_LISTED = "The address is not in the list";
+
 export type CardFormFormValues = {
   firstName: string;
   lastName: string;
@@ -9,6 +11,20 @@ export type CardFormFormValues = {
   cardNumber: string;
   expiryDate: string;
   cvv: string;
+  country?: string;
+  state?: string;
+  city?: string;
+  zip?: string;
+  addLine1?: string;
+  addLine2?: string;
+};
+
+export type ECheckFormValues = {
+  routingNumber: string;
+  bankName: string;
+  accountNumber: string;
+  accountHolderName: string;
+  accountType: "Checking" | "Savings";
   country?: string;
   state?: string;
   city?: string;
