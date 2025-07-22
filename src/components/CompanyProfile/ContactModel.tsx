@@ -194,14 +194,6 @@ export const ContactModel = ({
         <Typography size="big" weight="semibold">
           {selectedContact ? "Edit Contact" : "Add Contact"}
         </Typography>
-        <Box display="flex" gap="10px">
-          {isPrimaryContact && (
-            <Badge status="Primary Contact" color="primary" />
-          )}
-          {isBillingContact && (
-            <Badge status="Default for Service" color="primary" />
-          )}
-        </Box>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box display="flex" flexWrap="wrap" gap="16px" marginTop="20px">
             <Box display="flex" gap="8px" width="100%">

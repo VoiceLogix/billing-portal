@@ -183,14 +183,7 @@ export const AddressModel = ({
         <Typography size="big" weight="semibold">
           {selectedAddress ? "Edit Address" : "Add Address"}
         </Typography>
-        <Box display="flex" gap="10px">
-          {isDefaultBilling && (
-            <Badge status="Default for Billing" color="primary" />
-          )}
-          {isDefaultShipping && (
-            <Badge status="Default for Service" color="primary" />
-          )}
-        </Box>
+
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box display="flex" flexWrap="wrap" gap="16px" marginTop="20px">
             <Box display="flex" gap="8px" width="100%">
