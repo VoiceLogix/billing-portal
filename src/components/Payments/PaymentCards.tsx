@@ -11,6 +11,12 @@ interface PaymentCardsProps {
 }
 export const PaymentCards = ({ subscriberInfo }: PaymentCardsProps) => {
   const cards = subscriberInfo.payInfo;
+  let defaultCard = subscriberInfo?.payInfo?.find(
+    (card) => card.isDefault === true,
+  );
+  if (!defaultCard && subscriberInfo?.payInfo?.length > 0) {
+    defaultCard = subscriberInfo?.payInfo?.[0];
+  }
   const [openPaymentMethodModel, setOpenPaymentMethodModel] = useState(
     cards?.length === 0,
   );
@@ -29,10 +35,17 @@ export const PaymentCards = ({ subscriberInfo }: PaymentCardsProps) => {
       >
         <PaymentMethodModel handleClose={handleClose} />
       </Model>
-      <Box>
-        <Button onClick={handleAddPaymentCard} bgColor="blueAccent">
-          Add Payment Card
-        </Button>
+      <Box
+        width="350px"
+        display="flex"
+        flexDirection="column"
+        alignItems="flex-end"
+      >
+        <Box width="170px" display="flex" justifyContent="flex-end">
+          <Button fullWidth onClick={handleAddPaymentCard} bgColor="blueAccent">
+            Add Payment Method
+          </Button>
+        </Box>
 
         <Box display="flex" flexDirection="column" gap="16px" marginTop="20px">
           {cards?.map((card) => (
@@ -40,6 +53,7 @@ export const PaymentCards = ({ subscriberInfo }: PaymentCardsProps) => {
               key={card.paymentProfileId}
               cardDetails={card}
               showAutopay={true}
+              isDefault={card.paymentProfileId === defaultCard.paymentProfileId}
             />
           ))}
         </Box>

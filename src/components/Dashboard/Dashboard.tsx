@@ -51,9 +51,13 @@ export const Dashboard = () => {
     return <Error />;
   }
 
-  const defaultCard = subscriberInfo?.payInfo?.find(
+  let defaultCard = subscriberInfo?.payInfo?.find(
     (card) => card.isDefault === true,
   );
+  if (!defaultCard && subscriberInfo?.payInfo?.length > 0) {
+    defaultCard = subscriberInfo?.payInfo?.[0];
+  }
+
   return (
     <Box display="flex" flexDirection="column" gap="16px">
       <Box display="flex" flexDirection="row" gap="16px">

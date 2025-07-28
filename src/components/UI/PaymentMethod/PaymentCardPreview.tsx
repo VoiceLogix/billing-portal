@@ -15,10 +15,12 @@ import { maskAccountNumber } from "./utils";
 interface PaymentCardPreviewProps {
   cardDetails?: PayInfoItem;
   showAutopay?: boolean;
+  isDefault?: boolean;
 }
 export const PaymentCardPreview = ({
   cardDetails,
   showAutopay,
+  isDefault,
 }: PaymentCardPreviewProps) => {
   const [openPaymentMethodModel, setOpenPaymentMethodModel] = useState(false);
 
@@ -50,6 +52,7 @@ export const PaymentCardPreview = ({
         <PaymentMethodModel
           payInfo={cardDetails}
           handleClose={handleCloseModel}
+          isDefault={cardDetails?.isDefault || isDefault}
         />
       </Model>
       <CardLayout width="368px" height="152px">
@@ -66,7 +69,9 @@ export const PaymentCardPreview = ({
           >
             <Box display="flex" flexDirection="column" gap="6px">
               <Typography color="secondaryText">
-                {cardDetails?.paymentMethod === "CC"
+                {cardDetails === undefined
+                  ? "Payment Methods"
+                  : cardDetails?.paymentMethod === "CC"
                   ? "Credit/Debit Card"
                   : "E-Check"}
               </Typography>
@@ -107,7 +112,7 @@ export const PaymentCardPreview = ({
           <Box display="flex" justifyContent="space-between">
             {showAutopay && (
               <RadioSelect
-                checked={cardDetails.isDefault || false}
+                checked={cardDetails.isDefault || isDefault || false}
                 onChange={handleSetAutopay}
                 label="Autopay"
               />
@@ -116,9 +121,9 @@ export const PaymentCardPreview = ({
               padding="small"
               borderColor="blueBorder"
               borderSize="1px"
-              bgColor="white"
-              color="blueText"
-              text="View"
+              bgColor={cardDetails ? "white" : "blueAccent"}
+              color={cardDetails ? "blueText" : "white"}
+              text={cardDetails ? "Edit" : "Add Payment Method"}
               onClick={() => setOpenPaymentMethodModel(true)}
             />
           </Box>

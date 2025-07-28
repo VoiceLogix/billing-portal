@@ -85,7 +85,7 @@ export function Payments() {
   ];
 
   return (
-    <Box display="flex" justifyContent="space-between" gap="48px">
+    <Box display="flex" justifyContent="space-between" gap="80px">
       <Box display="flex" flexDirection="column" gap="30px">
         <SearchInput
           width="272px"

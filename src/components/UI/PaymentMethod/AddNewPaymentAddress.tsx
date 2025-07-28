@@ -75,7 +75,6 @@ export const AddNewPaymentAddress = ({}) => {
           value={country}
           items={countries}
           onChange={handleCountryChange}
-          width="250px"
           error={errors.country}
         />
         <Dropdown
@@ -83,7 +82,6 @@ export const AddNewPaymentAddress = ({}) => {
           value={state}
           items={states}
           onChange={handleStateChange}
-          width="240px"
           error={errors.state}
         />
       </Box>

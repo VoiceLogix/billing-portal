@@ -34,9 +34,11 @@ const formatRoutingNumber = (value: string) => {
 const ECheckForm = ({
   payInfo,
   handleClose,
+  isDefault,
 }: {
   payInfo?: PayInfoItem;
   handleClose?: () => void;
+  isDefault?: boolean;
 }) => {
   const { data: subscriberInfo } = useGetSubscriberInfo();
 
@@ -156,11 +158,11 @@ const ECheckForm = ({
           <Box display="flex" gap="16px">
             <Box
               display="flex"
-              gap="16px"
+              gap="20px"
               flexDirection="column"
               width={`${
                 selectedAddressText === ADDRESS_NOT_LISTED && !useDefaultBilling
-                  ? "60%"
+                  ? "470px"
                   : "100%"
               }`}
             >
@@ -324,7 +326,7 @@ const ECheckForm = ({
 
             {selectedAddressText === ADDRESS_NOT_LISTED &&
               !useDefaultBilling && (
-                <Box width="690px">
+                <Box width="470px">
                   <AddNewPaymentAddress />
                 </Box>
               )}
@@ -352,7 +354,9 @@ const ECheckForm = ({
                   handleDeleteMethod();
                 }}
                 text="Delete Method"
-                disabled={isDefaultBilling || deletePaymentProfilePending}
+                disabled={
+                  isDefaultBilling || isDefault || deletePaymentProfilePending
+                }
               />
             )}
             {!payInfo && (

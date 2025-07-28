@@ -34,9 +34,11 @@ import {
 const CardForm = ({
   payInfo,
   handleClose,
+  isDefault,
 }: {
   payInfo?: PayInfoItem;
   handleClose: () => void;
+  isDefault?: boolean;
 }) => {
   const { data: subscriberInfo } = useGetSubscriberInfo();
 
@@ -67,7 +69,7 @@ const CardForm = ({
       cardNumber: card?.cardNumber || "",
       expiryDate:
         formatExpiryDate(card?.cardExpiryMonth, card?.cardExpiryYear) || "",
-      cvv: "***",
+      cvv: card?.cardNumber ? "***" : "",
       addLine1: "",
       addLine2: "",
       city: "",
@@ -171,11 +173,20 @@ const CardForm = ({
       deletePaymentProfileSuccess,
     );
   return (
-    <div className={styles.container}>
+    <Box>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
           <Box display="flex" gap="20px">
-            <Box display="flex" gap="20px" flexDirection="column">
+            <Box
+              display="flex"
+              gap="20px"
+              flexDirection="column"
+              width={`${
+                selectedAddressText === ADDRESS_NOT_LISTED && !useDefaultBilling
+                  ? "470px"
+                  : "100%"
+              }`}
+            >
               <div className={styles.grid2Cols}>
                 <TextInput
                   label="First Name*"
@@ -376,7 +387,7 @@ const CardForm = ({
             </Box>
             {selectedAddressText === ADDRESS_NOT_LISTED &&
               !useDefaultBilling && (
-                <Box width="600px">
+                <Box width="470px" display="flex">
                   <AddNewPaymentAddress />
                 </Box>
               )}
@@ -404,7 +415,9 @@ const CardForm = ({
                   handleDeleteMethod();
                 }}
                 text="Delete Method"
-                disabled={isDefaultBilling || deletePaymentProfilePending}
+                disabled={
+                  isDefaultBilling || isDefault || deletePaymentProfilePending
+                }
               />
             )}
             {!payInfo && (
@@ -421,7 +434,7 @@ const CardForm = ({
           </Box>
         </form>
       </FormProvider>
-    </div>
+    </Box>
   );
 };
 

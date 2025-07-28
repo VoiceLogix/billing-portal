@@ -8,11 +8,13 @@ import ECheckForm from "./ECheckForm";
 interface PaymentMethodModelProps {
   payInfo?: PayInfoItem;
   handleClose: () => void;
+  isDefault?: boolean;
 }
 
 const PaymentMethodModel = ({
   payInfo,
   handleClose,
+  isDefault = false,
 }: PaymentMethodModelProps) => {
   const isAddNewPayment = !payInfo;
   const isCreditCard =
@@ -49,10 +51,18 @@ const PaymentMethodModel = ({
         )}
 
         {!isAddNewPayment && isCreditCard && (
-          <CardForm payInfo={payInfo} handleClose={handleClose} />
+          <CardForm
+            payInfo={payInfo}
+            handleClose={handleClose}
+            isDefault={isDefault}
+          />
         )}
         {!isAddNewPayment && !isCreditCard && (
-          <ECheckForm payInfo={payInfo} handleClose={handleClose} />
+          <ECheckForm
+            payInfo={payInfo}
+            handleClose={handleClose}
+            isDefault={isDefault}
+          />
         )}
       </Box>
     </Box>
