@@ -17,7 +17,6 @@ const mo = new MutationObserver((mutations, observer) => {
       defaultOptions: {
         queries: {
           staleTime: 1000 * 30,
-          // refetch if you remount *after* that 30s window
           refetchOnMount: true,
         },
       },
