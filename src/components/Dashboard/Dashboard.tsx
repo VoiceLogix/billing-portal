@@ -66,7 +66,7 @@ export const Dashboard = () => {
             accountInfo={accountInfo}
             invoiceHistory={invoiceHistory}
           />
-          <PaymentCardPreview cardDetails={defaultCard} />
+          <PaymentCardPreview cardDetails={defaultCard} isDefault={true} />
         </Box>
         <Box display="flex" flexDirection="column" gap="16px">
           <DueAmount />
