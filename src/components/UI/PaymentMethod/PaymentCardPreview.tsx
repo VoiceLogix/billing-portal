@@ -123,7 +123,7 @@ export const PaymentCardPreview = ({
               borderSize="1px"
               bgColor={cardDetails ? "white" : "blueAccent"}
               color={cardDetails ? "blueText" : "white"}
-              text={cardDetails ? "Edit" : "Add Payment Method"}
+              text={cardDetails ? "View" : "Add Payment Method"}
               onClick={() => setOpenPaymentMethodModel(true)}
             />
           </Box>
