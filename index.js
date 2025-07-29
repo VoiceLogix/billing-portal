@@ -29,7 +29,6 @@ function createNavButton(cloneFromId, newId, label, iconUrl, contentId) {
       li.classList.remove("nav-link-current");
     });
 
-    btn.classList.add("nav-link-current");
     btn.querySelector(".nav-text").style.color = "#404040";
 
     document.querySelector(".navigation-title").textContent = label;
