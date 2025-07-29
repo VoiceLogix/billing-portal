@@ -6,7 +6,7 @@ import { Loading } from "./components/UI/Loading";
 
 type AuthStatus = "loading" | "authenticated" | "unauthenticated";
 
-const App = () => {
+const BillingCenterApp = () => {
   const [status, setStatus] = useState<AuthStatus>("loading");
 
   useEffect(() => {
@@ -51,4 +51,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default BillingCenterApp;

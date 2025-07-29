@@ -1,31 +1,61 @@
-let existingbutton = document.querySelector("#nav-callhistory");
-let newbutton = existingbutton.cloneNode(true);
+function createNavButton(cloneFromId, newId, label, iconUrl, contentId) {
+  const existing = document.querySelector(cloneFromId);
+  if (!existing) throw new Error(`Template button not found: ${cloneFromId}`);
 
-newbutton.id = "nav-billing";
+  const btn = existing.cloneNode(true);
+  btn.id = newId;
+  btn.querySelector(".nav-text").textContent = label;
+  btn.classList.remove("nav-link-current");
 
-newbutton.querySelector(".nav-text").innerHTML = "Billing Center";
-newbutton.classList.remove("nav-link-current");
-document.querySelector("#nav-buttons").appendChild(newbutton);
-newbutton
-  .querySelector(".nav-bg-image")
-  .setAttribute(
-    "style",
-    "background-position: 50%;background-repeat:no-repeat; background-size: 70%; background-image: url('https://raw.githubusercontent.com/VoiceLogix/billing-portal/refs/heads/main/public/asset/billing-center.svg');",
-  );
+  btn.querySelector(".nav-bg-image").style.cssText = [
+    "background-position: 50%",
+    "background-repeat: no-repeat",
+    "background-size: 70%",
+    `background-image: url('${iconUrl}')`,
+  ].join("; ");
 
-newbutton.querySelector("a").addEventListener("click", function (e) {
-  e.preventDefault();
+  btn.querySelector("a").addEventListener("click", (e) => {
+    e.preventDefault();
 
-  let navButtons = document.querySelectorAll("#nav-buttons li");
-  navButtons.forEach(function (button) {
-    button.classList.remove("nav-link-current");
+    const existingContent = document.getElementById(contentId);
+    if (
+      existingContent &&
+      window.getComputedStyle(existingContent).display !== "none"
+    ) {
+      return false;
+    }
+
+    document.querySelectorAll("#nav-buttons li").forEach((li) => {
+      li.classList.remove("nav-link-current");
+    });
+
+    btn.classList.add("nav-link-current");
+    btn.querySelector(".nav-text").style.color = "#404040";
+
+    document.querySelector(".navigation-title").textContent = label;
+    document.querySelector(
+      "#content",
+    ).innerHTML = `<div id="${contentId}"></div>`;
+
+    return false;
   });
 
-  const newTextSpan = newbutton.querySelector("span.nav-text");
-  if (newTextSpan) newTextSpan.style.color = "#404040";
-  document.querySelector(".navigation-title").innerHTML = "Billing Center";
-  document.querySelector("#content").innerHTML =
-    "<div id='billing-center-content'></div>";
+  document.querySelector("#nav-buttons").appendChild(btn);
+  return btn;
+}
 
-  return false;
-});
+createNavButton(
+  "#nav-callhistory",
+  "nav-billing",
+  "Billing Center",
+  "https://raw.githubusercontent.com/VoiceLogix/billing-portal/refs/heads/main/public/asset/billing-center.svg",
+  "billing-center-content",
+);
+
+createNavButton(
+  "#nav-callhistory",
+  "nav-service-desk",
+  "Service Desk",
+  "https://raw.githubusercontent.com/YourOrg/your-repo/main/public/asset/service-desk.svg",
+  "service-desk-content",
+);
