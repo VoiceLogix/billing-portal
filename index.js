@@ -4,15 +4,15 @@ function createNavButton(cloneFromId, newId, label, iconUrl, contentId) {
 
   const btn = existing.cloneNode(true);
   btn.id = newId;
-  btn.querySelector(".nav-text").textContent = label;
+  btn.querySelector(".nav-text").innerHTML = label;
   btn.classList.remove("nav-link-current");
-
-  btn.querySelector(".nav-bg-image").style.cssText = [
-    "background-position: 50%",
-    "background-repeat: no-repeat",
-    "background-size: 70%",
-    `background-image: url('${iconUrl}')`,
-  ].join("; ");
+  document.querySelector("#nav-buttons").appendChild(btn);
+  btn
+    .querySelector(".nav-bg-image")
+    .setAttribute(
+      "style",
+      `background-position: 50%;background-repeat:no-repeat; background-size: 70%; background-image: url('${iconUrl}');`,
+    );
 
   btn.querySelector("a").addEventListener("click", (e) => {
     e.preventDefault();
@@ -40,7 +40,6 @@ function createNavButton(cloneFromId, newId, label, iconUrl, contentId) {
     return false;
   });
 
-  document.querySelector("#nav-buttons").appendChild(btn);
   return btn;
 }
 
@@ -56,6 +55,6 @@ createNavButton(
   "#nav-callhistory",
   "nav-service-desk",
   "Service Desk",
-  "https://raw.githubusercontent.com/YourOrg/your-repo/main/public/asset/service-desk.svg",
+  "https://raw.githubusercontent.com/VoiceLogix/billing-portal/refs/heads/main/public/asset/service-desk.svg",
   "service-desk-content",
 );
