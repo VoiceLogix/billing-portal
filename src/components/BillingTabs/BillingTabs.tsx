@@ -8,7 +8,7 @@ import { CompanyProfile } from "../CompanyProfile/CompanyProfile";
 import Subscriptions from "../Subscriptions/Subscriptions";
 
 const BillingTabs = () => (
-  <>
+  <div>
     <Tabs.Root className={styles.TabsRoot} defaultValue="tab1">
       <Tabs.List className={styles.TabsList} aria-label="Manage your account">
         <Tabs.Trigger className={styles.TabsTrigger} value="tab1">
@@ -60,7 +60,7 @@ const BillingTabs = () => (
         <Subscriptions />
       </Tabs.Content>
     </Tabs.Root>
-  </>
+  </div>
 );
 
 export default BillingTabs;

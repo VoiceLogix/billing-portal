@@ -1,0 +1,74 @@
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 14px;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.inputWrapper {
+  min-height: 32px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  cursor: text;
+}
+
+.emailList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.emailChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  background-color: var(--color-light-gray);
+}
+
+.removeButton {
+  margin-left: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.removeButton:focus {
+  outline: none;
+}
+
+.input {
+  flex: 1;
+  min-width: 128px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #111827;
+  font-size: 14px;
+}
+
+.input::placeholder {
+  color: #6b7280;
+}
+
+.errorMessage {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #dc2626;
+}

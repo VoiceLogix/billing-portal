@@ -20,21 +20,30 @@ const getStatusClass = (status: string) => {
   if (statusLower.includes("primary")) {
     return styles["status-primary"];
   }
-  if (statusLower.includes("cancelled") || statusLower.includes("expired")) {
+  if (
+    statusLower.includes("cancelled") ||
+    statusLower.includes("expired") ||
+    statusLower.includes("critical")
+  ) {
     return styles["status-cancelled"];
   }
   if (
     statusLower.includes("active") ||
     statusLower.includes("sent") ||
     statusLower.includes("fulfilled") ||
-    statusLower.includes("paid")
+    statusLower.includes("paid") ||
+    statusLower.includes("open")
   ) {
     return styles["status-active"];
   }
-  if (statusLower.includes("pending")) {
+  if (statusLower.includes("pending") || statusLower.includes("high")) {
     return styles["status-pending"];
   }
-  if (statusLower.includes("created")) {
+  if (
+    statusLower.includes("created") ||
+    statusLower.includes("new") ||
+    statusLower.includes("medium")
+  ) {
     return styles["status-created"];
   }
 

@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { InfoSvg } from "../../SVG/InfoSvg";
 import styles from "./notification.module.css";
 
+export interface NotificationProps {
+  type: "success" | "error";
+  message: string;
+  showNotification: boolean;
+}
+
 export const Notification = ({
   type,
   message,

@@ -1,6 +1,4 @@
-button,
-fieldset,
-input {
+.textInputContainer input {
   all: unset;
 }
 

@@ -1,9 +1,11 @@
 import "../index.js";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ToastContainer } from "react-toastify";
 
 import BillingCenterApp from "./BillingCenterApp";
 import ServiceDeskApp from "./ServiceDeskApp";
+import { InfoIcon, ErrorIcon } from "./components/UI/ToastIcons";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
@@ -34,6 +36,23 @@ const mo = new MutationObserver(() => {
       root.render(
         <QueryClientProvider client={queryClient}>
           <Component />
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={true}
+            newestOnTop={true}
+            closeOnClick
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            icon={({ type }) => {
+              if (type === "success") return <InfoIcon />;
+              if (type === "error") return <ErrorIcon />;
+              if (type === "info") return <InfoIcon />;
+              if (type === "warning") return <ErrorIcon />;
+              return <InfoIcon />;
+            }}
+          />
         </QueryClientProvider>,
       );
     }

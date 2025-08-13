@@ -19,8 +19,10 @@ const SearchInput: React.FC<SearchInputProps> = ({
 }) => {
   return (
     <div className={styles.searchInputContainer}>
-      <div className={styles.searchIcon}>
-        <SearchSVG />
+      <div>
+        <div className={styles.searchIcon}>
+          <SearchSVG />
+        </div>
       </div>
       <input
         value={value}

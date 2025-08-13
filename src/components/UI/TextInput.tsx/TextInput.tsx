@@ -13,6 +13,7 @@ interface TextInputProps {
   placeholder?: string;
   error?: FieldError;
   disabled?: boolean;
+  background?: "white" | "transparent";
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -21,6 +22,7 @@ const TextInput: React.FC<TextInputProps> = ({
   register,
   rules,
   error,
+  background,
   ...rest
 }) => {
   return (
@@ -32,6 +34,9 @@ const TextInput: React.FC<TextInputProps> = ({
         id={name}
         {...(register && register(name, rules))}
         className={styles.textInput}
+        style={{
+          backgroundColor: background,
+        }}
         {...rest}
       />
       {error && <p className={styles.error}>{error.message}</p>}

@@ -1,6 +1,4 @@
-button,
-fieldset,
-input {
+button {
   all: unset;
 }
 

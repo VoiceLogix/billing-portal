@@ -22,3 +22,31 @@ export function formatDateRange(start: number, end: number, locale = "en-US") {
   const formatter = new Intl.DateTimeFormat(locale, options);
   return `${formatter.format(startDate)} - ${formatter.format(endDate)}`;
 }
+
+export function formatDateTimeObject(dateStr: string | number): {
+  date: string;
+  time: string;
+} {
+  if (!dateStr) {
+    return { date: "--", time: "--" };
+  }
+
+  const date = new Date(dateStr);
+
+  const dateFormatted = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  }).format(date);
+
+  const timeFormatted = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(date);
+
+  return {
+    date: dateFormatted,
+    time: timeFormatted,
+  };
+}

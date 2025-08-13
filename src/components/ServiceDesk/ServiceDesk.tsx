@@ -1,41 +1,106 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box } from "../UI/Box";
 import SearchInput from "../UI/Input.tsx/SearchInput.tsx";
 import Dropdown from "../UI/Dropdown/Dropdown";
-
-const STATUS_OPTIONS = [
-  { label: "Any Time", value: "all" },
-  { label: "Open", value: "open" },
-  { label: "Closed", value: "closed" },
-];
+import { CalendarSVG } from "../SVG/CalenderSVG";
+import { FilterSVG } from "../SVG/FilterSVG";
+import {
+  Filter_Selection,
+  sampleTickets,
+  Time_Selection,
+  applyAllFilters,
+} from "./utils";
+import MultiSelectDropdown from "../UI/MultiSelectDropdown/MultiSelectDropdown";
+import { Button } from "../UI/Button";
+import TicketsTable from "./TicketsTable";
+import AddTicketModel from "./AddTicketModel";
+import SelectedTicket from "./SelectedTicket";
 
 export default function ServiceDesk() {
+  const [tickets, setTickets] = useState(sampleTickets);
+
   const [searchTerm, setSearchTerm] = useState("");
-  const [status, setStatus] = useState(STATUS_OPTIONS[0]);
+  const [selectedTime, setSelectedTime] = useState(Time_Selection[0]);
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [showAddTicketModal, setShowAddTicketModal] = useState(false);
+  const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
+  const handleSelectedTicket = (ticketId: string) => {
+    setSelectedTicketId(ticketId);
+  };
+
+  const handleTimeSelection = (time: (typeof Time_Selection)[number]) => {
+    setSelectedTime(time);
+  };
+
+  const handleFilterSelection = (filters: string[]) => {
+    setSelectedFilters(filters);
+  };
+
+  useEffect(() => {
+    const filteredTickets = applyAllFilters(
+      sampleTickets,
+      selectedTime,
+      selectedFilters,
+    );
+    setTickets(filteredTickets);
+  }, [selectedTime, selectedFilters]);
+
   return (
-    <Box display="flex" justifyContent="space-between" gap="80px">
-      <Box display="flex" flexDirection="column" gap="30px">
-        <Box display="flex" gap="16px">
-          <SearchInput
-            width="272px"
-            name="searchTickets"
-            placeholder={`Search tickets...`}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <Dropdown
-            value={status.label}
-            items={STATUS_OPTIONS.map((opt) => opt.label)}
-            onChange={(label) => {
-              const selected = STATUS_OPTIONS.find(
-                (opt) => opt.label === label,
-              );
-              if (selected) setStatus(selected);
-            }}
-            width="100%"
+    <>
+      <AddTicketModel
+        show={showAddTicketModal}
+        onClose={() => setShowAddTicketModal(false)}
+      />
+      {!selectedTicketId && (
+        <Box display="flex" flexDirection="column" gap="30px" width="100%">
+          <Box display="flex" flexDirection="column" gap="30px" width="100%">
+            <Box display="flex" justifyContent="space-between">
+              <Box display="flex" gap="16px">
+                <Box>
+                  <SearchInput
+                    width="272px"
+                    name="searchTickets"
+                    placeholder={`Search tickets...`}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </Box>
+                <Dropdown
+                  value={selectedTime}
+                  items={Time_Selection}
+                  onChange={handleTimeSelection}
+                  width="100%"
+                  icon={<CalendarSVG />}
+                />
+                <MultiSelectDropdown
+                  items={Filter_Selection}
+                  onChange={handleFilterSelection}
+                  selected={selectedFilters}
+                  width="100%"
+                  icon={<FilterSVG />}
+                />
+              </Box>
+              <Button
+                bgColor="blueAccent"
+                text="Create Ticket"
+                onClick={() => setShowAddTicketModal(true)}
+              />
+            </Box>
+          </Box>
+
+          <TicketsTable
+            tickets={tickets}
+            searchTerm={searchTerm}
+            setSelectedTicketId={handleSelectedTicket}
           />
         </Box>
-      </Box>
-    </Box>
+      )}
+      {selectedTicketId && (
+        <SelectedTicket
+          selectTicketId={selectedTicketId}
+          onBack={() => setSelectedTicketId(null)}
+        />
+      )}
+    </>
   );
 }

@@ -10,6 +10,7 @@ interface DropdownProps {
   value: string;
   label?: string | React.ReactNode;
   items: string[];
+  icon?: React.ReactNode;
   width?: string;
   withBackground?: boolean;
   onChange: (item: string) => void;
@@ -22,6 +23,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   label,
   items,
   width = "100%",
+  icon,
   withBackground = true,
   onChange,
   error,
@@ -46,6 +48,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             }}
             disabled={disabled}
           >
+            {icon && <span className={styles.icon}>{icon}</span>}
             <span className={styles.labelText}>{value}</span>
             <span className={styles.chevron}>
               <ArrowDown />

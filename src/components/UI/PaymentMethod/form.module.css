@@ -1,8 +1,7 @@
-button,
-fieldset,
-input {
+.form button,
+.form fieldset,
+.form input {
   all: unset;
-  box-sizing: border-box;
 }
 
 .container {

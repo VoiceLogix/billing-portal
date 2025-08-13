@@ -1,8 +1,9 @@
-button,
-fieldset,
-input {
+.searchInputContainer button,
+.searchInputContainer fieldset,
+.searchInputContainer input {
   all: unset;
 }
+
 .searchInputContainer {
   position: relative;
 }
@@ -28,7 +29,7 @@ input {
 .searchIcon {
   position: absolute;
   left: 10px;
-  top: 40%;
+  top: 50%;
   transform: translateY(-50%);
   width: 16px;
   height: 16px;

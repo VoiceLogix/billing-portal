@@ -11,10 +11,12 @@ export const theme = {
     warningText: "#D88500",
     gray: "#DFDFDF",
     lightGray: "#F6F6F6",
+    border: "#dddddd",
     neutral: "#60646C",
     bgNeutral: "#0000330F",
     blueBorder: "#0072BC72",
     disabled: "#a9a9a9",
+    bgPrimary: "#F1F1F1",
   },
 };
 

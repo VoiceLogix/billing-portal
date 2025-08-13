@@ -1,7 +1,7 @@
 export const ArrowDown = () => (
   <svg
-    width="9"
-    height="5"
+    width="12px"
+    height="12px"
     viewBox="0 0 10 6"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

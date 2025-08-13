@@ -13,6 +13,7 @@ export interface Column<T> {
   sortable?: boolean;
   isLink?: boolean;
   width?: string;
+  minWidth?: string;
   searchable?: boolean;
   Cell?: (value: T[keyof T], row: T) => React.ReactNode;
   key?: string;
@@ -28,6 +29,7 @@ export interface TableProps<T extends Record<string, any>> {
   className?: string;
   emptyText?: string;
   headerBackground?: boolean;
+  showScroll?: boolean;
 }
 
 export function Table<T extends Record<string, any>>({
@@ -40,6 +42,7 @@ export function Table<T extends Record<string, any>>({
   onSort,
   className = "",
   headerBackground = false,
+  showScroll = false,
 }: TableProps<T>) {
   const [sortKey, setSortKey] = useState<keyof T | undefined>(defaultSortKey);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">(defaultSortOrder);
@@ -152,7 +155,11 @@ export function Table<T extends Record<string, any>>({
   };
 
   return (
-    <div className={`${styles.tableWrapper} ${className}`}>
+    <div
+      className={` ${styles.tableWrapper} ${className}  ${
+        showScroll ? "always-show-scrollbar" : ""
+      }`}
+    >
       <table className={styles.table}>
         <thead>
           <tr>
@@ -165,12 +172,14 @@ export function Table<T extends Record<string, any>>({
                 col.align === "center" ? styles.alignCenter : "",
               ].join(" ");
               const columnKey = getColumnKey(col, index);
-
+              const headerStyle: React.CSSProperties = {};
+              if (col.width) headerStyle.width = col.width;
+              if (col.minWidth) headerStyle.minWidth = col.minWidth;
               return (
                 <th
                   key={columnKey}
                   className={headerClass}
-                  style={col.width ? { width: col.width } : undefined}
+                  style={headerStyle}
                   onClick={
                     col.sortable && col.accessor && col.accessor !== ""
                       ? () => handleSort(col.accessor as keyof T)
@@ -212,13 +221,11 @@ export function Table<T extends Record<string, any>>({
                     col.align === "center" ? styles.alignCenter : "",
                   ].join(" ");
                   const columnKey = getColumnKey(col, colIndex);
-
+                  const cellStyle: React.CSSProperties = {};
+                  if (col.width) cellStyle.width = col.width;
+                  if (col.minWidth) cellStyle.minWidth = col.minWidth;
                   return (
-                    <td
-                      style={col.width ? { width: col.width } : undefined}
-                      key={columnKey}
-                      className={cellClass}
-                    >
+                    <td style={cellStyle} key={columnKey} className={cellClass}>
                       {content}
                     </td>
                   );

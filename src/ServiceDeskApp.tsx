@@ -31,18 +31,18 @@ const ServiceDeskApp = () => {
     return <Loading />;
   }
 
-  if (status === "unauthenticated") {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="50vh"
-      >
-        Error Loading Service Desk. Please contact support.
-      </Box>
-    );
-  }
+  // if (status === "unauthenticated") {
+  //   return (
+  //     <Box
+  //       display="flex"
+  //       justifyContent="center"
+  //       alignItems="center"
+  //       height="50vh"
+  //     >
+  //       Error Loading Service Desk. Please contact support.
+  //     </Box>
+  //   );
+  // }
 
   return (
     <Box>

@@ -8,7 +8,6 @@ import { RadioSelect } from "../UI/RadioSelect/RadioSelect";
 import { Button } from "../UI/Button";
 import { Address, ClientCountryDTO } from "../../types/ProfileDetailsInterface";
 import { useMemo, useState, useEffect } from "react";
-import { Badge } from "../UI/Badge/Badge";
 import { useGetStateInfo } from "../../service/getStateInfo";
 import {
   useDeleteAddress,
