@@ -11,6 +11,11 @@
   font-weight: 500;
 }
 
+.inputWrapper button,
+.inputWrapper input {
+  all: unset;
+}
+
 .inputWrapper {
   min-height: 32px;
   padding: 8px 12px;

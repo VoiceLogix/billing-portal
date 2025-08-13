@@ -65,6 +65,8 @@
   cursor: pointer;
   color: #495057;
   font-family: inherit;
+  width: fit-content;
+  height: fit-content;
 }
 
 /* Editor content area */

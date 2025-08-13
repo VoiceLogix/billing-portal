@@ -70,6 +70,7 @@ export default function ServiceDesk() {
                   items={Time_Selection}
                   onChange={handleTimeSelection}
                   width="100%"
+                  withBackground={false}
                   icon={<CalendarSVG />}
                 />
                 <MultiSelectDropdown
