@@ -1,6 +1,3 @@
-// This is the full version with both Billing Center and Service Desk
-// Use index-service-desk-only.js for Service Desk only
-
 function createNavButton(cloneFromId, newId, label, iconUrl, contentId) {
   const existing = document.querySelector(cloneFromId);
   if (!existing) throw new Error(`Template button not found: ${cloneFromId}`);
@@ -45,15 +42,7 @@ function createNavButton(cloneFromId, newId, label, iconUrl, contentId) {
   return btn;
 }
 
-// Full version: Both Billing Center and Service Desk
-createNavButton(
-  "#nav-callhistory",
-  "nav-billing",
-  "Billing Center",
-  "https://raw.githubusercontent.com/VoiceLogix/billing-portal/refs/heads/main/public/asset/billing-center.svg",
-  "billing-center-content",
-);
-
+// Only Service Desk button
 createNavButton(
   "#nav-callhistory",
   "nav-service-desk",

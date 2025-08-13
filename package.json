@@ -6,7 +6,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "build": "VITE_NODE_ENV=production vite build"
+    "build": "VITE_NODE_ENV=production vite build",
+    "build:full": "VITE_NODE_ENV=production vite build --config vite.config.js",
+    "build:servicedesk": "VITE_NODE_ENV=production vite build --config vite.config.servicedesk.js",
+    "build:all": "npm run build:full && npm run build:servicedesk"
   },
   "dependencies": {
     "@lexical/html": "^0.33.1",
