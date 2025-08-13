@@ -16,9 +16,12 @@
   all: unset;
 }
 
+.inputWrapper input[type="text"]:focus {
+  box-shadow: none;
+}
+
 .inputWrapper {
-  min-height: 32px;
-  padding: 8px 12px;
+  padding: 8px;
   border: 1px solid var(--color-border);
   border-radius: 4px;
   cursor: text;
