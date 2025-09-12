@@ -1,5 +1,5 @@
 import { Box } from "../UI/Box";
-import { useGetProfileDetails } from "../../service/getProfileDetails";
+import { useGetProfileDetails } from "../../service/billing_center/getProfileDetails";
 import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 import { AccountOverview } from "./AccountOverview";

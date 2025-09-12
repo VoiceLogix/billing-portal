@@ -8,7 +8,7 @@ import { InvoiceListingInterface } from "../../types/InvoiceListingInterface";
 import { Button } from "../UI/Button";
 import CardSVG from "../SVG/CardSVG";
 import { Box } from "../UI/Box";
-import { getInvoiceDetails } from "../../service/getInvoiceListing";
+import { getInvoiceDetails } from "../../service/billing_center/getInvoiceListing";
 import { DownloadSVG } from "../SVG/DownloadSVG";
 
 interface InvoicesTableProps {

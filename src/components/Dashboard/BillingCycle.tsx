@@ -1,4 +1,4 @@
-import { useGetUnBilledDetails } from "../../service/getUnBilledDetails";
+import { useGetUnBilledDetails } from "../../service/billing_center/getUnBilledDetails";
 import { formatDateRange } from "../../utils/formatDate";
 import { Box } from "../UI/Box";
 import { Typography } from "../UI/Typography";

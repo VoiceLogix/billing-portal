@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import BillingTabs from "./components/BillingTabs/BillingTabs";
-import { authenticateUser } from "./service/tokenStorage";
+import { authenticateUser } from "./service/billing_center/tokenStorage";
 import { Box } from "./components/UI/Box";
 import { Loading } from "./components/UI/Loading";
 

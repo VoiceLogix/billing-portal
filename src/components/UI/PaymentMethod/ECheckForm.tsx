@@ -2,7 +2,7 @@ import { useForm, Controller, FormProvider } from "react-hook-form";
 import styles from "./form.module.css";
 import Dropdown from "../Dropdown/Dropdown";
 import { PayInfoItem } from "../../../types/SubscriberInfoInterface";
-import { useGetSubscriberInfo } from "../../../service/getSubscriberInfo";
+import { useGetSubscriberInfo } from "../../../service/billing_center/getSubscriberInfo";
 import { use, useCallback, useEffect, useMemo, useState } from "react";
 import {
   ADDRESS_NOT_LISTED,
@@ -13,7 +13,7 @@ import {
 import {
   useCreatePaymentProfile,
   useDeletePaymentProfile,
-} from "../../../service/createPaymentProfile";
+} from "../../../service/billing_center/createPaymentProfile";
 import { Box } from "../Box";
 import { AddNewPaymentAddress } from "./AddNewPaymentAddress";
 import ToggleSwitch from "../Toggle/Toggle";
@@ -43,13 +43,14 @@ const ECheckForm = ({
   const { data: subscriberInfo } = useGetSubscriberInfo();
 
   const defaultAddress = useMemo(
-    () => subscriberInfo?.address.find((addr) => addr.defaultBilling === true),
+    () => subscriberInfo?.address?.find((addr) => addr.defaultBilling === true),
     [subscriberInfo?.address],
   );
 
   const addressOptions = useMemo(() => {
     const addresses =
-      subscriberInfo?.address.map((address) => getAddressString(address)) || [];
+      subscriberInfo?.address?.map((address) => getAddressString(address)) ||
+      [];
     return [...addresses, ADDRESS_NOT_LISTED];
   }, [subscriberInfo?.address]);
 

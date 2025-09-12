@@ -4,26 +4,45 @@ import SearchInput from "../UI/Input.tsx/SearchInput.tsx";
 import Dropdown from "../UI/Dropdown/Dropdown";
 import { CalendarSVG } from "../SVG/CalenderSVG";
 import { FilterSVG } from "../SVG/FilterSVG";
-import {
-  Filter_Selection,
-  sampleTickets,
-  Time_Selection,
-  applyAllFilters,
-} from "./utils";
+import { Filter_Selection, Time_Selection, applyAllFilters } from "./utils";
 import MultiSelectDropdown from "../UI/MultiSelectDropdown/MultiSelectDropdown";
 import { Button } from "../UI/Button";
 import TicketsTable from "./TicketsTable";
 import AddTicketModel from "./AddTicketModel";
 import SelectedTicket from "./SelectedTicket";
+import { useGetTickets } from "../../service/service_desk/getTickets";
+import { Loading } from "../UI/Loading";
+import { Error } from "../UI/Error";
 
 export default function ServiceDesk() {
-  const [tickets, setTickets] = useState(sampleTickets);
+  const { data: ticketsData, isLoading, error } = useGetTickets({});
+
+  const [tickets, setTickets] = useState(ticketsData || []);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTime, setSelectedTime] = useState(Time_Selection[0]);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [showAddTicketModal, setShowAddTicketModal] = useState(false);
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (ticketsData) {
+      const filteredTickets = applyAllFilters(
+        ticketsData,
+        selectedTime,
+        selectedFilters,
+      );
+      setTickets(filteredTickets);
+    }
+  }, [ticketsData, selectedTime, selectedFilters]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <Error />;
+  }
+
   const handleSelectedTicket = (ticketId: string) => {
     setSelectedTicketId(ticketId);
   };
@@ -35,15 +54,6 @@ export default function ServiceDesk() {
   const handleFilterSelection = (filters: string[]) => {
     setSelectedFilters(filters);
   };
-
-  useEffect(() => {
-    const filteredTickets = applyAllFilters(
-      sampleTickets,
-      selectedTime,
-      selectedFilters,
-    );
-    setTickets(filteredTickets);
-  }, [selectedTime, selectedFilters]);
 
   return (
     <>

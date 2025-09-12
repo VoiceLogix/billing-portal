@@ -8,7 +8,7 @@ import { Button } from "../Button";
 import { Badge } from "../Badge/Badge";
 import { CardLayout } from "../CardLayout/CardLayout";
 import { RadioSelect } from "../RadioSelect/RadioSelect";
-import { useUpdateDefaultPayment } from "../../../service/updateDefaultPayment";
+import { useUpdateDefaultPayment } from "../../../service/billing_center/updateDefaultPayment";
 import { PayInfoItem } from "../../../types/SubscriberInfoInterface";
 import { maskAccountNumber } from "./utils";
 

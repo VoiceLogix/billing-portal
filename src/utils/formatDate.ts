@@ -23,7 +23,7 @@ export function formatDateRange(start: number, end: number, locale = "en-US") {
   return `${formatter.format(startDate)} - ${formatter.format(endDate)}`;
 }
 
-export function formatDateTimeObject(dateStr: string | number): {
+export function formatDateTimeObject(dateStr: string): {
   date: string;
   time: string;
 } {

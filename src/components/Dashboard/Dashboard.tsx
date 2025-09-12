@@ -3,14 +3,14 @@ import { Box } from "../UI/Box";
 import { DueAmount } from "./DueAmount";
 import { BillingCycle } from "./BillingCycle";
 import { AccountNumber } from "./AccountNumber";
-import { useGetAccountInfo } from "../../service/getAccountInfo";
-import { useGetInvoiceHistory } from "../../service/getInvoiceHistory";
-import { useGetAgingInvoices } from "../../service/getAgingInvoices";
+import { useGetAccountInfo } from "../../service/billing_center/getAccountInfo";
+import { useGetInvoiceHistory } from "../../service/billing_center/getInvoiceHistory";
+import { useGetAgingInvoices } from "../../service/billing_center/getAgingInvoices";
 import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 import { PaymentCardPreview } from "../UI/PaymentMethod/PaymentCardPreview";
 import { InvoiceAndPayment } from "./InvoiceAndPayment";
-import { useGetSubscriberInfo } from "../../service/getSubscriberInfo";
+import { useGetSubscriberInfo } from "../../service/billing_center/getSubscriberInfo";
 
 export const Dashboard = () => {
   const {

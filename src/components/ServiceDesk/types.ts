@@ -1,8 +1,13 @@
 export enum TicketPriority {
-  Low = "Low",
-  Medium = "Medium",
-  High = "High",
-  Critical = "Critical",
+  Low = 1,
+  Medium = 2,
+  High = 3,
+  Critical = 4,
+}
+
+export interface AttachmentFile {
+  filename: string;
+  fileContent: string; // base64 encoded
 }
 
 export interface AddTicket {
@@ -11,7 +16,7 @@ export interface AddTicket {
   incidentType: string;
   incidentSubType: string;
   description: string;
-  attachments: File[];
+  attachments: AttachmentFile[];
   address: string;
   cc: string;
   bcc: string;
@@ -32,7 +37,7 @@ export interface TicketData {
   address?: string;
   bcc?: string[];
   cc?: string[];
-  attachments?: string[];
+  attachments?: AttachmentFile[];
   assignedTo?: string;
   comments?: {
     name: string;

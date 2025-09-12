@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { Box } from "../UI/Box";
 import Dropdown from "../UI/Dropdown/Dropdown";
 import SubscriptionItem from "./SubscriptionItem";
-import { useGetSubscriptionsList } from "../../service/getSubscriptionsList";
+import { useGetSubscriptionsList } from "../../service/billing_center/getSubscriptionsList";
 import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 import { CardLayout } from "../UI/CardLayout/CardLayout";

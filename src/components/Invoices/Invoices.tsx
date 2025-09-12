@@ -5,7 +5,7 @@ import InvoicesTable from "./InvoicesTable";
 import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 import { InvoicesDetails } from "./InvoicesDetails";
-import { useGetInvoiceListing } from "../../service/getInvoiceListing";
+import { useGetInvoiceListing } from "../../service/billing_center/getInvoiceListing";
 import { InvoiceInfo } from "../../types/InvoiceListingInterface";
 
 export const Invoices = () => {

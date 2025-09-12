@@ -1,38 +1,48 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import DOMPurify from "dompurify";
 import { formatDateTimeObject } from "../../utils/formatDate";
 import { DownloadSVG } from "../SVG/DownloadSVG";
 import { Box } from "../UI/Box";
 import { Typography } from "../UI/Typography";
 import Model from "../UI/Model/Model";
-import { TicketData } from "./types";
-import { getImageBase64Previews, splitAttachmentsByType } from "./utils";
+import {
+  getImageBase64Previews,
+  splitAttachmentsByType,
+  processHtmlContent,
+} from "./utils";
 import { Search } from "lucide-react";
 import { PDFSVG } from "../SVG/PDFSVG";
 import { ExcelSVG } from "../SVG/ExcelSVG";
 import { FileSVG } from "../SVG/FileSVG";
+import { Ticket } from "../../types/TicketInterface";
+import {
+  TicketDetails,
+  TicketDetailsAttachment,
+} from "../../types/TicketDetailsInterface";
 
 interface TicketBodyProps {
-  ticket: TicketData;
+  ticket: TicketDetails;
 }
 
-type Attachment = {
+type ImagePreview = {
   image: string;
   name: string;
 };
 
 const TicketBody = ({ ticket }: TicketBodyProps) => {
-  const [selectedImage, setSelectedImage] = useState<{
-    image: string;
-    name: string;
-  } | null>(null);
+  const [selectedImage, setSelectedImage] = useState<ImagePreview | null>(null);
   const [hoveredImage, setHoveredImage] = useState<number | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const processedDescription = useMemo(() => {
+    return processHtmlContent(ticket.description, ticket.inlineContentIds);
+  }, [ticket.description, ticket.inlineContentIds]);
 
   const { date, time } = formatDateTimeObject(ticket.createdDate);
   const { images, others } = splitAttachmentsByType(ticket.attachments);
   const imagesPreviews = getImageBase64Previews(images);
 
-  const handleImageClick = (image: Attachment) => {
+  const handleImageClick = (image: ImagePreview) => {
     setSelectedImage(image);
     setIsDialogOpen(true);
   };
@@ -40,6 +50,17 @@ const TicketBody = ({ ticket }: TicketBodyProps) => {
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setSelectedImage(null);
+  };
+
+  const handleAttachmentDownload = (attachment: TicketDetailsAttachment) => {
+    if (attachment.presignedUrl) {
+      const link = document.createElement("a");
+      link.href = attachment.presignedUrl;
+      link.download = attachment.filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
   return (
     <Box
@@ -54,21 +75,29 @@ const TicketBody = ({ ticket }: TicketBodyProps) => {
       gap="16px"
     >
       <Box display="flex" flexDirection="column" gap="2px">
-        <Typography weight="medium">{ticket.contact}</Typography>
+        <Typography weight="medium">{`${ticket.createdByFirstName} ${ticket.createdByLastName}`}</Typography>
         <Typography
           size="xSmall"
           color="secondaryText"
         >{`${date} ${time}`}</Typography>
       </Box>
       <Box borderTop="1px solid" borderColor="border" />
-      <Typography>{ticket.description}</Typography>
-      <Box
-        marginTop="16px"
-        style={{
-          overflowX: "scroll",
-        }}
-      >
-        {imagesPreviews.length > 0 && (
+      <Typography>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: DOMPurify.sanitize(processedDescription, {
+              ADD_ATTR: ["target"],
+            }),
+          }}
+        />
+      </Typography>
+      {imagesPreviews.length > 0 && (
+        <Box
+          marginTop="16px"
+          style={{
+            overflowX: "scroll",
+          }}
+        >
           <Box display="flex" gap="20px" style={{ overflowX: "auto" }}>
             {imagesPreviews.map((image, index) => (
               <Box
@@ -80,6 +109,10 @@ const TicketBody = ({ ticket }: TicketBodyProps) => {
                   cursor: "pointer",
                   borderRadius: "4px",
                   overflow: "hidden",
+                  width: "135px",
+                  minWidth: "135px",
+                  maxWidth: "135px",
+                  flexShrink: 0,
                 }}
                 onMouseEnter={() => setHoveredImage(index)}
                 onMouseLeave={() => setHoveredImage(null)}
@@ -119,13 +152,17 @@ const TicketBody = ({ ticket }: TicketBodyProps) => {
               </Box>
             ))}
           </Box>
-        )}
-      </Box>
+        </Box>
+      )}
 
-      <Box display="flex" gap="8px" className="always-show-scrollbar">
-        {others.map((attachment) => (
+      <Box
+        display="flex"
+        gap="8px"
+        className={others.length > 0 ? "always-show-scrollbar" : "hidden"}
+      >
+        {others.map((attachment, index) => (
           <Box
-            key={attachment}
+            key={attachment.id || index}
             bgColor="bgPrimary"
             padding="4px"
             paddingLeft="8px"
@@ -134,9 +171,11 @@ const TicketBody = ({ ticket }: TicketBodyProps) => {
             display="flex"
             alignItems="center"
             gap="10px"
+            style={{ cursor: "pointer" }}
+            onClick={() => handleAttachmentDownload(attachment)}
           >
-            {getFileIconType(attachment)}
-            {attachment}
+            {getFileIconType(attachment.filename)}
+            {attachment.filename}
             <DownloadSVG />
           </Box>
         ))}

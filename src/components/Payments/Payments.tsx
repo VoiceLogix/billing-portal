@@ -4,13 +4,16 @@ import { Box } from "../UI/Box";
 import SearchInput from "../UI/Input.tsx/SearchInput.tsx";
 import { DownloadSVG } from "../SVG/DownloadSVG";
 import { Loading } from "../UI/Loading";
-import { paymentPdf, useGetPayments } from "../../service/getPayments";
+import {
+  paymentPdf,
+  useGetPayments,
+} from "../../service/billing_center/getPayments";
 import { Error } from "../UI/Error";
 import { PaymentInfo } from "../../types/PaymentsInterface";
 import { formatDate } from "../../utils/formatDate";
 import { PaymentCards } from "./PaymentCards";
 import { formatToUSD } from "../../utils/formatToUSD";
-import { useGetSubscriberInfo } from "../../service/getSubscriberInfo";
+import { useGetSubscriberInfo } from "../../service/billing_center/getSubscriberInfo";
 
 export function Payments() {
   const [searchTerm, setSearchTerm] = React.useState("");

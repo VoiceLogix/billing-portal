@@ -5,8 +5,8 @@ import styles from "./form.module.css";
 import {
   useCreatePaymentProfile,
   useDeletePaymentProfile,
-} from "../../../service/createPaymentProfile";
-import { useGetSubscriberInfo } from "../../../service/getSubscriberInfo";
+} from "../../../service/billing_center/createPaymentProfile";
+import { useGetSubscriberInfo } from "../../../service/billing_center/getSubscriberInfo";
 
 import { AddNewPaymentAddress } from "./AddNewPaymentAddress";
 import TextInput from "../TextInput.tsx/TextInput";
@@ -43,13 +43,14 @@ const CardForm = ({
   const { data: subscriberInfo } = useGetSubscriberInfo();
 
   const defaultAddress = useMemo(
-    () => subscriberInfo?.address.find((addr) => addr.defaultBilling === true),
+    () => subscriberInfo?.address?.find((addr) => addr.defaultBilling === true),
     [subscriberInfo?.address],
   );
 
   const addressOptions = useMemo(() => {
     const addresses =
-      subscriberInfo?.address.map((address) => getAddressString(address)) || [];
+      subscriberInfo?.address?.map((address) => getAddressString(address)) ||
+      [];
     return [...addresses, ADDRESS_NOT_LISTED];
   }, [subscriberInfo?.address]);
 

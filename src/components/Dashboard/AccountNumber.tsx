@@ -1,9 +1,9 @@
-import { useGetAccountSummaryCounts } from "../../service/getAccountSummaryCounts";
+import { useGetAccountSummaryCounts } from "../../service/billing_center/getAccountSummaryCounts";
 import { BriefcaseSVG } from "../SVG/BriefcaseSVG";
 import { Box } from "../UI/Box";
 import { Typography } from "../UI/Typography";
 import { CardLayout } from "../UI/CardLayout/CardLayout";
-import { useGetSubscriberInfo } from "../../service/getSubscriberInfo";
+import { useGetSubscriberInfo } from "../../service/billing_center/getSubscriberInfo";
 
 export const AccountNumber = () => {
   const { data: accountSummary } = useGetAccountSummaryCounts();

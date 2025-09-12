@@ -6,11 +6,11 @@ import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 import { InvoicesDetailsTable } from "./InvoicesDetailsTable";
 import { Button } from "../UI/Button";
-import { useGetPayInvoiceDetails } from "../../service/getInvoiceListing";
+import { useGetPayInvoiceDetails } from "../../service/billing_center/getInvoiceListing";
 import { InvoiceInfo } from "../../types/InvoiceListingInterface";
 import Dropdown from "../UI/Dropdown/Dropdown";
-import { useGetSubscriberInfo } from "../../service/getSubscriberInfo";
-import { usePayInvoice } from "../../service/payinvoice";
+import { useGetSubscriberInfo } from "../../service/billing_center/getSubscriberInfo";
+import { usePayInvoice } from "../../service/billing_center/payinvoice";
 import { Notification } from "../UI/Notification/Notification";
 
 export const InvoicesDetails = ({

@@ -9,21 +9,35 @@ import TicketComments from "./TicketComments";
 import TicketSendMessage from "./TicketSendMessage";
 import EscalateTicket from "./EscalateTicket";
 import { useState } from "react";
-import AddTicketModel from "./AddTicketModel";
-import { sampleTickets } from "./utils";
 import { FlagSVG } from "../SVG/FlagSVG";
+import { useGetTicketDetails } from "../../service/service_desk/getTicketDetails";
+import { Loading } from "../UI/Loading";
+import { Error } from "../UI/Error";
+import UpdateTicket from "./UpdateTicket";
+import TicketBadge from "../TicketBadge";
 
 interface SelectedTicketProps {
-  selectTicketId: string | null;
+  selectTicketId: string;
   onBack: () => void;
 }
 
 const SelectedTicket = ({ selectTicketId, onBack }: SelectedTicketProps) => {
-  const ticket = sampleTickets.find(
-    (ticket) => ticket.ticketNumber === selectTicketId,
-  );
+  const {
+    data: ticket,
+    isLoading: isTicketLoading,
+    error: ticketError,
+  } = useGetTicketDetails(selectTicketId);
+
   const [showUpdateTicket, setShowUpdateTicket] = useState(false);
   const [showEscalateTicket, setShowEscalateTicket] = useState(false);
+
+  if (isTicketLoading) {
+    return <Loading />;
+  }
+  if (ticketError) {
+    return <Error />;
+  }
+
   const handleEscalateTicket = () => {
     setShowEscalateTicket(true);
   };
@@ -56,8 +70,9 @@ const SelectedTicket = ({ selectTicketId, onBack }: SelectedTicketProps) => {
                 <Typography size="medium" weight="semibold">
                   {ticket?.ticketNumber}
                 </Typography>
-                <Badge status={ticket?.status || "N/A"} />
-                {ticket?.flag && <FlagSVG />}
+                <TicketBadge status={ticket?.status || "N/A"} />
+
+                {ticket?.isEscalated && <FlagSVG />}
               </Box>
               <Typography weight="medium">{ticket?.subject}</Typography>
             </Box>
@@ -67,7 +82,7 @@ const SelectedTicket = ({ selectTicketId, onBack }: SelectedTicketProps) => {
               color="blueText"
               borderColor="blueText"
               borderSize="1px"
-              text={ticket?.flag ? "De-Escalate" : "Escalate"}
+              text={ticket?.isEscalated ? "De-Escalate" : "Escalate"}
               onClick={handleEscalateTicket}
             />
             <Button
@@ -89,7 +104,7 @@ const SelectedTicket = ({ selectTicketId, onBack }: SelectedTicketProps) => {
           <Box>
             <TicketBody ticket={ticket} />
             <TicketComments ticket={ticket} />
-            <TicketSendMessage />
+            <TicketSendMessage ticketId={ticket.ticketNumber} />
           </Box>
           <TicketProperties ticket={ticket} />
         </Box>
@@ -98,11 +113,7 @@ const SelectedTicket = ({ selectTicketId, onBack }: SelectedTicketProps) => {
         <EscalateTicket onClose={handleCloseEscalateTicket} ticket={ticket} />
       )}
       {showUpdateTicket && (
-        <AddTicketModel
-          show={showUpdateTicket}
-          onClose={handleCloseUpdateTicket}
-          ticket={ticket}
-        />
+        <UpdateTicket onClose={handleCloseUpdateTicket} ticket={ticket} />
       )}
     </>
   );

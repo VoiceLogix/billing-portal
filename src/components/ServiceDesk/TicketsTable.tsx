@@ -5,21 +5,11 @@ import { formatDateTimeObject } from "../../utils/formatDate";
 import { FlagSVG } from "../SVG/FlagSVG";
 import { Typography } from "../UI/Typography";
 import { Box } from "../UI/Box";
-
-interface TicketTableData {
-  ticketNumber: string;
-  status: string;
-  flag: boolean;
-  incidentType: string;
-  incidentSubType: string;
-  priority: string;
-  createdDate: number;
-  updatedDate: number;
-  contact: string;
-}
+import { Ticket } from "../../types/TicketInterface";
+import TicketBadge from "../TicketBadge";
 
 interface TicketsTableProps {
-  tickets: TicketTableData[];
+  tickets: Ticket[] | undefined;
   searchTerm: string;
   setSelectedTicketId: (ticketId: string) => void;
 }
@@ -29,7 +19,9 @@ const TicketsTable = ({
   searchTerm,
   setSelectedTicketId,
 }: TicketsTableProps) => {
-  const columns: Column<TicketTableData>[] = useMemo(
+  const safeTickets = Array.isArray(tickets) ? tickets : [];
+
+  const columns: Column<Ticket>[] = useMemo(
     () => [
       {
         header: `Ticket`,
@@ -38,7 +30,7 @@ const TicketsTable = ({
         isLink: true,
         searchable: true,
         minWidth: "150px",
-        Cell: (val: string, row: TicketTableData) => (
+        Cell: (val: string, row: Ticket) => (
           <span onClick={() => setSelectedTicketId(row.ticketNumber)}>
             {val}
           </span>
@@ -51,12 +43,12 @@ const TicketsTable = ({
         searchable: true,
         minWidth: "150px",
 
-        Cell: (val: string) => <Badge status={val || "N/A"} />,
+        Cell: (val: string) => <TicketBadge status={val || "N/A"} />,
       },
 
       {
         header: "Flag",
-        accessor: "flag",
+        accessor: "isEscalated",
         sortable: true,
         searchable: true,
         Cell: (val) => val && <FlagSVG />,
@@ -90,8 +82,8 @@ const TicketsTable = ({
         searchable: true,
         minWidth: "200px",
 
-        Cell: (val) => {
-          const { date, time } = formatDateTimeObject(Number(val));
+        Cell: (val: string) => {
+          const { date, time } = formatDateTimeObject(val);
           return (
             <Box display="flex" flexDirection="column">
               <Typography>{date}</Typography>
@@ -104,12 +96,12 @@ const TicketsTable = ({
       },
       {
         header: "Updated",
-        accessor: "updatedDate",
+        accessor: "lastModifiedDate",
         sortable: true,
         searchable: true,
         minWidth: "200px",
-        Cell: (val) => {
-          const { date, time } = formatDateTimeObject(Number(val));
+        Cell: (val: string) => {
+          const { date, time } = formatDateTimeObject(val);
           return (
             <Box display="flex" flexDirection="column">
               <Typography>{date}</Typography>
@@ -122,7 +114,7 @@ const TicketsTable = ({
       },
       {
         header: "Contact",
-        accessor: "contact",
+        accessor: "createdByContactName",
         sortable: true,
         searchable: true,
         minWidth: "200px",
@@ -134,7 +126,7 @@ const TicketsTable = ({
   return (
     <Table
       columns={columns}
-      data={tickets}
+      data={safeTickets}
       searchTerm={searchTerm}
       defaultSortKey="ticketNumber"
       defaultSortOrder="asc"

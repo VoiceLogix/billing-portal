@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Box } from "../UI/Box";
 import SearchInput from "../UI/Input.tsx/SearchInput.tsx";
 import BillingTable from "./BillingTable";
-import { useGetBillingListing } from "../../service/getQuoteListing";
+import { useGetBillingListing } from "../../service/billing_center/getQuoteListing";
 import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 import { BillingDetails } from "./BillingDetails";

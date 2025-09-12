@@ -4,44 +4,54 @@ import Model from "../UI/Model/Model";
 import TextInput from "../UI/TextInput.tsx/TextInput";
 import Dropdown from "../UI/Dropdown/Dropdown";
 import MultiEmailInput from "../UI/MultiEmailInput/MultiEmailInput";
-import { TicketData, TicketPriority } from "./types";
+import { TicketPriority } from "./types";
 import { RadioSelect } from "../UI/RadioSelect/RadioSelect";
 import { Typography } from "../UI/Typography";
-import {
-  addresses,
-  getErrorMessage,
-  incidentSubTypes,
-  incidentTypes,
-} from "./utils";
+import { getErrorMessage, getIncidentCategories, getIncidentSubCategories, getClassificationId } from "./utils";
 import { TextEditor } from "../TextEditor";
 import { Button } from "../UI/Button";
 import { Attachments } from "./Attachments";
-import { Badge } from "../UI/Badge/Badge";
-import { useCreateTicket } from "../../service/CreateTicket";
-import { useEffect } from "react";
+import type { AttachmentFile } from "./types";
+import { useCreateTicket } from "../../service/service_desk/CreateTicket";
+import { useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
+import { useGetSubscriberInfo } from "../../service/billing_center/getSubscriberInfo";
+import { getAddressString } from "../UI/PaymentMethod/utils";
+import { useGetTicketClassifications } from "../../service/service_desk/getTicketClassifications";
 
 interface AddTicketModelProps {
   show: boolean;
   onClose: () => void;
-  ticket?: TicketData;
 }
 
-const AddTicketModel = ({ show, onClose, ticket }: AddTicketModelProps) => {
+interface formValues {
+  subject: string;
+  priority: TicketPriority;
+  incidentType: string;
+  incidentSubType: string;
+  description: string;
+  attachments: AttachmentFile[];
+  address: string;
+  cc: string[];
+  bcc: string[];
+}
+
+const AddTicketModel = ({ show, onClose }: AddTicketModelProps) => {
   if (!show) return null;
 
-  const isUpdateMode = !!ticket;
-  const getDefaultValues = () => ({
-    subject: ticket?.subject || "",
-    priority: ticket?.priority || TicketPriority.Low,
-    incidentType: incidentTypes[0],
-    incidentSubType: incidentSubTypes[0],
-    description: ticket?.description || "",
-    attachments: ticket?.attachments || [],
-    address: ticket?.address || addresses[0],
-    cc: ticket?.cc || [],
-    bcc: ticket?.bcc || [],
+  // Initial default values without ticketClassifications dependency
+  const getInitialDefaultValues = () => ({
+    subject: "",
+    priority: TicketPriority.Critical,
+    incidentType: "",
+    incidentSubType: "",
+    description: "",
+    attachments: [],
+    address: "",
+    cc: [],
+    bcc: [],
   });
+
   const {
     register,
     handleSubmit,
@@ -50,7 +60,7 @@ const AddTicketModel = ({ show, onClose, ticket }: AddTicketModelProps) => {
     control,
     formState: { errors },
   } = useForm({
-    defaultValues: getDefaultValues(),
+    defaultValues: getInitialDefaultValues(),
   });
 
   const {
@@ -70,26 +80,58 @@ const AddTicketModel = ({ show, onClose, ticket }: AddTicketModelProps) => {
     }
 
     if (isCreateTicketSuccess) {
-      toast.success(
-        isUpdateMode
-          ? "Ticket updated successfully."
-          : "Ticket created successfully.",
-      );
+      toast.success("Ticket created successfully.");
     }
   }, [createTicketError, isCreateTicketSuccess]);
 
   const subject = watch("subject");
   const selectedPriority = watch("priority");
+
   const incidentType = watch("incidentType");
   const incidentSubType = watch("incidentSubType");
   const files = watch("attachments");
   const cc = watch("cc");
   const bcc = watch("bcc");
+
+  const { data: subscriberInfo } = useGetSubscriberInfo();
+
+  const { data: ticketClassifications } = useGetTicketClassifications();
+
+  const incidentCategories = useMemo(() => {
+    return getIncidentCategories(ticketClassifications);
+  }, [ticketClassifications]);
+
+  const incidentSubCategories = useMemo(() => {
+    return getIncidentSubCategories(ticketClassifications, incidentType);
+  }, [ticketClassifications, incidentType]);
+
+  const addressOptions = useMemo(() => {
+    return subscriberInfo?.address?.map((address) => {
+      return {
+        addressId: address.id,
+        address: getAddressString(address),
+      };
+    });
+  }, [subscriberInfo?.address]);
+
   const handlePriorityChange = (value: TicketPriority) => {
     setValue("priority", value);
   };
   const handleIncidentTypeChange = (value: string) => {
     setValue("incidentType", value);
+
+    if (ticketClassifications) {
+      const selectedCategory = ticketClassifications.find(
+        (classification: any) => classification.incidentType === value,
+      );
+      const firstSubCategory =
+        selectedCategory?.incidentSubTypeList?.[0]?.incidentSubType;
+      if (firstSubCategory) {
+        setValue("incidentSubType", firstSubCategory);
+      } else {
+        setValue("incidentSubType", "");
+      }
+    }
   };
   const handleIncidentSubTypeChange = (value: string) => {
     setValue("incidentSubType", value);
@@ -102,25 +144,69 @@ const AddTicketModel = ({ show, onClose, ticket }: AddTicketModelProps) => {
     setValue("bcc", value);
   };
 
-  const handleAttachmentsChange = (files: string[]) => {
+  const handleAttachmentsChange = (files: AttachmentFile[]) => {
     setValue("attachments", files);
   };
-  const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
+  const onSubmit = (data: formValues) => {
+    const classificationId = getClassificationId(
+      ticketClassifications,
+      data.incidentType,
+      data.incidentSubType
+    );
+
     const ticketData = {
-      subject: data.subject,
-      priority: data.priority,
-      incidentType: data.incidentType,
-      incidentSubType: data.incidentSubType,
-      description: data.description,
-      attachments: data.attachments,
-      address: data.address,
-      cc: data.cc,
-      bcc: data.bcc,
+      clientTicket: {
+        subject: data.subject,
+        description: data.description,
+        priority: data.priority,
+        classificationId: classificationId,
+        userId: subscriberInfo.accountId,
+        attachments: data.attachments,
+        addressId: addressOptions?.find((addr) => addr.address === data.address)
+          ?.addressId,
+        emailInfo: {
+          ccAddressList: data.cc,
+          bccAddressList: data.bcc,
+        },
+      },
     };
+
     createTicket(ticketData);
   };
+  useEffect(() => {
+    if (addressOptions && addressOptions.length > 0) {
+      setValue("address", addressOptions[0].address);
+    }
+  }, [addressOptions]);
 
+  // Set default incident type and subtype when ticketClassifications loads
+  useEffect(() => {
+    if (
+      ticketClassifications &&
+      ticketClassifications.length > 0 &&
+      incidentCategories.length > 0 &&
+      (!incidentType || incidentType === "")
+    ) {
+      const firstAllowedCategory = incidentCategories[0];
+      let firstSubCategory: string | undefined;
+
+      if (firstAllowedCategory) {
+        const selectedCategory = ticketClassifications.find(
+          (classification: any) =>
+            classification.incidentType === firstAllowedCategory,
+        );
+        firstSubCategory =
+          selectedCategory?.incidentSubTypeList?.[0]?.incidentSubType;
+      }
+
+      if (firstAllowedCategory && (!incidentType || incidentType === "")) {
+        setValue("incidentType", firstAllowedCategory);
+      }
+      if (firstSubCategory && (!incidentSubType || incidentSubType === "")) {
+        setValue("incidentSubType", firstSubCategory);
+      }
+    }
+  }, [ticketClassifications, incidentCategories, incidentType, incidentSubType, setValue]);
   return (
     <Model open={show} handleClose={onClose} width="800px">
       <Box
@@ -136,21 +222,10 @@ const AddTicketModel = ({ show, onClose, ticket }: AddTicketModelProps) => {
           style={{ display: "flex", flexDirection: "column", height: "100%" }}
         >
           <Box display="flex" flexDirection="column" gap="8px">
-            {isUpdateMode && ticket ? (
-              <Box display="flex" alignItems="center" gap="8px">
-                <Typography weight="semibold" size="big">
-                  Edit Ticket {ticket?.ticketNumber}
-                </Typography>
-                <Badge status={ticket.status} />
-              </Box>
-            ) : (
-              <Typography weight="semibold" size="big">
-                Submit Ticket
-              </Typography>
-            )}
-            <Typography color="secondaryText">
-              {subject || ticket?.subject}
+            <Typography weight="semibold" size="big">
+              Submit Ticket
             </Typography>
+            <Typography color="secondaryText">{subject}</Typography>
           </Box>
 
           {/* Scrollable content area */}
@@ -210,7 +285,7 @@ const AddTicketModel = ({ show, onClose, ticket }: AddTicketModelProps) => {
                   label="Incident Category"
                   withBackground={false}
                   value={incidentType}
-                  items={incidentTypes}
+                  items={incidentCategories}
                   onChange={handleIncidentTypeChange}
                   width="100%"
                   error={errors.incidentType}
@@ -219,7 +294,7 @@ const AddTicketModel = ({ show, onClose, ticket }: AddTicketModelProps) => {
                   label="Incident Subcategory"
                   withBackground={false}
                   value={incidentSubType}
-                  items={incidentSubTypes}
+                  items={incidentSubCategories}
                   onChange={handleIncidentSubTypeChange}
                   width="100%"
                   error={errors.incidentSubType}
@@ -253,7 +328,7 @@ const AddTicketModel = ({ show, onClose, ticket }: AddTicketModelProps) => {
                   withBackground={false}
                   label="Address"
                   value={watch("address")}
-                  items={addresses}
+                  items={addressOptions?.map((addr) => addr.address) || []}
                   onChange={(value) => setValue("address", value)}
                   width="100%"
                   error={errors.address}
@@ -294,7 +369,7 @@ const AddTicketModel = ({ show, onClose, ticket }: AddTicketModelProps) => {
             <Button
               type="submit"
               bgColor="blueAccent"
-              text={isUpdateMode ? "Update" : "Submit"}
+              text={"Submit"}
               disabled={isCreateTicketPending}
               isLoading={isCreateTicketPending}
             />

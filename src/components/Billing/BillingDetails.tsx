@@ -7,7 +7,7 @@ import { Error } from "../UI/Error";
 import { formatDate } from "../../utils/formatDate";
 import { BillingDetailsTable } from "./BillingDetailsTable";
 import { Button } from "../UI/Button";
-import { useGetOrderDetails } from "../../service/getOrderDetails";
+import { useGetOrderDetails } from "../../service/billing_center/getOrderDetails";
 import { BillingType } from "./BillingListing";
 import { Badge } from "../UI/Badge/Badge";
 

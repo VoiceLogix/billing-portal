@@ -4,11 +4,12 @@ import { Badge } from "../UI/Badge/Badge";
 import { Box } from "../UI/Box";
 import { Button } from "../UI/Button";
 import { Typography } from "../UI/Typography";
-import { TicketData } from "./types";
-import EdiitProperties from "./EdiitProperties";
+import EditProperties from "./EditProperties";
+import { TicketDetails } from "../../types/TicketDetailsInterface";
+import { TicketBadge } from "../TicketBadge";
 
 interface TicketPropertiesProps {
-  ticket: TicketData;
+  ticket: TicketDetails;
 }
 
 const TicketProperties = ({ ticket }: TicketPropertiesProps) => {
@@ -50,7 +51,7 @@ const TicketProperties = ({ ticket }: TicketPropertiesProps) => {
             paddingBottom="10px"
           >
             <Typography>Status</Typography>
-            <Badge status={ticket.status} />
+            <TicketBadge status={ticket?.status || "N/A"} />
           </Box>
           <Box
             display="flex"
@@ -110,18 +111,20 @@ const TicketProperties = ({ ticket }: TicketPropertiesProps) => {
           >
             <Typography>Updated</Typography>
             <Typography weight="medium">
-              {formatDate(ticket.updatedDate)}
+              {formatDate(ticket.lastModifiedDate)}
             </Typography>
           </Box>
 
           <Box display="flex" justifyContent="space-between" marginTop="16px">
             <Typography>Assignee</Typography>
-            <Typography weight="medium">{ticket.assignedTo}</Typography>
+            <Typography weight="medium">
+              {ticket?.assigneeContactName}
+            </Typography>
           </Box>
         </Box>
       </Box>
       {showEditProperties && (
-        <EdiitProperties onClose={handleCloseEditProperties} ticket={ticket} />
+        <EditProperties onClose={handleCloseEditProperties} ticket={ticket} />
       )}
     </>
   );

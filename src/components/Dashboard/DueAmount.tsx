@@ -1,5 +1,5 @@
-import { useGetAccountInfo } from "../../service/getAccountInfo";
-import { useGetUnBilledDetails } from "../../service/getUnBilledDetails";
+import { useGetAccountInfo } from "../../service/billing_center/getAccountInfo";
+import { useGetUnBilledDetails } from "../../service/billing_center/getUnBilledDetails";
 import { formatToUSD } from "../../utils/formatToUSD";
 import { Box } from "../UI/Box";
 import { CardLayout } from "../UI/CardLayout/CardLayout";

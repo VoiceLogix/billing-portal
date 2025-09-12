@@ -46,6 +46,9 @@ export function Table<T extends Record<string, any>>({
 }: TableProps<T>) {
   const [sortKey, setSortKey] = useState<keyof T | undefined>(defaultSortKey);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">(defaultSortOrder);
+  
+  // Safety check to ensure data is always an array
+  const safeData = Array.isArray(data) ? data : [];
 
   const getColumnKey = (col: Column<T>, index: number): string => {
     if (col.key) return col.key;
@@ -55,9 +58,9 @@ export function Table<T extends Record<string, any>>({
 
   const filteredData = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
-    if (!term) return data;
+    if (!term) return safeData;
 
-    return data.filter((row) => {
+    return safeData.filter((row) => {
       return columns.some((col) => {
         if (col.searchable === false) return false;
         if (!col.accessor || col.accessor === "") return false; // Skip custom columns in search
@@ -107,10 +110,10 @@ export function Table<T extends Record<string, any>>({
         return searchableText.includes(term);
       });
     });
-  }, [data, searchTerm, columns]);
+  }, [safeData, searchTerm, columns]);
 
   const sortedData = useMemo(() => {
-    if (!sortKey) return filteredData;
+    if (!sortKey || !Array.isArray(filteredData)) return filteredData || [];
 
     const arr = [...filteredData];
     arr.sort((a, b) => {

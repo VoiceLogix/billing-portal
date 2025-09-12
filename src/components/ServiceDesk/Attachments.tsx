@@ -4,28 +4,62 @@ import { Box } from "../UI/Box";
 import { Button } from "../UI/Button";
 import { Typography } from "../UI/Typography";
 
+import type { AttachmentFile } from "./types";
+
 interface AttachmentsProps {
-  files: string[];
-  setFiles: (files: string[]) => void;
+  files: AttachmentFile[];
+  setFiles: (files: AttachmentFile[]) => void;
+  withoutLabel?: boolean;
 }
 
-export const Attachments = ({ files, setFiles }: AttachmentsProps) => {
+export const Attachments = ({
+  files,
+  setFiles,
+  withoutLabel,
+}: AttachmentsProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleButtonClick = () => {
     inputRef.current?.click();
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
-      const fileNames = newFiles.map((file) => file.name);
       const currentFiles = Array.isArray(files) ? files : [];
-      const allFiles = [...currentFiles, ...fileNames];
-      // Remove duplicates
-      const uniqueFiles = Array.from(new Set(allFiles));
-      setFiles(uniqueFiles);
-      e.target.value = "";
+
+      const filePromises = newFiles.map((file) => {
+        return new Promise<AttachmentFile>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const base64 = reader.result as string;
+            const base64Content = base64.split(",")[1];
+            resolve({
+              filename: file.name,
+              fileContent: base64Content,
+            });
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      });
+
+      try {
+        const newAttachments = await Promise.all(filePromises);
+
+        const existingFilenames = currentFiles.map((f) => f.filename);
+        const uniqueAttachments = newAttachments.filter(
+          (attachment) => !existingFilenames.includes(attachment.filename),
+        );
+
+        const allFiles = [...currentFiles, ...uniqueAttachments];
+        console.log("Selected files:", allFiles);
+
+        setFiles(allFiles);
+        e.target.value = "";
+      } catch (error) {
+        console.error("Error processing files:", error);
+      }
     }
   };
 
@@ -36,7 +70,7 @@ export const Attachments = ({ files, setFiles }: AttachmentsProps) => {
 
   return (
     <Box display="flex" flexDirection="column" gap="8px">
-      <Typography weight="medium">Attachments</Typography>
+      {!withoutLabel && <Typography weight="medium">Attachments</Typography>}
       <Box>
         <input
           ref={inputRef}
@@ -81,12 +115,12 @@ export const Attachments = ({ files, setFiles }: AttachmentsProps) => {
               position: "relative",
             }}
           >
-            <Typography color="secondaryText">{file}</Typography>
+            <Typography color="secondaryText">{file.filename}</Typography>
             <Button
               type="button"
               onClick={() => handleRemoveFile(idx)}
               color="errorText"
-              aria-label={`Remove ${file}`}
+              aria-label={`Remove ${file.filename}`}
             >
               <X />
             </Button>

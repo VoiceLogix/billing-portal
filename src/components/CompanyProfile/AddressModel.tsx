@@ -8,11 +8,11 @@ import { RadioSelect } from "../UI/RadioSelect/RadioSelect";
 import { Button } from "../UI/Button";
 import { Address, ClientCountryDTO } from "../../types/ProfileDetailsInterface";
 import { useMemo, useState, useEffect } from "react";
-import { useGetStateInfo } from "../../service/getStateInfo";
+import { useGetStateInfo } from "../../service/billing_center/getStateInfo";
 import {
   useDeleteAddress,
   useUpdateAddress,
-} from "../../service/updateAddress";
+} from "../../service/billing_center/updateAddress";
 import { Notification } from "../UI/Notification/Notification";
 import { getAddressNotification } from "./utils";
 

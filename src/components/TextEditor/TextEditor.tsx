@@ -490,8 +490,13 @@ interface TextEditorProps {
 export default function TextEditor({ value, onValueChange }: TextEditorProps) {
   const [wordCount, setWordCount] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [editor, setEditor] = useState<LexicalEditor | null>(null);
 
-  const onChange = (newEditorState: EditorState, editor: LexicalEditor) => {
+  const onChange = (newEditorState: EditorState, editorInstance: LexicalEditor) => {
+    if (!editor) {
+      setEditor(editorInstance);
+    }
+    
     newEditorState.read(() => {
       const root = $getRoot();
       const textContent = root.getTextContent();
@@ -501,12 +506,24 @@ export default function TextEditor({ value, onValueChange }: TextEditorProps) {
         if (!textContent.trim()) {
           onValueChange("");
         } else {
-          const htmlContent = $generateHtmlFromNodes(editor, null);
+          const htmlContent = $generateHtmlFromNodes(editorInstance, null);
           onValueChange(htmlContent);
         }
       }
     });
   };
+
+  // Effect to handle value prop changes (like clearing the editor)
+  useEffect(() => {
+    if (editor && value === "") {
+      editor.update(() => {
+        const root = $getRoot();
+        root.clear();
+        const paragraph = $createParagraphNode();
+        root.append(paragraph);
+      });
+    }
+  }, [editor, value]);
 
   const toggleFullscreen = () => {
     setIsFullscreen(!isFullscreen);

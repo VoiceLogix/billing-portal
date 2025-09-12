@@ -11,7 +11,7 @@ import { Badge } from "../UI/Badge/Badge";
 import {
   useDeleteContact,
   useUpdateContact,
-} from "../../service/updateContact";
+} from "../../service/billing_center/updateContact";
 import { getContactType } from "../UI/ContactsCard/utils";
 import Dropdown from "../UI/Dropdown/Dropdown";
 import {

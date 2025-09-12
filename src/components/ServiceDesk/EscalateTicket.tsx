@@ -1,28 +1,57 @@
 import Model from "../UI/Model/Model";
-import { TicketData } from "./types";
 import { Button } from "../UI/Button";
 import { Typography } from "../UI/Typography";
 import Box from "../UI/Box";
 import { Badge } from "../UI/Badge/Badge";
 import Dropdown from "../UI/Dropdown/Dropdown";
-import { deEscalateReasons, escalateReasons, getErrorMessage } from "./utils";
+import { getErrorMessage } from "./utils";
 import TextEditor from "../TextEditor";
 import { Attachments } from "./Attachments";
+import type { AttachmentFile } from "./types";
 import MultiEmailInput from "../UI/MultiEmailInput/MultiEmailInput";
 import { useForm, Controller } from "react-hook-form";
-import { useEscalateTicket } from "../../service/EscalateTicket";
+import { useEscalateTicket } from "../../service/service_desk/EscalateTicket";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+import { TicketDetails } from "../../types/TicketDetailsInterface";
+import { useGetTicketStatusListWithReasons } from "../../service/service_desk/getTicketStatusListWithReasons";
+import TicketBadge from "../TicketBadge";
 
 interface EscalateTicketProps {
   onClose: () => void;
-  ticket: TicketData;
+  ticket: TicketDetails;
 }
 
 const EscalateTicket = ({ onClose, ticket }: EscalateTicketProps) => {
-  const isFlagged = ticket.flag;
+  const { data: statusList } = useGetTicketStatusListWithReasons();
+
+  const statusData = statusList?.reduce(
+    (acc, status) => {
+      if (status.statusName === "Escalate") {
+        status.reasons.forEach((reason) => {
+          acc.escalateReasons.push(reason.value);
+          acc.reasonIdMap[reason.value] = reason.id;
+        });
+      }
+      if (status.statusName === "De-escalate") {
+        status.reasons.forEach((reason) => {
+          acc.deEscalateReasons.push(reason.value);
+          acc.reasonIdMap[reason.value] = reason.id;
+        });
+      }
+      return acc;
+    },
+    {
+      deEscalateReasons: [] as string[],
+      escalateReasons: [] as string[],
+      reasonIdMap: {} as Record<string, string>,
+    },
+  ) || { deEscalateReasons: [], escalateReasons: [], reasonIdMap: {} };
+
+  const { deEscalateReasons, escalateReasons, reasonIdMap } = statusData;
+  const isFlagged = ticket.isEscalated;
   const getDefaultValues = () => ({
-    reason: isFlagged ? deEscalateReasons[0] : escalateReasons[0],
+    reason: "",
     description: "",
     attachments: [],
     cc: [],
@@ -30,12 +59,12 @@ const EscalateTicket = ({ onClose, ticket }: EscalateTicketProps) => {
   });
 
   const {
-    mutate: escalateTicket,
+    mutateAsync: escalateTicket,
     isPending: isEscalateTicketPending,
     isError: escalateTicketError,
     isSuccess: isEscalateTicketSuccess,
     error: escalateTicketErrorMessage,
-  } = useEscalateTicket({ onClose });
+  } = useEscalateTicket({ ticketId: ticket.ticketNumber });
 
   useEffect(() => {
     if (escalateTicketError) {
@@ -64,9 +93,25 @@ const EscalateTicket = ({ onClose, ticket }: EscalateTicketProps) => {
     defaultValues: getDefaultValues(),
   });
 
-  const handleEscalate = (data) => {
-    console.log("Ticket escalated", { data });
-    escalateTicket(data);
+  const handleEscalate = async (data) => {
+    const escalateData = {
+      clientTicket: {
+        status: "",
+        conversations: [
+          {
+            conversation: data.description,
+            attachments: data.attachments,
+            reason: reasonIdMap[data.reason] || data.reason,
+          },
+        ],
+        emailInfo: {
+          ccAddressList: data.cc,
+          bccAddressList: data.bcc,
+        },
+      },
+    };
+    await escalateTicket(escalateData);
+    onClose();
   };
 
   const handleCCChange = (value: string[]) => {
@@ -76,7 +121,7 @@ const EscalateTicket = ({ onClose, ticket }: EscalateTicketProps) => {
     setValue("bcc", value);
   };
 
-  const handleAttachmentsChange = (files: string[]) => {
+  const handleAttachmentsChange = (files: AttachmentFile[]) => {
     setValue("attachments", files);
   };
 
@@ -97,7 +142,7 @@ const EscalateTicket = ({ onClose, ticket }: EscalateTicketProps) => {
                 {isFlagged ? "De-Escalate Ticket" : "Escalate Ticket"}{" "}
                 {ticket.ticketNumber}
               </Typography>
-              <Badge status={ticket.status} />
+              <TicketBadge status={ticket?.status || "N/A"} />
             </Box>
             <Typography color="secondaryText">{ticket.subject}</Typography>
           </Box>

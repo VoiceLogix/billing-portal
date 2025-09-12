@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Box } from "../Box";
 import Dropdown from "../Dropdown/Dropdown";
 import TextInput from "../TextInput.tsx/TextInput";
-import { useGetStateInfo } from "../../../service/getStateInfo";
+import { useGetStateInfo } from "../../../service/billing_center/getStateInfo";
 import { Typography } from "../Typography";
-import { useGetProfileDetails } from "../../../service/getProfileDetails";
+import { useGetProfileDetails } from "../../../service/billing_center/getProfileDetails";
 import { useFormContext } from "react-hook-form";
 import { CardFormFormValues, ECheckFormValues } from "./utils";
 

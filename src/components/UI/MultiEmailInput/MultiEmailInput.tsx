@@ -112,6 +112,13 @@ const MultiEmailInput = ({
     setInputValue("");
   };
 
+  const handleBlur = () => {
+    if (inputValue.trim()) {
+      addEmail(inputValue);
+      setInputValue("");
+    }
+  };
+
   return (
     <div className={styles.container}>
       <label className={styles.label}>{label}</label>
@@ -142,6 +149,7 @@ const MultiEmailInput = ({
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
+            onBlur={handleBlur}
             placeholder={emails.length === 0 ? placeholder : ""}
             className={styles.input}
           />
