@@ -58,6 +58,6 @@ createNavButton(
   "#nav-callhistory",
   "nav-service-desk",
   "Service Desk",
-  "https://raw.githubusercontent.com/VoiceLogix/billing-portal/refs/heads/main/public/asset/service-desk.svg",
+  "https://cdn.jsdelivr.net/gh/VoiceLogix/billing-portal@main/public/asset/service-desk.svg",
   "service-desk-content",
 );
