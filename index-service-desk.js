@@ -1,40 +1,4 @@
-async function getSvgUrl(filename) {
-  const cdns = [
-    `https://cdn.jsdelivr.net/gh/VoiceLogix/billing-portal@main/public/asset/${filename}`,
-    `https://cdn.statically.io/gh/VoiceLogix/billing-portal/main/public/asset/${filename}`,
-    `https://raw.githack.com/VoiceLogix/billing-portal/main/public/asset/${filename}`
-  ];
-  
-  // Try each CDN until one works
-  for (const url of cdns) {
-    try {
-      console.log(`Testing CDN: ${url}`);
-      const response = await fetch(url, { 
-        method: 'GET',
-        mode: 'cors',
-        referrerPolicy: 'no-referrer'
-      });
-      
-      if (response.ok) {
-        const content = await response.text();
-        if (content && content.includes('<svg')) {
-          console.log(`✅ Success with: ${url}`);
-          return url;
-        } else {
-          console.warn(`❌ Invalid SVG content from: ${url}`);
-        }
-      } else {
-        console.warn(`❌ HTTP ${response.status} from: ${url}`);
-      }
-    } catch (error) {
-      console.warn(`❌ Error from ${url}:`, error.message);
-    }
-  }
-  
-  // If all fail, return the first one as fallback
-  console.error(`All CDNs failed for ${filename}, using first URL as fallback`);
-  return cdns[0];
-}
+const getSvgBase64 = require('./src/utils/getSvgBase64.js');
 
 function createNavButton(cloneFromId, newId, label, iconUrl, contentId) {
   const existing = document.querySelector(cloneFromId);
@@ -81,13 +45,10 @@ function createNavButton(cloneFromId, newId, label, iconUrl, contentId) {
 }
 
 // Only Service Desk button
-(async () => {
-  const iconUrl = await getSvgUrl('service-desk.svg');
-  createNavButton(
-    "#nav-callhistory",
-    "nav-service-desk",
-    "Service Desk",
-    iconUrl,
-    "service-desk-content",
-  );
-})();
+createNavButton(
+  "#nav-callhistory",
+  "nav-service-desk",
+  "Service Desk",
+  getSvgBase64("service-desk.svg"),
+  "service-desk-content",
+);

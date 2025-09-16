@@ -1,43 +1,4 @@
-// This is the full version with both Billing Center and Service Desk
-// Use index-service-desk-only.js for Service Desk only
-
-async function getSvgUrl(filename) {
-  const cdns = [
-    `https://cdn.jsdelivr.net/gh/VoiceLogix/billing-portal@main/public/asset/${filename}`,
-    `https://cdn.statically.io/gh/VoiceLogix/billing-portal/main/public/asset/${filename}`,
-    `https://raw.githack.com/VoiceLogix/billing-portal/main/public/asset/${filename}`
-  ];
-  
-  // Try each CDN until one works
-  for (const url of cdns) {
-    try {
-      console.log(`Testing CDN: ${url}`);
-      const response = await fetch(url, { 
-        method: 'GET',
-        mode: 'cors',
-        referrerPolicy: 'no-referrer'
-      });
-      
-      if (response.ok) {
-        const content = await response.text();
-        if (content && content.includes('<svg')) {
-          console.log(`✅ Success with: ${url}`);
-          return url;
-        } else {
-          console.warn(`❌ Invalid SVG content from: ${url}`);
-        }
-      } else {
-        console.warn(`❌ HTTP ${response.status} from: ${url}`);
-      }
-    } catch (error) {
-      console.warn(`❌ Error from ${url}:`, error.message);
-    }
-  }
-  
-  // If all fail, return the first one as fallback
-  console.error(`All CDNs failed for ${filename}, using first URL as fallback`);
-  return cdns[0];
-}
+const getSvgBase64 = require('./src/utils/getSvgBase64.js');
 
 function createNavButton(cloneFromId, newId, label, iconUrl, contentId) {
   const existing = document.querySelector(cloneFromId);
@@ -84,22 +45,18 @@ function createNavButton(cloneFromId, newId, label, iconUrl, contentId) {
 }
 
 // Full version: Both Billing Center and Service Desk
-(async () => {
-  // Create Billing Center button
-  createNavButton(
-    "#nav-callhistory",
-    "nav-billing",
-    "Billing Center",
-    await getSvgUrl('billing-center.svg'),
-    "billing-center-content",
-  );
-  
-  // Create Service Desk button
-  createNavButton(
-    "#nav-callhistory",
-    "nav-service-desk",
-    "Service Desk",
-    await getSvgUrl('service-desk.svg'),
-    "service-desk-content",
-  );
-})();
+createNavButton(
+  "#nav-callhistory",
+  "nav-billing",
+  "Billing Center",
+  getSvgBase64("billing-center.svg"),
+  "billing-center-content",
+);
+
+createNavButton(
+  "#nav-callhistory",
+  "nav-service-desk",
+  "Service Desk",
+  getSvgBase64("service-desk.svg"),
+  "service-desk-content",
+);
