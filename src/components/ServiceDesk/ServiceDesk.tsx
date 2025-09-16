@@ -15,7 +15,13 @@ import { Loading } from "../UI/Loading";
 import { Error } from "../UI/Error";
 
 export default function ServiceDesk() {
-  const { data: ticketsData, isLoading, error } = useGetTickets({});
+  const {
+    data: ticketsData,
+    isLoading,
+    error,
+  } = useGetTickets({
+    searchCategory: 1,
+  });
 
   const [tickets, setTickets] = useState(ticketsData || []);
 

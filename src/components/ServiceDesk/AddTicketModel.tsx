@@ -7,7 +7,12 @@ import MultiEmailInput from "../UI/MultiEmailInput/MultiEmailInput";
 import { TicketPriority } from "./types";
 import { RadioSelect } from "../UI/RadioSelect/RadioSelect";
 import { Typography } from "../UI/Typography";
-import { getErrorMessage, getIncidentCategories, getIncidentSubCategories, getClassificationId } from "./utils";
+import {
+  getErrorMessage,
+  getIncidentCategories,
+  getIncidentSubCategories,
+  getClassificationId,
+} from "./utils";
 import { TextEditor } from "../TextEditor";
 import { Button } from "../UI/Button";
 import { Attachments } from "./Attachments";
@@ -151,7 +156,7 @@ const AddTicketModel = ({ show, onClose }: AddTicketModelProps) => {
     const classificationId = getClassificationId(
       ticketClassifications,
       data.incidentType,
-      data.incidentSubType
+      data.incidentSubType,
     );
 
     const ticketData = {
@@ -160,7 +165,6 @@ const AddTicketModel = ({ show, onClose }: AddTicketModelProps) => {
         description: data.description,
         priority: data.priority,
         classificationId: classificationId,
-        userId: subscriberInfo.accountId,
         attachments: data.attachments,
         addressId: addressOptions?.find((addr) => addr.address === data.address)
           ?.addressId,
@@ -206,7 +210,13 @@ const AddTicketModel = ({ show, onClose }: AddTicketModelProps) => {
         setValue("incidentSubType", firstSubCategory);
       }
     }
-  }, [ticketClassifications, incidentCategories, incidentType, incidentSubType, setValue]);
+  }, [
+    ticketClassifications,
+    incidentCategories,
+    incidentType,
+    incidentSubType,
+    setValue,
+  ]);
   return (
     <Model open={show} handleClose={onClose} width="800px">
       <Box
