@@ -9,4 +9,4 @@ function getSvgBase64(filename) {
   return svgs[filename];
 }
 
-module.exports = getSvgBase64;
+export default getSvgBase64;

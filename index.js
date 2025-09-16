@@ -1,4 +1,4 @@
-const getSvgBase64 = require('./src/utils/getSvgBase64.js');
+import getSvgBase64 from './src/utils/getSvgBase64.js';
 
 function createNavButton(cloneFromId, newId, label, iconUrl, contentId) {
   const existing = document.querySelector(cloneFromId);
