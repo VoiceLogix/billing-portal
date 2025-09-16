@@ -11,12 +11,26 @@ async function getSvgUrl(filename) {
   // Try each CDN until one works
   for (const url of cdns) {
     try {
-      const response = await fetch(url, { method: 'HEAD' }); // Just check if URL exists
+      console.log(`Testing CDN: ${url}`);
+      const response = await fetch(url, { 
+        method: 'GET',
+        mode: 'cors',
+        referrerPolicy: 'no-referrer'
+      });
+      
       if (response.ok) {
-        return url;
+        const content = await response.text();
+        if (content && content.includes('<svg')) {
+          console.log(`✅ Success with: ${url}`);
+          return url;
+        } else {
+          console.warn(`❌ Invalid SVG content from: ${url}`);
+        }
+      } else {
+        console.warn(`❌ HTTP ${response.status} from: ${url}`);
       }
     } catch (error) {
-      console.warn(`Failed to load from ${url}:`, error);
+      console.warn(`❌ Error from ${url}:`, error.message);
     }
   }
   
