@@ -22,6 +22,7 @@ export const useEscalateTicket = ({ ticketId }: { ticketId: string }) => {
       await queryClient.invalidateQueries({
         queryKey: ["getTicketDetails", ticketId],
       });
+      await queryClient.invalidateQueries({ queryKey: ["getTickets"] });
     },
   });
 };

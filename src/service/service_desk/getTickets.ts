@@ -25,7 +25,7 @@ export async function getTickets(data: any) {
 
 export function useGetTickets(data: any) {
   return useQuery({
-    queryKey: ["getTickets", data],
+    queryKey: ["getTickets"],
     queryFn: () => getTickets(data),
     enabled: !!data,
   });

@@ -41,6 +41,7 @@ export const useUpdateTicket = ({ ticketId }: UseUpdateTicket) => {
       await queryClient.invalidateQueries({
         queryKey: ["getTicketDetails", ticketId],
       });
+      await queryClient.invalidateQueries({ queryKey: ["getTickets"] });
     },
   });
 };

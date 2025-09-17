@@ -68,7 +68,13 @@ export default function ServiceDesk() {
         onClose={() => setShowAddTicketModal(false)}
       />
       {!selectedTicketId && (
-        <Box display="flex" flexDirection="column" gap="30px" width="100%">
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap="30px"
+          width="100%"
+          marginTop="20px"
+        >
           <Box display="flex" flexDirection="column" gap="30px" width="100%">
             <Box display="flex" justifyContent="space-between">
               <Box display="flex" gap="16px">
