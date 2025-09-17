@@ -235,7 +235,6 @@ const AddTicketModel = ({ show, onClose }: AddTicketModelProps) => {
             <Typography weight="semibold" size="big">
               Submit Ticket
             </Typography>
-            <Typography color="secondaryText">{subject}</Typography>
           </Box>
 
           {/* Scrollable content area */}
